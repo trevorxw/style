@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "^0.20.10",
+    "@types/react": "~18.2.45",
     "expo": "~50.0.11",
     "expo-application": "^5.8.3",
     "expo-auth-session": "^5.4.0",
@@ -19,7 +20,8 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.73.4"
+    "react-native": "0.73.4",
+    "typescript": "^5.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
