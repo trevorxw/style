@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/clerk-expo": "^0.20.10",
+    "@react-native-picker/picker": "2.6.1",
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.1.16",
     "@types/react": "~18.2.45",
@@ -20,6 +21,7 @@
     "expo-status-bar": "~1.11.1",
     "expo-web-browser": "^12.8.2",
     "firebase": "^10.9.0",
+    "formik": "^2.4.5",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
