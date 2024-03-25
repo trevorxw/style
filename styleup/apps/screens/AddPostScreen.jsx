@@ -85,7 +85,7 @@ export default function AddPostScreen() {
         <KeyboardAvoidingView>
             <ScrollView className="p-10">
                 <Formik
-                    initialValues={{name:'', desc:'', url:'', price:'', image:'', category: '', userName:'', userImage:''}}
+                    initialValues={{name:'', desc:'', url:'', price:'', image:'', category: '', userName:'', userImage:'', createdAt:Date.now()}}
                     onSubmit={value=>onSubmitMethod(value)}
                 >
                     {({handleChange,handleBlur,handleSubmit,values,setFieldValue})=>(
