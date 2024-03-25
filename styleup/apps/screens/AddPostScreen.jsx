@@ -1,12 +1,15 @@
-import { View, Text, TextInput, StyleSheet, Button } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Button, Image, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { app } from '../../firebaseConfig';
 import { getFirestore } from "firebase/firestore";
 import { collection, getDocs } from "firebase/firestore";
 import { Formik } from 'formik';
 import { Picker } from '@react-native-picker/picker';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function AddPostScreen() {
+
+    const [image, setImage] = useState(null);
 
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
@@ -25,15 +28,50 @@ export default function AddPostScreen() {
             setCategoryList(categoryList=>[...categoryList,doc.data()])
         })
     }
+    // Used to Pick Image from Gallery
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsMultipleSelection: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+    
+        console.log(result);
+    
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+        }
+      };
+
+    const onSubmitMethod=(value)=>{
+        value.image=image;
+        console.log(value)
+    }
+
     return (
         <View className="p-10">
-            <Text className="text-[20px] font-bold mb-10 mt-10">Add New Post</Text>
             <Formik
                 initialValues={{name:'', desc:'', category:'', url:'', price:'', image:''}}
-                onSubmit={value=>console.log(value)}
+                onSubmit={value=>onSubmitMethod(value)}
             >
                 {({handleChange,handleBlur,handleSubmit,values,setFieldValue})=>(
                     <View className="">
+                        <View className=" bg-black">
+                            <TouchableOpacity onPress={pickImage}>
+                                {image?
+                                <Image source={{uri:image}} 
+                                style={{width:400,height:400, borderRadius:15}}
+                                />    
+                                :
+                                <Image source={require('./../../assets/images/placeholder.jpg')}
+                                style={{width:400,height:400, borderRadius:15}}
+                                />}
+                            </TouchableOpacity>
+                        </View>
+                        
+                        
                         <TextInput
                             style={styles.input}
                             placeholder='Title'
