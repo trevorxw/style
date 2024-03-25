@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, Button, Image, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Button, Image, TouchableOpacity, ActivityIndicator, Alert, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { app } from '../../firebaseConfig';
 import { getFirestore } from "firebase/firestore";
@@ -7,14 +7,19 @@ import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Formik } from 'formik';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
+import { useUser } from '@clerk/clerk-expo';
 
 export default function AddPostScreen() {
 
     const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(false);
 
-    // Initialize Cloud Firestore and get a reference to the service
+    // Initialize Cloud Firestore and Database and get a reference to the service
     const db = getFirestore(app);
     const storage = getStorage();
+
+    // Retrieve user information
+    const {user} = useUser();
 
     const [categoryList,setCategoryList]=useState([]);
     useEffect(()=>{
@@ -27,7 +32,7 @@ export default function AddPostScreen() {
         const querySnapshot=await getDocs(collection(db, 'Category'));
 
         querySnapshot.forEach((doc)=>{
-            console.log("Docs:", doc.data());
+            // console.log("Docs:", doc.data());
             setCategoryList(categoryList=>[...categoryList,doc.data()])
         })
     }
@@ -49,6 +54,8 @@ export default function AddPostScreen() {
       };
 
     const onSubmitMethod=async(value)=>{
+        setLoading(true);
+        
         //convert uri to blob file
         const resp=await fetch(image);
         const blob=await resp.blob();
@@ -61,11 +68,13 @@ export default function AddPostScreen() {
         }).then((resp)=>{
             getDownloadURL(storageRef).then(async(downloadUrl)=>{
                 console.log(downloadUrl);
-                value.image=downloadUrl
-
+                value.image=downloadUrl;
+                value.userId=user.id;
+                value.userImage=user.imageUrl;
                 const docRef=await addDoc(collection(db, "UserPost"), value);
                 if(docRef.id){
-                    console.log('Document Added')
+                    setLoading(false);
+                    Alert.alert('Success!',"Post Added Sucessfully.");
                 }
             })
         });
@@ -75,7 +84,7 @@ export default function AddPostScreen() {
     return (
         <View className="p-10">
             <Formik
-                initialValues={{name:'', desc:'', category:'', url:'', price:'', image:''}}
+                initialValues={{name:'', desc:'', url:'', price:'', image:'', userName:'', userImage:''}}
                 onSubmit={value=>onSubmitMethod(value)}
             >
                 {({handleChange,handleBlur,handleSubmit,values,setFieldValue})=>(
@@ -83,13 +92,14 @@ export default function AddPostScreen() {
                         <View className=" bg-black">
                             <TouchableOpacity onPress={pickImage}>
                                 {image?
-                                <Image source={{uri:image}} 
-                                style={{width:400,height:400, borderRadius:15}}
-                                />    
-                                :
-                                <Image source={require('./../../assets/images/placeholder.jpg')}
-                                style={{width:400,height:400, borderRadius:15}}
-                                />}
+                                    <Image source={{uri:image}} 
+                                    style={{width:400,height:400, borderRadius:15}}
+                                    />    
+                                    :
+                                    <Image source={require('./../../assets/images/placeholder.jpg')}
+                                    style={{width:400,height:400, borderRadius:15}}
+                                    />
+                                }
                             </TouchableOpacity>
                         </View>
                         
@@ -98,7 +108,7 @@ export default function AddPostScreen() {
                             style={styles.input}
                             placeholder='Title'
                             value={values?.title}
-                            onChangeText={handleChange('title')}
+                            onChangeText={handleChange('name')}
                         />
                         <TextInput
                             style={styles.input}
@@ -131,10 +141,17 @@ export default function AddPostScreen() {
                             ))}
                             
                         </Picker> */}
-
-                        <Button onPress={handleSubmit} 
-                        className="mt-7"
-                        title='Submit'/>
+                        {loading?
+                            <ActivityIndicator color='#fff'/>
+                            :
+                            <TouchableOpacity onPress={handleSubmit} 
+                            className="p-4 bg-blue-500 rounded-full mt-10"
+                            title='Submit'
+                            disabled={loading}>
+                                <Text className="text-white text-center text-[16px]">Submit</Text>
+                            </TouchableOpacity>
+                        }
+                        
                     </View>
                 )}
             </Formik>
@@ -149,7 +166,7 @@ const styles = StyleSheet.create({
         padding:10,
         paddingTop:15,
         marginTop:10,
-        marginBottom:5,
+        marginBottom:0,
         paddingHorizontal:17,
         textAlignVertical:'top',
         fontSize:17
