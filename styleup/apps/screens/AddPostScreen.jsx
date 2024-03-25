@@ -2,7 +2,8 @@ import { View, Text, TextInput, StyleSheet, Button, Image, TouchableOpacity } fr
 import React, { useEffect, useState } from 'react'
 import { app } from '../../firebaseConfig';
 import { getFirestore } from "firebase/firestore";
-import { collection, getDocs } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import { Formik } from 'formik';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,6 +14,8 @@ export default function AddPostScreen() {
 
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
+    const storage = getStorage();
+
     const [categoryList,setCategoryList]=useState([]);
     useEffect(()=>{
         getCategoryList();
@@ -45,9 +48,28 @@ export default function AddPostScreen() {
         }
       };
 
-    const onSubmitMethod=(value)=>{
-        value.image=image;
-        console.log(value)
+    const onSubmitMethod=async(value)=>{
+        //convert uri to blob file
+        const resp=await fetch(image);
+        const blob=await resp.blob();
+        const storageRef = ref(storage, 'communityPost/'+Date.now()+'.jpg');
+
+
+        // 'file' comes from the Blob or File API
+        uploadBytes(storageRef, blob).then((snapshot) => {
+            console.log('Uploaded a blob or file!');
+        }).then((resp)=>{
+            getDownloadURL(storageRef).then(async(downloadUrl)=>{
+                console.log(downloadUrl);
+                value.image=downloadUrl
+
+                const docRef=await addDoc(collection(db, "UserPost"), value);
+                if(docRef.id){
+                    console.log('Document Added')
+                }
+            })
+        });
+  
     }
 
     return (
@@ -99,7 +121,7 @@ export default function AddPostScreen() {
                             onChangeText={handleChange('url')}
                         />
 
-                        <Picker
+                        {/* <Picker
                             selectedValue={values?.category}
                             className="border-2"
                             onValueChange={itemValue=>setFieldValue('category',itemValue)}
@@ -108,7 +130,7 @@ export default function AddPostScreen() {
                                 <Picker.Item key={index} label={item.name} value={item.name}/>
                             ))}
                             
-                        </Picker>
+                        </Picker> */}
 
                         <Button onPress={handleSubmit} 
                         className="mt-7"
