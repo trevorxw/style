@@ -1,9 +1,8 @@
 import { View, Text, TextInput, StyleSheet, Button, Image, TouchableOpacity, ActivityIndicator, Alert, Pressable, ScrollView, KeyboardAvoidingView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { app } from '../../firebaseConfig';
-import { getFirestore } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 import { Formik } from 'formik';
 import { Picker } from '@react-native-picker/picker';
 import * as ImagePicker from 'expo-image-picker';
