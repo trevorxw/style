@@ -10,7 +10,8 @@ import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { TabBar, TabView, SceneMap } from "react-native-tab-view";
+import Posts from "../components/ProfileScreen/Posts";
 import { FlatGrid } from "react-native-super-grid";
 
 const FirstRoute = () => (
@@ -22,19 +23,30 @@ const SecondRoute = () => (
 );
 
 const ThirdRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
+    <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
 );
 
 const FourthRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
+    <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
 );
 
 const renderScene = SceneMap({
-    posts: FirstRoute,
+    posts: Posts,
     swipes: SecondRoute,
     saved: ThirdRoute,
     wardrobe: FourthRoute,
 });
+
+const renderTabBar = (props) => (
+    <TabBar
+        {...props}
+        indicatorStyle={{ backgroundColor: "white" }}
+        style={{ backgroundColor: "pink" }}
+        renderLabel={({ route, focused, color }) => (
+            <Text style={{ color, margin: 8 }}>{route.title}</Text>
+        )}
+    />
+);
 
 export default function ProfileScreen() {
     const { user } = useUser();
@@ -98,6 +110,7 @@ export default function ProfileScreen() {
                 <TabView
                     navigationState={{ index, routes }}
                     renderScene={renderScene}
+                    renderTabBar={renderTabBar}
                     onIndexChange={setIndex}
                     initialLayout={{ width: layout.width }}
                 />
