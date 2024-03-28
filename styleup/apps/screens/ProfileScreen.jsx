@@ -61,17 +61,21 @@ export default function ProfileScreen() {
         { key: "wardrobe", title: "Wardrobe" },
     ]);
 
+    const settings = () =>{
+        console.log("Settings Pressed")
+    };
+
     return (
         <View>
-            <View className="mt-14 ml-6 flex-row ">
+            <View className="mt-14 ml-6 flex-row">
                 <Image
                     source={{ uri: user.imageUrl }}
                     className="w-[120px] h-[120px] rounded-full justify-center"
                 />
                 {/* Text View */}
                 <View className="w-3/5">
-                    <View className="right-1 absolute">
-                        <TouchableOpacity>
+                    <View className="right-1 absolute z-1">
+                        <TouchableOpacity onPress={settings} className="">
                             <Feather name="settings" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
