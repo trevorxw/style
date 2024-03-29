@@ -7,6 +7,7 @@ import AddPostScreen from '../screens/AddPostScreen';
 import NewsScreen from '../screens/NewsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { Foundation, AntDesign, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import ProfileScreenStackNav from './ProfileScreenStackNav';
 
 const Tab = createBottomTabNavigator();
 
@@ -56,7 +57,7 @@ export default function TabNavigation() {
             )
         }}
       />
-      <Tab.Screen name="Profile" component={ProfileScreen}
+      <Tab.Screen name="Profile" component={ProfileScreenStackNav}
         options={{
             tabBarLabel:({color})=>(
                 <Text style={{color:color}}>Profile</Text>

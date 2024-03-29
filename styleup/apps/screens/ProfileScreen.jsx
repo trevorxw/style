@@ -13,6 +13,7 @@ import Following from "../components/ProfileScreen/Following";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
 import { FlatGrid } from "react-native-super-grid";
+import { useNavigation } from "@react-navigation/native";
 
 const FirstRoute = () => (
     <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
@@ -52,6 +53,7 @@ export default function ProfileScreen() {
     const { user } = useUser();
 
     const layout = useWindowDimensions();
+    const navigation = useNavigation();
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -75,7 +77,7 @@ export default function ProfileScreen() {
                 {/* Text View */}
                 <View className="w-3/5">
                     <View className="right-1 absolute z-1">
-                        <TouchableOpacity onPress={settings} className="">
+                        <TouchableOpacity onPress={() => [navigation.navigate("settings")]} className="">
                             <Feather name="settings" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
