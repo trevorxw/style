@@ -3,6 +3,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../screens/ProfileScreen";
 import Settings from "../screens/Settings";
+import EditProfile from "../screens/EditProfile";
 
 const Stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ export default function ProfileScreenStackNav() {
                 options={{ headerShown: false }}
             />
             <Stack.Screen name="settings" component={Settings} />
+            <Stack.Screen name="edit-profile" component={EditProfile} />
         </Stack.Navigator>
     );
 }

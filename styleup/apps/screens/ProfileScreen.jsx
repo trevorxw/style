@@ -63,10 +63,6 @@ export default function ProfileScreen() {
         { key: "wardrobe", title: "Wardrobe" },
     ]);
 
-    const settings = () =>{
-        console.log("Settings Pressed")
-    };
-
     return (
         <View>
             <View className="mt-14 ml-6 flex-row">
@@ -77,7 +73,10 @@ export default function ProfileScreen() {
                 {/* Text View */}
                 <View className="w-3/5">
                     <View className="right-1 absolute z-1">
-                        <TouchableOpacity onPress={() => [navigation.navigate("settings")]} className="">
+                        <TouchableOpacity
+                            onPress={() => [navigation.navigate("settings")]}
+                            className=""
+                        >
                             <Feather name="settings" size={24} color="black" />
                         </TouchableOpacity>
                     </View>
@@ -99,7 +98,10 @@ export default function ProfileScreen() {
             </View>
             <View className="mt-5 flex-row">
                 <View className="justify-center">
-                    <TouchableOpacity className="ml-6 border-2 w-28 rounded-sm py-1">
+                    <TouchableOpacity
+                        onPress={() => [navigation.navigate("edit-profile")]}
+                        className="ml-6 border-2 w-28 rounded-sm py-1"
+                    >
                         <Text className="text-[20px] text-center">
                             edit profile
                         </Text>
