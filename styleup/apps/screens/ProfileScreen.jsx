@@ -12,7 +12,6 @@ import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
-import { FlatGrid } from "react-native-super-grid";
 import { useNavigation } from "@react-navigation/native";
 
 const FirstRoute = () => (

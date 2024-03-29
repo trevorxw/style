@@ -8,6 +8,7 @@ import NewsScreen from '../screens/NewsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import { Foundation, AntDesign, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import ProfileScreenStackNav from './ProfileScreenStackNav';
+import Posts from '../components/ProfileScreen/Posts';
 
 const Tab = createBottomTabNavigator();
 
@@ -47,7 +48,7 @@ export default function TabNavigation() {
             )
         }}
       />
-      <Tab.Screen name="News" component={NewsScreen}
+      <Tab.Screen name="News" component={Posts}
         options={{
             tabBarLabel:({color})=>(
                 <Text style={{color:color}}>News</Text>
