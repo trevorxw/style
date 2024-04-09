@@ -1,26 +1,19 @@
-import { View, Text } from 'react-native'
-import Header from '../components/HomeScreen/Header'
-import Discover from '../components/HomeScreen/Discover'
-import React, { useEffect, useState } from 'react'
+import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import Discover from '../components/HomeScreen/Discover';
 import { app } from '../../firebaseConfig';
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { collection, getFirestore, getDocs } from "firebase/firestore";
+import { getFirestore, getDocs, collection } from "firebase/firestore";
 
 export default function HomeScreen() {
-
-  // database and collection
   const db = getFirestore(app);
-  const storage = getStorage();
 
-  //states
-  const [cards, setCards]=useState([]);
+  const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(()=>{
+  useEffect(() => {
     getCards();
-  }, [])
+  }, []);
 
-  // get cards
   const getCards = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, 'UserPost'));
@@ -32,19 +25,23 @@ export default function HomeScreen() {
     } catch (error) {
       console.error("Error fetching cards:", error);
     } finally {
-      setLoading(false); // Update loading state regardless of success/failure
+      setLoading(false);
     }
   };
-  console.log({cards});
+
+  if (loading) {
+    return <View style={styles.container}><ActivityIndicator color='#fff'/></View>;
+  }
+
   return (
-    <View>
-      {/* <Header/> */}
-      {!cards? 
-        <ActivityIndicator color='#fff'/>
-      :
-        <Discover latestCards={cards}/>
-      }
-      
+    <View style={styles.container}>
+      <Discover latestCards={cards}/>
     </View>
-  )
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
