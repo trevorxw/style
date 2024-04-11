@@ -79,7 +79,6 @@ export default function AddPostScreen() {
             <ScrollView>
                 <Formik
                     initialValues={{
-                        name: "",
                         desc: "",
                         url: "",
                         price: "",
@@ -162,8 +161,18 @@ export default function AddPostScreen() {
                                     placeholder="Shop Address"
                                     onChangeText={handleChange("url")}
                                 />
-                                {/* Category Picker commented out for brevity */}
-                                {loading ? (
+                            </View>
+                            <View style={styles.tags}>
+                                <Text style={styles.tagsText}>
+                                    Tags: 
+                                </Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="#xxx ..."
+                                    onChangeText={handleChange("url")}
+                                />
+                            </View>
+                            {loading ? (
                                     <ActivityIndicator color="#0000ff" />
                                 ) : (
                                     <TouchableOpacity
@@ -175,7 +184,6 @@ export default function AddPostScreen() {
                                         </Text>
                                     </TouchableOpacity>
                                 )}
-                            </View>
                         </View>
                     )}
                 </Formik>
@@ -238,11 +246,23 @@ const styles = StyleSheet.create({
         backgroundColor: "#007bff",
         padding: 15,
         borderRadius: 10,
-        marginTop: 20,
+        margin: 20,
     },
     submitButtonText: {
         color: "#ffffff",
         textAlign: "center",
         fontSize: 16,
+    },
+    tags: {
+        flex: 1,
+        flexDirection: 'row',
+        marginTop: 10,
+        paddingHorizontal: 20,
+    },
+    tagsText: {
+        marginVertical: 10,
+        fontFamily: "Cochin",
+        fontSize: 20,
+        marginRight: 20,
     },
 });
