@@ -37,10 +37,10 @@ export default function Discover({ latestCards }) {
                                     />
                                 </TouchableOpacity>
                             </View>
-                            {/* <Image
+                            <Image
                                 source={{ uri: card.image }}
                                 style={styles.image}
-                            /> */}
+                            />
                         </View>
                     );
                 }}
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     },
     buttons: {
         position: "absolute",
-        zIndex: 1,
+        zIndex: 10,
         right: 20,
         borderWidth: 2,
         borderColor: "red",
