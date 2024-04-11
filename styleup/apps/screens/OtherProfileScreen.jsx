@@ -44,12 +44,6 @@ export default function OtherProfileScreen({ route }) {
             <View style={styles.profileSection}>
                 <Image source={{ uri: user.imageUrl }} style={styles.profileImage} />
                 <View style={styles.profileInfo}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("Settings")}
-                        style={styles.settingsButton}
-                    >
-                        <Feather name="settings" size={24} color="black" />
-                    </TouchableOpacity>
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.fullName}</Text>
                         <Text style={styles.userBio}>{user.bio || "No bio available"}</Text>
