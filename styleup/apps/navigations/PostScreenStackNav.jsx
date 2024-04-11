@@ -3,6 +3,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import AddPostScreen from "../screens/Post/AddPostScreen";
 import CameraScreen from "../screens/Post/CameraScreen";
+import PreviewScreen from "../screens/Post/PreviewScreen";
 
 const Stack = createStackNavigator();
 
@@ -15,7 +16,7 @@ export default function PostScreenStackNav() {
                 options={{ headerShown: false }}
             />
             <Stack.Screen name="camera" component={CameraScreen} />
-            {/* <Stack.Screen name="post2" component={EditProfile} /> */}
+            <Stack.Screen name="preview" component={PreviewScreen} />
         </Stack.Navigator>
     );
 }

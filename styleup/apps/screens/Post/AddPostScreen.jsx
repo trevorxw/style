@@ -47,7 +47,6 @@ export default function AddPostScreen() {
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
-            allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
@@ -107,6 +106,21 @@ export default function AddPostScreen() {
                                             style={styles.image}
                                         />
                                     )}
+                                </TouchableOpacity>
+                            </View>
+                            <View>
+                                <TouchableOpacity
+                                    onPress={() => [
+                                        navigation.navigate("camera"),
+                                    ]}
+                                    className=""
+                                    style={styles.cameraButton}
+                                >
+                                    <Feather
+                                        name="camera"
+                                        size={24}
+                                        color="black"
+                                    />
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={() => [
@@ -181,6 +195,9 @@ const styles = StyleSheet.create({
         height: 300,
         borderRadius: 15,
     },
+    navIconsContainer: {
+        flex: 1,
+    },
     cameraButton: {
         marginTop: 10,
     },
@@ -193,7 +210,6 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 15,
         fontSize: 17,
-
     },
     linkHeader: {
         marginVertical: 10,
