@@ -108,17 +108,17 @@ export default function AddPostScreen() {
                                     )}
                                 </TouchableOpacity>
                             </View>
-                            <View>
+                            <View style={styles.navIconsContainer}>
                                 <TouchableOpacity
                                     onPress={() => [
                                         navigation.navigate("camera"),
                                     ]}
                                     className=""
-                                    style={styles.cameraButton}
+                                    style={styles.navIcons}
                                 >
                                     <Feather
-                                        name="camera"
-                                        size={24}
+                                        name="eye"
+                                        size={18}
                                         color="black"
                                     />
                                 </TouchableOpacity>
@@ -127,11 +127,11 @@ export default function AddPostScreen() {
                                         navigation.navigate("camera"),
                                     ]}
                                     className=""
-                                    style={styles.cameraButton}
+                                    style={styles.navIcons}
                                 >
                                     <Feather
                                         name="camera"
-                                        size={24}
+                                        size={18}
                                         color="black"
                                     />
                                 </TouchableOpacity>
@@ -197,9 +197,15 @@ const styles = StyleSheet.create({
     },
     navIconsContainer: {
         flex: 1,
-    },
-    cameraButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
         marginTop: 10,
+    },
+    navIcons: {
+        marginHorizontal: 12,
+        padding: 7,
+        borderWidth: 1.5,
+        borderRadius: 10,
     },
     desc: {
         marginTop: 10,
