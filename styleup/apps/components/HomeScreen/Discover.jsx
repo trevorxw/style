@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     card: {
-        flex:1,
+        flex: 1,
         width: screenWidth,
         justifyContent: 'center',
         alignItems: 'center',
