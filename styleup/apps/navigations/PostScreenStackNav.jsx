@@ -15,8 +15,17 @@ export default function PostScreenStackNav() {
                 component={AddPostScreen}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen name="camera" component={CameraScreen} />
-            <Stack.Screen name="preview" component={PreviewScreen} />
+            <Stack.Screen
+                name="camera"
+                component={CameraScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="preview"
+                component={PreviewScreen}
+                options={{ headerShown: false }}
+                initialParams={{ image: null }}
+            />
         </Stack.Navigator>
     );
 }

@@ -111,7 +111,9 @@ export default function AddPostScreen() {
                             <View style={styles.navIconsContainer}>
                                 <TouchableOpacity
                                     onPress={() => [
-                                        navigation.navigate("camera"),
+                                        navigation.navigate("preview", {
+                                            image: image,
+                                        }),
                                     ]}
                                     className=""
                                     style={styles.navIcons}
@@ -197,8 +199,8 @@ const styles = StyleSheet.create({
     },
     navIconsContainer: {
         flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
+        flexDirection: "row",
+        justifyContent: "center",
         marginTop: 10,
     },
     navIcons: {
