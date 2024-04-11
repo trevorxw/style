@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
+import {
+    View,
+    Text,
+    StyleSheet,
+    Image,
+    ActivityIndicator,
+    Dimensions,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import {
     collection,
@@ -10,6 +17,8 @@ import {
 import { app } from "../../../firebaseConfig";
 import { useUser } from "@clerk/clerk-expo";
 import { FlatGrid } from "react-native-super-grid";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Posts() {
     const db = getFirestore(app);
@@ -74,20 +83,23 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     itemContainer: {
+        flex: 1,
+        width: screenWidth/3,
+        height: 150,
         justifyContent: "flex-end",
         borderRadius: 5,
-        borderBlockColor: '#FFFFF',
-        height: 150,
+        borderBlockColor: "#FFFFF",
     },
     image: {
-        flex: 1,
-        width: "1/3",
+        width: '100%',
+        height: '100%',
+        resizeMode: 'cover',
     },
     activityIndicator: {
-        position: 'absolute',
+        position: "absolute",
         left: 0,
         right: 0,
         top: 0,
         bottom: 0,
-      }
+    },
 });
