@@ -5,14 +5,17 @@ import {
     ActivityIndicator,
     Dimensions,
     TouchableOpacity,
+    Text,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
-import React from "react";
-import { Feather } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { Feather, FontAwesome5 } from "@expo/vector-icons";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Discover({ latestCards }) {
+    const [pressed, setPressed] = useState(false);
+
     if (!latestCards || latestCards.length === 0) {
         return (
             <View style={styles.outerContainer}>
@@ -28,14 +31,29 @@ export default function Discover({ latestCards }) {
                 renderCard={(card) => {
                     return (
                         <View style={styles.card}>
-                            <View style={styles.buttons}>
+                            <View style={styles.buttonsContainer}>
                                 <TouchableOpacity>
+                                    <Image
+                                        source={{ uri: card.userImage }}
+                                        style={styles.profileImage}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.buttons}>
                                     <Feather
                                         name="heart"
-                                        size={28}
+                                        size={35}
                                         color="white"
                                     />
                                 </TouchableOpacity>
+                                <Text style={styles.buttonText}>{card.likes}0</Text>
+                                <TouchableOpacity style={styles.buttons}>
+                                    <FontAwesome5
+                                        name="share"
+                                        size={35}
+                                        color="white"
+                                    />
+                                </TouchableOpacity>
+                                <Text style={styles.buttonText}>{card.shares}0</Text>
                             </View>
                             <Image
                                 source={{ uri: card.image }}
@@ -75,12 +93,30 @@ const styles = StyleSheet.create({
         height: "100%",
         resizeMode: "cover",
     },
-    buttons: {
+    buttonsContainer: {
         position: "absolute",
         zIndex: 10,
-        right: 20,
+        right: (screenWidth * 1) / 30,
+        top: (screenHeight * 5) / 8,
+        justifyContent: "center",
+    },
+    profileImage: {
+        marginBottom: 20,
+        width: 44, // Tailwind w-[120px]
+        height: 44, // Tailwind h-[120px]
+        borderRadius: 60, // Tailwind rounded-full
         borderWidth: 2,
-        borderColor: "red",
-        justifyContent: "right",
+        borderColor: "white",
+    },
+    buttons: {
+        alignSelf: "center",
+    },
+    buttonText: {
+        marginTop: 2,
+        marginBottom: 12,
+        fontSize: 15,
+        alignSelf: "center",
+        color: "white",
+        fontWeight: 'bold',
     },
 });
