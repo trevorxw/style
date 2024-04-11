@@ -11,6 +11,7 @@ import Swiper from "react-native-deck-swiper";
 import React, { useState } from "react";
 import Like from "./Like";
 import Share from "./Share";
+import ProfilePicture from "./ProfilePicture";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -33,12 +34,7 @@ export default function Discover({ latestCards }) {
                     return (
                         <View style={styles.card}>
                             <View style={styles.buttonsContainer}>
-                                <TouchableOpacity>
-                                    <Image
-                                        source={{ uri: card.userImage }}
-                                        style={styles.profileImage}
-                                    />
-                                </TouchableOpacity>
+                                <ProfilePicture card={card}/>
                                 <Like card={card}/>
                                 <Share card={card}/>
                             </View>
