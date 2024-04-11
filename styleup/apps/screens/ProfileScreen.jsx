@@ -1,58 +1,39 @@
+import React from "react";
 import {
     View,
     Text,
     Image,
     TouchableOpacity,
+    StyleSheet,
     useWindowDimensions,
 } from "react-native";
-import React from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
-import { TabBar, TabView, SceneMap } from "react-native-tab-view";
+import { TabView, TabBar } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
 import { useNavigation } from "@react-navigation/native";
 
-const FirstRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
-
-const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
-
-const ThirdRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
-
-const FourthRoute = () => (
-    <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
-
-const renderScene = SceneMap({
-    posts: Posts,
-    swipes: SecondRoute,
-    saved: ThirdRoute,
-    wardrobe: FourthRoute,
-});
-
-const renderTabBar = (props) => (
-    <TabBar
-        {...props}
-        indicatorStyle={{ backgroundColor: "white" }}
-        style={{ backgroundColor: "pink" }}
-        renderLabel={({ route, focused, color }) => (
-            <Text style={{ color, margin: 8 }}>{route.title}</Text>
-        )}
-    />
-);
+const renderScene = ({ route }) => {
+    switch (route.key) {
+        case "posts":
+            return <Posts />;
+        case "swipes":
+            return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+        case "saved":
+            return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+        case "wardrobe":
+            return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+        default:
+            return null;
+    }
+};
 
 export default function ProfileScreen() {
-    const { user } = useUser();
-
     const layout = useWindowDimensions();
     const navigation = useNavigation();
+    const { user } = useUser();
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -63,65 +44,134 @@ export default function ProfileScreen() {
     ]);
 
     return (
-        <View>
-            <View className="mt-14 ml-6 flex-row">
+        <View style={styles.container}>
+            <View style={styles.profileSection}>
                 <Image
                     source={{ uri: user.imageUrl }}
-                    className="w-[120px] h-[120px] rounded-full justify-center"
+                    style={styles.profileImage}
                 />
-                {/* Text View */}
-                <View className="w-3/5">
-                    <View className="right-1 absolute z-1">
-                        <TouchableOpacity
-                            onPress={() => [navigation.navigate("settings")]}
-                            className=""
-                        >
-                            <Feather name="settings" size={24} color="black" />
-                        </TouchableOpacity>
-                    </View>
-                    <View className="ml-5">
-                        <Text className="mt-8 font-bold text-[25px]">
-                            @{user.fullName}
-                        </Text>
-                        <Text className="ml-4 mt-1 text-[20px]">
-                            trevor | 😃😃😃😃
-                        </Text>
-                        <View className="flex-row mt-3">
-                            <Text className="font-bold text-[20px]">INS:</Text>
-                            <Text className="text-[20px]">
+                <View style={styles.profileInfo}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("settings")}
+                        style={styles.settingsButton}
+                    >
+                        <Feather name="settings" size={24} color="black" />
+                    </TouchableOpacity>
+                    <View style={styles.profileText}>
+                        <Text style={styles.userName}>@{user.fullName}</Text>
+                        <Text style={styles.userBio}>trevor | 😃😃😃😃</Text>
+                        <View style={styles.insContainer}>
+                            <Text style={styles.insTitle}>INS:</Text>
+                            <Text style={styles.insDescription}>
                                 currently obsessed with...
                             </Text>
                         </View>
                     </View>
                 </View>
             </View>
-            <View className="mt-5 flex-row">
-                <View className="justify-center">
-                    <TouchableOpacity
-                        onPress={() => [navigation.navigate("edit-profile")]}
-                        className="ml-6 border-2 w-28 rounded-sm py-1"
-                    >
-                        <Text className="text-[20px] text-center">
-                            edit profile
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                {/* Followers and Following */}
-                <View className="w-3/5 justify-center flex-row">
-                    <Followers className="" />
-                    <Following className="" />
+            <View style={styles.editProfileSection}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("edit-profile")}
+                    style={styles.editProfileButton}
+                >
+                    <Text style={styles.editProfileButtonText}>
+                        edit profile
+                    </Text>
+                </TouchableOpacity>
+                <View style={styles.followSection}>
+                    <Followers />
+                    <Following />
                 </View>
             </View>
-            <View className="h-full mt-3">
-                <TabView
-                    navigationState={{ index, routes }}
-                    renderScene={renderScene}
-                    renderTabBar={renderTabBar}
-                    onIndexChange={setIndex}
-                    initialLayout={{ width: layout.width }}
-                />
-            </View>
+            <TabView
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                renderTabBar={(props) => (
+                    <TabBar
+                        {...props}
+                        indicatorStyle={{ backgroundColor: "white" }}
+                        style={{ backgroundColor: "pink" }}
+                        renderLabel={({ route, focused, color }) => (
+                            <Text style={{ color, margin: 8 }}>
+                                {route.title}
+                            </Text>
+                        )}
+                    />
+                )}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }}
+            />
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    profileSection: {
+        flexDirection: "row",
+        marginTop: 56, // mt-14 in Tailwind
+        marginLeft: 24, // ml-6 in Tailwind
+    },
+    profileImage: {
+        width: 120, // Tailwind w-[120px]
+        height: 120, // Tailwind h-[120px]
+        borderRadius: 60, // Tailwind rounded-full
+    },
+    profileInfo: {
+        flex: 7/8, // Tailwind w-3/5
+    },
+    settingsButton: {
+        position: "absolute",
+        right: 0, // Approximation of right-1 in Tailwind
+        zIndex: 10, // Tailwind z-1
+    },
+    profileText: {
+        marginLeft: 20, // ml-5 in Tailwind
+    },
+    userName: {
+        marginTop: 32, // mt-8 in Tailwind
+        fontWeight: "bold",
+        fontSize: 25, // Tailwind text-[25px]
+    },
+    userBio: {
+        marginLeft: 16, // ml-4 in Tailwind
+        marginTop: 4, // mt-1 in Tailwind
+        fontSize: 20, // Tailwind text-[20px]
+    },
+    insContainer: {
+        flexDirection: "row",
+        marginTop: 12, // mt-3 in Tailwind
+    },
+    insTitle: {
+        fontWeight: "bold",
+        fontSize: 20, // Tailwind text-[20px]
+    },
+    insDescription: {
+        fontSize: 20, // Tailwind text-[20px]
+    },
+    editProfileSection: {
+        flexDirection: "row",
+        marginTop: 20, // mt-5 in Tailwind
+        marginBottom: 20,
+        alignItems: "center",
+    },
+    editProfileButton: {
+        marginLeft: 24, // ml-6 in Tailwind
+        borderWidth: 2, // Tailwind border-2
+        borderRadius: 4, // Tailwind rounded-sm
+        paddingVertical: 4, // Tailwind py-1
+        paddingHorizontal: 0, // Adjusted for React Native
+        width: 112, // Tailwind w-28
+    },
+    editProfileButtonText: {
+        fontSize: 20, // Tailwind text-[20px]
+        textAlign: "center",
+    },
+    followSection: {
+        flex: 4 / 5, // Tailwind w-3/5
+        flexDirection: "row",
+        justifyContent: "center",
+    },
+});
