@@ -66,7 +66,6 @@ export default function AddPostScreen() {
             getDownloadURL(storageRef).then(async (downloadUrl) => {
                 values.image = downloadUrl;
                 values.userId = user.id;
-                values.userImage = user.imageUrl;
                 await addDoc(collection(db, "UserPost"), values);
                 setLoading(false);
                 Alert.alert("Success!", "Post Added Successfully.");
@@ -85,7 +84,6 @@ export default function AddPostScreen() {
                         image: "",
                         category: "",
                         userName: "",
-                        userImage: "",
                         createdAt: Date.now(),
                         likes:"0",
                         shares: "0",
