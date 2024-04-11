@@ -18,10 +18,10 @@ export default function HomeScreen() {
         try {
             console.log("Fetching Cards");
             const querySnapshot = await getDocs(collection(db, "UserPost"));
-            const fetchedCards = [];
-            querySnapshot.forEach((doc) => {
-                fetchedCards.push(doc.data());
-            });
+            const fetchedCards = querySnapshot.docs.map(doc => ({
+                id: doc.id, // Include the document ID
+                ...doc.data() // Spread the rest of the document data
+            }));
             setCards(fetchedCards);
         } catch (error) {
             console.error("Error fetching cards:", error);

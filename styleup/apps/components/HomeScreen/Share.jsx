@@ -8,7 +8,7 @@ export default function Share({ card }) {
             <TouchableOpacity style={styles.buttons}>
                 <FontAwesome5 name="share" size={35} color="white" />
             </TouchableOpacity>
-            <Text style={styles.buttonText}>{card.shares}0</Text>
+            <Text style={styles.buttonText}>{card.shares}</Text>
         </View>
     );
 }
