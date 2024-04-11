@@ -104,24 +104,37 @@ export default function AddPostScreen() {
                                     ) : (
                                         <Image
                                             source={require("../../../assets/images/placeholder.jpg")}
-                                            style={styles.placeholderImage}
+                                            style={styles.image}
                                         />
                                     )}
                                 </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => [
+                                        navigation.navigate("camera"),
+                                    ]}
+                                    className=""
+                                    style={styles.cameraButton}
+                                >
+                                    <Feather
+                                        name="camera"
+                                        size={24}
+                                        color="black"
+                                    />
+                                </TouchableOpacity>
                             </View>
-                            <View style={styles.formContainer}>
+                            <View style={styles.desc}>
                                 <TextInput
-                                    style={styles.input}
-                                    placeholder="Title"
-                                    onChangeText={handleChange("name")}
-                                />
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Description"
+                                    style={styles.descInput}
+                                    placeholder="description (optional)"
                                     multiline
                                     numberOfLines={4}
                                     onChangeText={handleChange("desc")}
                                 />
+                                <Text style={styles.linkHeader}>
+                                    LINKS: (max 5)
+                                </Text>
+                            </View>
+                            <View style={styles.linksContainer}>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Price"
@@ -146,18 +159,6 @@ export default function AddPostScreen() {
                                         </Text>
                                     </TouchableOpacity>
                                 )}
-                                <TouchableOpacity
-                                    onPress={() => [
-                                        navigation.navigate("camera"),
-                                    ]}
-                                    className=""
-                                >
-                                    <Feather
-                                        name="camera"
-                                        size={24}
-                                        color="black"
-                                    />
-                                </TouchableOpacity>
                             </View>
                         </View>
                     )}
@@ -173,28 +174,40 @@ const styles = StyleSheet.create({
     },
     imagePickerContainer: {
         alignItems: "center",
-        padding: 20,
-        marginTop: 23,
+        marginTop: 43,
     },
     image: {
         width: 300,
         height: 300,
         borderRadius: 15,
     },
-    placeholderImage: {
-        width: 300,
-        height: 300,
-        borderRadius: 15,
+    cameraButton: {
+        marginTop: 10,
     },
-    formContainer: {
+    desc: {
+        marginTop: 10,
         paddingHorizontal: 20,
     },
-    input: {
+    descInput: {
         borderWidth: 1,
-        borderRadius: 10,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        marginBottom: 10,
+        fontSize: 17,
+
+    },
+    linkHeader: {
+        marginVertical: 10,
+        fontFamily: "Cochin",
+        fontSize: 20,
+    },
+    linksContainer: {
+        paddingHorizontal: 40,
+    },
+    input: {
+        marginVertical: 5,
+        borderWidth: 1,
+        paddingVertical: 10,
+        paddingHorizontal: 15,
         fontSize: 17,
     },
     submitButton: {
