@@ -5,16 +5,16 @@ import AddPostScreen from "../screens/Post/AddPostScreen";
 
 const Stack = createStackNavigator();
 
-export default function ProfileScreenStackNav() {
+export default function PostScreenStackNav() {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="profile-tab"
-                component={ProfileScreen}
+                name="post1"
+                component={AddPostScreen}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen name="settings" component={Settings} />
-            <Stack.Screen name="edit-profile" component={EditProfile} />
+            {/* <Stack.Screen name="post1" component={AddPostScreen} /> */}
+            {/* <Stack.Screen name="post2" component={EditProfile} /> */}
         </Stack.Navigator>
     );
 }

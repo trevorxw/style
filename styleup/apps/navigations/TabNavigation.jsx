@@ -3,11 +3,10 @@ import React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeScreen from '../screens/HomeScreen';
 import ExploreScreen from '../screens/ExploreScreen';
-import AddPostScreen from '../screens/Post/AddPostScreen';
 import NewsScreen from '../screens/NewsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
 import { Foundation, AntDesign, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import ProfileScreenStackNav from './ProfileScreenStackNav';
+import PostScreenStackNav from './PostScreenStackNav';
 import Posts from '../components/ProfileScreen/Posts';
 
 const Tab = createBottomTabNavigator();
@@ -38,7 +37,7 @@ export default function TabNavigation() {
             )
         }}
       />
-      <Tab.Screen name="AddPost" component={AddPostScreen}
+      <Tab.Screen name="AddPost" component={PostScreenStackNav}
         options={{
             tabBarLabel:({color})=>(
                 <Text style={{color:color}}>Post</Text>
