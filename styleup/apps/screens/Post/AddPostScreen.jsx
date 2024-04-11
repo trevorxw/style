@@ -13,7 +13,7 @@ import {
     KeyboardAvoidingView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { app } from "../../firebaseConfig";
+import { app } from "../../../firebaseConfig";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 import { Formik } from "formik";
@@ -133,7 +133,7 @@ export default function AddPostScreen() {
                                         />
                                     ) : (
                                         <Image
-                                            source={require("./../../assets/images/placeholder.jpg")}
+                                            source={require("./../../../assets/images/placeholder.jpg")}
                                             style={{
                                                 width: "50%",
                                                 height: 200,
