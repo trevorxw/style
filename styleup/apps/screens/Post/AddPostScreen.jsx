@@ -87,6 +87,8 @@ export default function AddPostScreen() {
                         userName: "",
                         userImage: "",
                         createdAt: Date.now(),
+                        likes:"0",
+                        shares: "0",
                     }}
                     onSubmit={(values) => onSubmitMethod(values)}
                 >

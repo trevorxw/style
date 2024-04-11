@@ -4,9 +4,11 @@ import {
     Image,
     ActivityIndicator,
     Dimensions,
+    TouchableOpacity,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import React from "react";
+import { Feather } from "@expo/vector-icons";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -20,16 +22,25 @@ export default function Discover({ latestCards }) {
     }
 
     return (
-        <View style={styles.outerContainer}>
+        <View style={styles.swiperContainer}>
             <Swiper
                 cards={latestCards}
                 renderCard={(card) => {
                     return (
                         <View style={styles.card}>
-                            <Image
+                            <View style={styles.buttons}>
+                                <TouchableOpacity>
+                                    <Feather
+                                        name="heart"
+                                        size={28}
+                                        color="white"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            {/* <Image
                                 source={{ uri: card.image }}
                                 style={styles.image}
-                            />
+                            /> */}
                         </View>
                     );
                 }}
@@ -50,19 +61,26 @@ export default function Discover({ latestCards }) {
 }
 
 const styles = StyleSheet.create({
-    outerContainer: {
+    swiperContainer: {
         flex: 1,
     },
     card: {
         flex: 1,
         width: screenWidth,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
     },
     image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
+        width: "100%",
+        height: "100%",
+        resizeMode: "cover",
+    },
+    buttons: {
+        position: "absolute",
+        zIndex: 1,
+        right: 20,
+        borderWidth: 2,
+        borderColor: "red",
+        justifyContent: "right",
     },
 });
-
