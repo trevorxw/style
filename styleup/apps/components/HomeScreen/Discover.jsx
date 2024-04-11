@@ -34,7 +34,7 @@ export default function Discover({ latestCards }) {
                             <View style={styles.buttonsContainer}>
                                 <TouchableOpacity>
                                     <Image
-                                        source={{ uri: card.userId.imageUrl }}
+                                        source={{ uri: card.userImage }}
                                         style={styles.profileImage}
                                     />
                                 </TouchableOpacity>
