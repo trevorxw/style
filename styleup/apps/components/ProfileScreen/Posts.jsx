@@ -81,19 +81,19 @@ export default function Posts() {
 const styles = StyleSheet.create({
     gridView: {
         flex: 1,
+
     },
     itemContainer: {
         flex: 1,
-        width: screenWidth/3,
-        height: 150,
         justifyContent: "flex-end",
         borderRadius: 5,
-        borderBlockColor: "#FFFFF",
+        width: screenWidth/3,
+        height: 150,
     },
     image: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
+        width: "100%",
+        height: "100%",
+        resizeMode: "cover",
     },
     activityIndicator: {
         position: "absolute",
