@@ -5,7 +5,6 @@ import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 
 export default function Like({ card }) {
-    console.log(card);
     const db = getFirestore(app);
     // Assuming card.id is the document ID. Adjust according to your data structure.
     const likesRef = doc(db, "UserPost", card.id);
@@ -17,20 +16,21 @@ export default function Like({ card }) {
         await updateDoc(likesRef, {
             likes: increment(1),
         });
-        // Consider calling changeColor() here after successfully updating to ensure state consistency
-        changeColor();
     };
-
-    // Function to handle press action
-    const changeColor = () => {
-        setIsLiked(!isLiked); // Toggle the liked state
+    const decrementLike = async () => {
+        await updateDoc(likesRef, {
+            likes: increment(-1),
+        });
     };
 
     return (
         <View>
             <TouchableOpacity
                 onPress={() => {
-                    incrementLike(); // Correctly call the functions when pressed
+                    {
+                        isLiked ? decrementLike() : incrementLike();
+                        setIsLiked(!isLiked);
+                    } // Correctly call the functions when pressed
                 }}
                 style={styles.buttons}
             >
@@ -40,7 +40,6 @@ export default function Like({ card }) {
                     color={isLiked ? "red" : "white"}
                 />
             </TouchableOpacity>
-            {/* Assuming card.likes is a number. Adjust if it's stored differently. */}
             <Text style={styles.buttonText}>{card.likes}</Text>
         </View>
     );
