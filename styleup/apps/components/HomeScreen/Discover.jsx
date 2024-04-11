@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import React, { useState } from "react";
-import { Feather, FontAwesome5 } from "@expo/vector-icons";
+import Like from "./Like";
+import Share from "./Share";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -38,22 +39,8 @@ export default function Discover({ latestCards }) {
                                         style={styles.profileImage}
                                     />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttons}>
-                                    <Feather
-                                        name="heart"
-                                        size={35}
-                                        color="white"
-                                    />
-                                </TouchableOpacity>
-                                <Text style={styles.buttonText}>{card.likes}0</Text>
-                                <TouchableOpacity style={styles.buttons}>
-                                    <FontAwesome5
-                                        name="share"
-                                        size={35}
-                                        color="white"
-                                    />
-                                </TouchableOpacity>
-                                <Text style={styles.buttonText}>{card.shares}0</Text>
+                                <Like card={card}/>
+                                <Share card={card}/>
                             </View>
                             <Image
                                 source={{ uri: card.image }}
