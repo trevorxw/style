@@ -1,10 +1,12 @@
 {
   "expo": {
     "name": "styleup",
-    "slug": "styleup",
+    "slug": "style",
+    "scheme": "style",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "owner": "trevorsx",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
