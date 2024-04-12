@@ -38,7 +38,7 @@ export default function TabNavigation() {
                     accessibilityLabel: "Home Tab",
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Explore"
                 component={ExploreScreen}
                 options={{
@@ -48,7 +48,7 @@ export default function TabNavigation() {
                     ),
                     accessibilityLabel: "Explore Tab",
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="AddPost"
                 component={PostScreenStackNav}
@@ -60,7 +60,7 @@ export default function TabNavigation() {
                     accessibilityLabel: "Add Post Tab",
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="News"
                 component={Posts}
                 options={{
@@ -70,7 +70,7 @@ export default function TabNavigation() {
                     ),
                     accessibilityLabel: "News Tab",
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="Profile"
                 component={ProfileScreenStackNav}
