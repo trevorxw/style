@@ -16,12 +16,8 @@ export default function HomeScreen() {
 
     const getCards = async () => {
         try {
-            console.log("Fetching Cards");
-            const querySnapshot = await getDocs(collection(db, "UserPost"));
-            const fetchedCards = querySnapshot.docs.map(doc => ({
-                id: doc.id, // Include the document ID
-                ...doc.data() // Spread the rest of the document data
-            }));
+            const response = await fetch('http://192.168.1.41:5000/cards');
+            const fetchedCards = await response.json();
             setCards(fetchedCards);
         } catch (error) {
             console.error("Error fetching cards:", error);

@@ -1,7 +1,9 @@
-firebase-adminsdk.json
+style-d2141-firebase-adminsdk-7j1ar-e2ee195ff6.json
 
 # Ignore node_modules directory
 node_modules/
 
 # Ignore all .env files
 *.env
+
+clerksecretkey.json
