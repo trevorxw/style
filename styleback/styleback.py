@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 import os
 import firebase_admin
@@ -13,7 +13,7 @@ load_dotenv()  # This loads the environment variables from .env.
 app = Flask(__name__)
 CORS(app)
 
-clerk_api_key = os.getenv('CLERK_API_KEY')
+clerk_api_key = os.getenv('CLERK_SECRET_KEY')
 
 def token_required(f):
     @wraps(f)
@@ -42,23 +42,39 @@ def get_cards():
         return jsonify({"error": str(e)}), 500
     
 # Function to get user from Clerk
+@app.route('/user/<user_id>', methods=['GET'])
 def get_clerk_user(user_id):
     headers = {'Authorization': f'Bearer {clerk_api_key}'}
-    clerk_endpoint = f'https://api.clerk.com/style/users/{user_id}'
+    clerk_endpoint = f'https://api.clerk.com/v1/users/{user_id}'
     response = requests.get(clerk_endpoint, headers=headers)
+    
+    # Check for a successful response
     if response.status_code == 200:
         return response.json()
-    return None
+    # Check for a not found response
+    elif response.status_code == 404:
+        abort(404, description="User not found")
+    else:
+        # For other HTTP errors, return a generic error message
+        # Log the error for debugging purposes
+        print(f"Failed to fetch user: {response.status_code}, {response.text}")
+        abort(response.status_code, description="Failed to fetch user profile from Clerk")
+
     
-@app.route('/profile/<user_id>', methods=['GET'])
-def get_user(user_id):
-    # Query Clerk for user.
-    user = get_clerk_user(user_id)
-    # Construct response
-    response = {
-        'user': user
-    }
-    return jsonify(response), 200
+
+# def get_user_image(user_id):
+#     # Query Clerk for user.
+#     user = get_clerk_user(user_id)
+    
+#     if not user:
+#         # Abort and send a 404 Not Found if user data could not be retrieved
+#         abort(404, description="User not found or failed to fetch user data.")
+        
+#     # Construct response
+#     response = {
+#         'user': user.image_url
+#     }
+#     return jsonify(response), 200
 
 cred = credentials.Certificate("style-d2141-firebase-adminsdk-7j1ar-e2ee195ff6.json")
 firebase_admin.initialize_app(cred)
