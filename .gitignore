@@ -1,0 +1,52 @@
+style-d2141-firebase-adminsdk-7j1ar-e2ee195ff6.json
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore all .env files
+*.env
+
+clerksecretkey.json
+
+#python caching
+*.pyc
+*.py
+__pycache__
+styleback/__pycache__/styleback.cpython-312.pyc
+styleback/.venv/*
+
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+
+# Native
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
