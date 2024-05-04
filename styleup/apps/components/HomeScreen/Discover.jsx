@@ -20,8 +20,32 @@ export default function Discover({ latestCards }) {
 
     if (!latestCards || latestCards.length === 0) {
         return (
-            <View style={styles.outerContainer}>
-                <ActivityIndicator color="#ffff" size="large" />
+            <View style={styles.swiperContainer}>
+                <Swiper
+                    cards={['Loading', 'Loading', 'Loading', 'Loading']}
+                    renderCard={(card) => {
+                        return (
+                            <View style={styles.card}>
+                                {/* <Image
+                                    source={ require("../../../assets/images/placeholder.jpg") }
+                                    style={styles.placeholderimage}
+                                /> */}
+                                <ActivityIndicator size="large" color="#0000ff" />
+                            </View>
+                        );
+                    }}
+                    onSwiped={(cardIndex) => console.log(cardIndex)}
+                    onSwipedAll={() => console.log("onSwipedAll")}
+                    cardIndex={0}
+                    backgroundColor={"#808080"}
+                    stackSize={3}
+                    stackScale={0}
+                    stackSeparation={0}
+                    verticalSwipe={false}
+                    outputRotationRange={["0deg", "0deg", "0deg"]}
+                    cardVerticalMargin={0}
+                    cardHorizontalMargin={0}
+                />
             </View>
         );
     }
@@ -34,9 +58,9 @@ export default function Discover({ latestCards }) {
                     return (
                         <View style={styles.card}>
                             <View style={styles.buttonsContainer}>
-                                <ProfilePicture card={card}/>
-                                <Like card={card}/>
-                                <Share card={card}/>
+                                <ProfilePicture card={card} />
+                                <Like card={card} />
+                                <Share card={card} />
                             </View>
                             <Image
                                 source={{ uri: card.image }}
@@ -76,6 +100,11 @@ const styles = StyleSheet.create({
         height: "100%",
         resizeMode: "cover",
     },
+    placeholderimage: {
+        width: "80%",
+        height: "80%",
+        resizeMode: "cover",
+    },
     buttonsContainer: {
         position: "absolute",
         zIndex: 10,
@@ -100,6 +129,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         alignSelf: "center",
         color: "white",
-        fontWeight: 'bold',
+        fontWeight: "bold",
     },
 });

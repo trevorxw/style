@@ -8,7 +8,6 @@ export default function HomeScreen() {
     const db = getFirestore(app);
 
     const [cards, setCards] = useState([]);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         getCards();
@@ -21,18 +20,8 @@ export default function HomeScreen() {
             setCards(fetchedCards);
         } catch (error) {
             console.error("Error fetching cards:", error);
-        } finally {
-            setLoading(false);
         }
     };
-
-    if (loading) {
-        return (
-            <View style={styles.container}>
-                <ActivityIndicator color="#fff" />
-            </View>
-        );
-    }
 
     return (
         <View style={styles.container}>
