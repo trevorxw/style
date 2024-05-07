@@ -31,15 +31,32 @@ def token_required(f):
         return f(current_user, *args, **kwargs)
     return decorated_function
 
-@app.route('/cards', methods=['GET'])
-def get_cards():
-    print("cards requested")
+# Retrieve next num_cards for user_id
+@app.route('/cards/<user_id>/<num_cards>', methods=['GET'])
+def get_cards(user_id, num_cards):
+    print(num_cards, " cards requested for user: ", user_id)
     try:
         query_snapshot = db.collection('UserPost').stream()
         cards = [{'id': doc.id, **doc.to_dict()} for doc in query_snapshot]
         return jsonify(cards), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+# Add new user
+@app.route('/new_user/<user_id>', methods=['PUT'])
+def new_user(user_id):
+    # Create a dictionary with post_ids initialized
+    user_data = {'post_id_{}'.format(i): None for i in range(1, 11)}
+    
+    # Add user_id to the dictionary
+    user_data['user_id'] = user_id
+
+    # Add the new user data to Firestore
+    db.collection('users').document(user_id).set(user_data)
+
+    # Return success message
+    return jsonify({"success": True, "message": "User created successfully"}), 200
+        
     
 # Function to get user from Clerk
 @app.route('/user/<user_id>', methods=['GET'])
