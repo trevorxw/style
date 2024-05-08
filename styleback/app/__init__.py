@@ -15,6 +15,11 @@ def create_app():
     firebase_admin.initialize_app(cred)
 
     from .api.views import api_blueprint
+    from .api.posts import posts_blueprint
+    from .api.interactions import interactions_blueprint
+    
     app.register_blueprint(api_blueprint)
+    app.register_blueprint(posts_blueprint)
+    app.register_blueprint(interactions_blueprint)
 
     return app
