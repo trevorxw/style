@@ -7,7 +7,7 @@ import TabNavigation from './apps/navigations/TabNavigation';
 
 export default function App() {
   return (
-    <ClerkProvider publishableKey='pk_test_bGlnaHQtZWFnbGUtNTguY2xlcmsuYWNjb3VudHMuZGV2JA'>
+    <ClerkProvider publishableKey='pk_test_bGlnaHQtZWFnbGUtNTguY2xlcmsuYWNjb3VudHMuZGV2JA=='>
       <View className="flex-1 bg-white">
         <StatusBar style="auto" />
         <SignedIn> 
