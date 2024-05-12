@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_item, save_user_interaction
+from app.services.firebase import save_user_interaction
 from app.services.auth import token_required
 
 api_blueprint = Blueprint('api', __name__)

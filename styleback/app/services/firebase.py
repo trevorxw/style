@@ -1,7 +1,8 @@
-from firebase_admin import firestore
+from firebase_admin import firestore, storage
 from flask import jsonify
 
 db = firestore.client()
+bucket = storage.bucket("postImages")
 
 def get_post(post_id):
     """
@@ -32,20 +33,17 @@ def get_all_posts():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-def get_item(item_id):
-    """
-    Retrieves a clothing item document from Firestore based on the item_id.
-    Returns the document as a dictionary if found, otherwise returns None.
-    """
-    try:
-        doc_ref = db.collection('items').document(item_id)
-        doc = doc_ref.get()
-        if doc.exists:
-            return doc.to_dict()
-        else:
-            return None
-    except Exception as e:
-        raise Exception(f"Failed to retrieve item: {str(e)}")
+def upload_file_to_storage(file_path, filename):
+    blob = bucket.blob(filename)
+    blob.upload_from_filename(file_path)
+    return blob.public_url  # Assuming you have set public access on the files
+
+def add_tags_to_firestore(filename, tags):
+    doc_ref = db.collection('posts').document(filename)
+    doc_ref.set({
+        'filename': filename,
+        'tags': tags,
+    })
 
 def save_user_interaction(data):
     """
