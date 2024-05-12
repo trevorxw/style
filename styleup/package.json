@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@clerk/clerk-expo": "^0.20.16",
+    "@clerk/clerk-expo": "^1.0.8-snapshot.v7e206ff",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.1.17",
@@ -19,17 +19,18 @@
     "expo": "^51.0.0",
     "expo-application": "~5.9.1",
     "expo-auth-session": "~5.5.2",
-    "expo-camera": "~15.0.5",
+    "expo-camera": "~15.0.6",
     "expo-constants": "~16.0.1",
     "expo-image-picker": "~15.0.4",
     "expo-status-bar": "~1.12.1",
+    "expo-updates": "~0.25.11",
     "expo-web-browser": "~13.0.3",
     "firebase": "^10.9.0",
     "formik": "^2.4.5",
     "moment": "^2.30.1",
     "nativewind": "^2.0.11",
     "react": "18.2.0",
-    "react-dom": "^18.2.0",
+    "react-dom": "18.2.0",
     "react-native": "0.74.1",
     "react-native-deck-swiper": "^2.0.17",
     "react-native-gesture-handler": "~2.16.1",
@@ -38,8 +39,7 @@
     "react-native-screens": "3.31.1",
     "react-native-super-grid": "^5.1.0",
     "react-native-tab-view": "^3.5.2",
-    "typescript": "~5.3.3",
-    "expo-updates": "~0.25.11"
+    "typescript": "~5.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
