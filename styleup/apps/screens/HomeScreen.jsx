@@ -15,7 +15,7 @@ export default function HomeScreen() {
 
     const getCards = async () => {
         try {
-            const response = await fetch('http://192.168.1.41:5000/cards');
+            const response = await fetch('https://cea6-2600-1700-3680-2110-812f-2160-1863-160e.ngrok-free.app/cards/');
             const fetchedCards = await response.json();
             setCards(fetchedCards);
         } catch (error) {
