@@ -20,6 +20,17 @@ def get_post(post_id):
     except Exception as e:
         # Return a JSON response indicating failure with the exception message
         return jsonify({"failed to retrieve post": str(e)}), 500
+    
+def get_all_posts():
+    """
+    Retrieves all posts from Firestore based on the post_id.
+    """
+    try:
+        query_snapshot = db.collection('UserPost').stream()
+        cards = [{'id': doc.id, **doc.to_dict()} for doc in query_snapshot]
+        return jsonify(cards), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 def get_item(item_id):
     """
