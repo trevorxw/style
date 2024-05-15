@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     useWindowDimensions,
+    ActivityIndicator,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import Followers from "../components/ProfileScreen/Followers";
@@ -13,78 +14,76 @@ import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
 import { TabView, TabBar } from "react-native-tab-view";
 import { useNavigation } from "@react-navigation/native";
-import axios from 'axios';
+import axios from "axios";
 import { useRoute } from "@react-navigation/native";
-import { CLERK_SECRET_KEY } from '@env';
 
 export default function OtherProfileScreen() {
     const layout = useWindowDimensions();
     const route = useRoute();
-    const user = route.params?.user; // Safely access the user object
-    console.log({CLERK_SECRET_KEY})
+    const userId = route.params?.user;
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
 
     useEffect(() => {
         const fetchUser = async () => {
+            if (!userId) {
+                setError("No User ID provided");
+                return;
+            }
             try {
-                const response = await axios.get(`https://46b3-2600-1700-3680-2110-4943-4220-72a0-761.ngrok-free.app/user/${user}`);
-                setUser(response.data);
-                setLoading(false);
+                const response = await axios.get(`https://46b3-2600-1700-3680-2110-4943-4220-72a0-761.ngrok-free.app/user/${userId}`);
+                if (response.data && typeof response.data === "object") {
+                    setUser(response.data);
+                } else {
+                    throw new Error("Received null or invalid user data");
+                }
             } catch (error) {
-                console.error("Failed to fetch user", error);
+                console.error("Failed to fetch user or process response", error);
+            } finally {
                 setLoading(false);
             }
         };
 
         fetchUser();
-    }, [user]);
+    }, [userId]);
 
-    const [index, setIndex] = useState(0);
-    const [routes] = useState([
-        { key: "posts", title: "Posts" },
-        { key: "followers", title: "Followers" },
-        { key: "following", title: "Following" },
-    ]);
-
-    const renderScene = ({ route }) => {
-        switch (route.key) {
-            case "posts":
-                return <Posts user={user} />;
-            case "followers":
-                return <Followers user={user} />;
-            case "following":
-                return <Following user={user} />;
-            default:
-                return null;
-        }
-    };
-
+    if (loading) {
+        return (
+            <View style={styles.center}>
+                <ActivityIndicator size="large" color="#00ffff" />
+            </View>
+        );
+    }
+    if (!user) {
+        return (
+            <View style={styles.center}>
+                <Text>No user data available.</Text>
+            </View>
+        );
+    }
+    console.log(user);
     return (
         <View style={styles.container}>
             <View style={styles.profileSection}>
-                <Image source={{ uri: user.imageUrl }} style={styles.profileImage} />
+                <Image
+                    source={{ uri: user.image_url }}
+                    style={styles.profileImage}
+                />
                 <View style={styles.profileInfo}>
                     <View style={styles.profileText}>
-                        <Text style={styles.userName}>@{user.fullName}</Text>
-                        <Text style={styles.userBio}>{user.bio || "No bio available"}</Text>
+                        <Text style={styles.userName}>@{user.username || user.first_name + " " + user.last_name}</Text>
+                        <Text style={styles.userBio}>
+                            {user.bio || "No bio available"}
+                        </Text>
+                        <View style={styles.followSection}>
+                            <Followers/>
+                            <Following/>
+                        </View>
+                        <Posts user={user}/>
                     </View>
                 </View>
             </View>
-            <TabView
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                renderTabBar={(props) => (
-                    <TabBar
-                        {...props}
-                        indicatorStyle={{ backgroundColor: "white" }}
-                        style={{ backgroundColor: "pink" }}
-                        renderLabel={({ route, focused, color }) => (
-                            <Text style={{ color, margin: 8 }}>{route.title}</Text>
-                        )}
-                    />
-                )}
-                onIndexChange={setIndex}
-                initialLayout={{ width: layout.width }}
-            />
         </View>
     );
 }
@@ -122,5 +121,10 @@ const styles = StyleSheet.create({
     userBio: {
         marginTop: 4,
         fontSize: 20,
+    },
+    followSection: {
+        flex: 4 / 5,
+        flexDirection: "row",
+        justifyContent: "center",
     },
 });
