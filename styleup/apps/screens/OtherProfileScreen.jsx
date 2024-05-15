@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -13,11 +13,30 @@ import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
 import { TabView, TabBar } from "react-native-tab-view";
 import { useNavigation } from "@react-navigation/native";
+import axios from 'axios';
+import { useRoute } from "@react-navigation/native";
+import { CLERK_SECRET_KEY } from '@env';
 
-export default function OtherProfileScreen({ route }) {
-    const { user } = route.params; // Assuming user data is passed as navigation parameter
+export default function OtherProfileScreen() {
     const layout = useWindowDimensions();
-    const navigation = useNavigation();
+    const route = useRoute();
+    const user = route.params?.user; // Safely access the user object
+    console.log({CLERK_SECRET_KEY})
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await axios.get(`https://46b3-2600-1700-3680-2110-4943-4220-72a0-761.ngrok-free.app/user/${user}`);
+                setUser(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error("Failed to fetch user", error);
+                setLoading(false);
+            }
+        };
+
+        fetchUser();
+    }, [user]);
 
     const [index, setIndex] = useState(0);
     const [routes] = useState([
