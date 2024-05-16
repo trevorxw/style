@@ -9,7 +9,7 @@ import {
     ActivityIndicator,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import useFetchUser from '../../hooks/useFetchUser';
+import useFetchUser from "../../hooks/useFetchUser";
 import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
@@ -49,14 +49,14 @@ export default function OtherProfileScreen() {
                         <Text style={styles.userBio}>
                             {user.bio || "No bio available"}
                         </Text>
-                        <View style={styles.followSection}>
-                            <Followers user={user}/>
-                            <Following user={user}/>
-                        </View>
-                        <Posts user={user}/>
                     </View>
                 </View>
             </View>
+            <View style={styles.followSection}>
+                <Followers user={user} />
+                <Following user={user} />
+            </View>
+            <Posts user={user} />
         </View>
     );
 }
@@ -96,10 +96,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     followSection: {
-        flex: 4 / 5,
         flexDirection: "row",
-        justifyContent: "center",
+        justifyContent: 'flex-end',
+        alignItems: "center",
         borderWidth: 2,
-        borderColor: 'black',
+        borderColor: "black",
+        marginTop: 20,
+        marginBottom: 20,
+        marginRight: 20,
+        padding: 1,
     },
 });
