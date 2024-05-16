@@ -3,7 +3,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, storage
 
 def create_app():
     load_dotenv()  # Load environment variables
@@ -12,7 +12,9 @@ def create_app():
 
     # Initialize Firebase
     cred = credentials.Certificate("style-d2141-firebase-adminsdk-7j1ar-e2ee195ff6.json")
-    firebase_admin.initialize_app(cred)
+    firebase_admin.initialize_app(cred, {
+        'storageBucket': 'style-d2141.appspot.com'
+    })
 
     from .api.views import api_blueprint
     from .api.posts import posts_blueprint

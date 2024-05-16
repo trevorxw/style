@@ -2,7 +2,7 @@ from firebase_admin import firestore, storage
 from flask import jsonify
 
 db = firestore.client()
-bucket = storage.bucket("postImages")
+bucket = storage.bucket()
 
 
 #Post
@@ -37,17 +37,20 @@ def get_all_posts():
         return jsonify({"error": str(e)}), 500
 
 def upload_file_to_storage(file_path, filename):
-    blob = bucket.blob(filename)
+    # Specify the path within the bucket
+    blob = bucket.blob(f'postImages/{filename}')
+    print(f"Uploading to: {blob.path}")  # Check the path
     blob.upload_from_filename(file_path)
-    return blob.public_url  # Assuming you have set public access on the files
+    blob.make_public()
+    print(f"File URL: {blob.public_url}")  # Verify the URL
+    return blob.public_url  # Ensure the file is publicly accessible
 
-def add_tags_to_firestore(filename, tags):
-    doc_ref = db.collection('posts').document(filename)
+def add_tags_to_firestore(filename, userId, tags):
+    doc_ref = db.collection('posts').document(userId).collection('userPosts').document(filename)
     doc_ref.set({
-        'filename': filename,
         'tags': tags,
     })
-
+    
 #User
 def get_user_posts(user_id):
     """

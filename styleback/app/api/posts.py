@@ -38,8 +38,8 @@ def get_posts():
     except Exception as e:
         return jsonify({"Could not retrieve post": str(e)}), 500
     
-@posts_blueprint.route('/upload', methods=['POST'])
-def upload_file():
+@posts_blueprint.route('/upload/<user_id>', methods=['POST'])
+def upload_file(user_id):
     if 'file' not in request.files:
         return jsonify(error="No file part"), 400
     file = request.files['file']
@@ -57,8 +57,8 @@ def upload_file():
             tags = tag_image(filepath)
             
             # Upload file to Firebase Storage and add tags to Firestore
-            # file_url = upload_file_to_storage(filepath, filename)
-            # add_tags_to_firestore(filename, tags)
+            file_url = upload_file_to_storage(filepath, filename)
+            add_tags_to_firestore(filename, user_id, tags)
             
             # Clean up the temporary directory
             os.remove(filepath)
@@ -68,7 +68,7 @@ def upload_file():
                 'message': "File and tags uploaded successfully",
                 'filename': filename,
                 'tags': tags,
-                # 'url': file_url
+                'url': file_url
             })
         except Exception as e:
             # Attempt to clean up even if there is an error
