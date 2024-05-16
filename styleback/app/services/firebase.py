@@ -27,7 +27,7 @@ def get_post(post_id):
     
 def get_all_posts():
     """
-    Retrieves all posts from Firestore based on the post_id.
+    Retrieves all posts from Firestore.
     """
     try:
         query_snapshot = db.collection('UserPost').stream()
@@ -35,6 +35,17 @@ def get_all_posts():
         return jsonify(cards), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+def get_posts_by_user(user_id):
+    """
+    Retrieves all posts from user_id.
+    """
+    try:
+        query_snapshot = db.collection('posts').document(user_id).collection('userPosts').stream()
+        cards = [{'id': doc.id, **doc.to_dict()} for doc in query_snapshot]
+        return jsonify(cards), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500    
 
 def upload_file_to_storage(file_path, filename):
     # Specify the path within the bucket
