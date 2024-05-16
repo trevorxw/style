@@ -2,11 +2,12 @@ from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
 import app
-from app.services.firebase import get_post, get_all_posts, save_user_interaction, upload_file_to_storage, add_tags_to_firestore
+from app.services.firebase import get_post, get_all_posts, save_user_interaction, upload_file_to_storage, add_data_to_firestore
 from app.services.auth import token_required
 from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
 import tempfile
+import datetime
 
 posts_blueprint = Blueprint('posts', __name__)
 
@@ -53,23 +54,36 @@ def upload_file(user_id):
         file.save(filepath)
         
         try:
+            # Additional data
+            description = request.form.get('description', '')
+            category = request.form.get('category', '')
+            shop_url = request.form.get('shop_url', '')
+
             # Tag the image
             tags = tag_image(filepath)
             
             # Upload file to Firebase Storage and add tags to Firestore
             file_url = upload_file_to_storage(filepath, filename)
-            add_tags_to_firestore(filename, user_id, tags)
+
+            # Add file metadata and tags to Firestore
+            file_metadata = {
+                'user_id': user_id,
+                'created_at': datetime.datetime.now(),
+                'url': file_url,
+                'shop_url': shop_url,
+                'description': description,
+                'category': category,
+                'likes': 0,
+                'shares': 0,
+                'tags': tags,
+            }
+            add_data_to_firestore(filename, user_id, file_metadata)
             
             # Clean up the temporary directory
             os.remove(filepath)
             os.rmdir(temp_dir)
             
-            return jsonify({
-                'message': "File and tags uploaded successfully",
-                'filename': filename,
-                'tags': tags,
-                'url': file_url
-            })
+            return jsonify(file_metadata), 200
         except Exception as e:
             # Attempt to clean up even if there is an error
             os.remove(filepath)

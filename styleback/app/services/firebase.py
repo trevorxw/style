@@ -45,12 +45,10 @@ def upload_file_to_storage(file_path, filename):
     print(f"File URL: {blob.public_url}")  # Verify the URL
     return blob.public_url  # Ensure the file is publicly accessible
 
-def add_tags_to_firestore(filename, userId, tags):
+def add_data_to_firestore(filename, userId, file_metadata):
     doc_ref = db.collection('posts').document(userId).collection('userPosts').document(filename)
-    doc_ref.set({
-        'tags': tags,
-    })
-    
+    doc_ref.set(file_metadata)
+
 #User
 def get_user_posts(user_id):
     """
