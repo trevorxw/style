@@ -7,7 +7,7 @@ from app.services.auth import token_required
 from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
 import tempfile
-import datetime
+from datetime import datetime
 
 posts_blueprint = Blueprint('posts', __name__)
 
@@ -75,12 +75,13 @@ def upload_file(user_id):
             tags = tag_image(filepath)
             
             # Upload file to Firebase Storage and add tags to Firestore
-            file_url = upload_file_to_storage(filepath, filename)
+            unique_filename = f"{user_id}{datetime.now().strftime('%Y%m%d%H%M%S')}.jpg"
+            file_url = upload_file_to_storage(filepath, unique_filename)
 
             # Add file metadata and tags to Firestore
             file_metadata = {
                 'user_id': user_id,
-                'created_at': datetime.datetime.now(),
+                'created_at': datetime.now(),
                 'url': file_url,
                 'shop_url': shop_url,
                 'description': description,
@@ -89,7 +90,7 @@ def upload_file(user_id):
                 'shares': 0,
                 'tags': tags,
             }
-            add_data_to_firestore(filename, user_id, file_metadata)
+            add_data_to_firestore(unique_filename, user_id, file_metadata)
             
             # Clean up the temporary directory
             os.remove(filepath)
