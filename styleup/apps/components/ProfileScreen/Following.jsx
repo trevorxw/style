@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function Following() {
+export default function Following({user}) {
     return (
         <View style={styles.container}>
             <TouchableOpacity>
-                <Text style={styles.number}>20</Text>
+                <Text style={styles.number}>{user.following.length}</Text>
                 <Text style={styles.text}>Following</Text>
             </TouchableOpacity>
         </View>

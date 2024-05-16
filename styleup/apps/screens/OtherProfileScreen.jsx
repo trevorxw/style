@@ -8,45 +8,18 @@ import {
     useWindowDimensions,
     ActivityIndicator,
 } from "react-native";
-import { Feather } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
+import useFetchUser from '../../hooks/useFetchUser';
 import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
-import { TabView, TabBar } from "react-native-tab-view";
-import { useNavigation } from "@react-navigation/native";
-import axios from "axios";
-import { useRoute } from "@react-navigation/native";
 
 export default function OtherProfileScreen() {
     const layout = useWindowDimensions();
     const route = useRoute();
     const userId = route.params?.user;
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            if (!userId) {
-                setError("No User ID provided");
-                return;
-            }
-            try {
-                const response = await axios.get(`https://46b3-2600-1700-3680-2110-4943-4220-72a0-761.ngrok-free.app/user/${userId}`);
-                if (response.data && typeof response.data === "object") {
-                    setUser(response.data);
-                } else {
-                    throw new Error("Received null or invalid user data");
-                }
-            } catch (error) {
-                console.error("Failed to fetch user or process response", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUser();
-    }, [userId]);
+    const { user, loading, error } = useFetchUser(userId);
 
     if (loading) {
         return (
@@ -72,13 +45,13 @@ export default function OtherProfileScreen() {
                 />
                 <View style={styles.profileInfo}>
                     <View style={styles.profileText}>
-                        <Text style={styles.userName}>@{user.username || user.first_name + " " + user.last_name}</Text>
+                        <Text style={styles.userName}>@{user.username}</Text>
                         <Text style={styles.userBio}>
                             {user.bio || "No bio available"}
                         </Text>
                         <View style={styles.followSection}>
-                            <Followers/>
-                            <Following/>
+                            <Followers user={user}/>
+                            <Following user={user}/>
                         </View>
                         <Posts user={user}/>
                     </View>
@@ -126,5 +99,7 @@ const styles = StyleSheet.create({
         flex: 4 / 5,
         flexDirection: "row",
         justifyContent: "center",
+        borderWidth: 2,
+        borderColor: 'black',
     },
 });

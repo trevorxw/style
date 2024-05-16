@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     View,
     Text,
@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     useWindowDimensions,
+    ActivityIndicator
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
@@ -14,6 +15,7 @@ import Following from "../components/ProfileScreen/Following";
 import { TabView, TabBar } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
 import { useNavigation } from "@react-navigation/native";
+import useFetchUser from '../../hooks/useFetchUser';
 
 const renderScene = ({ route }) => {
     switch (route.key) {
@@ -33,7 +35,8 @@ const renderScene = ({ route }) => {
 export default function ProfileScreen() {
     const layout = useWindowDimensions();
     const navigation = useNavigation();
-    const { user } = useUser();
+    const { isLoading, isSignedIn, user: userClerk } = useUser();
+    const { user, loading, error } = useFetchUser(userClerk.id);
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -43,11 +46,26 @@ export default function ProfileScreen() {
         { key: "wardrobe", title: "Wardrobe" },
     ]);
 
+    if (loading) {
+        return (
+            <View style={styles.center}>
+                <ActivityIndicator size="large" color="#00ffff" />
+            </View>
+        );
+    }
+    if (!user) {
+        return (
+            <View style={styles.center}>
+                <Text>No user data available.</Text>
+            </View>
+        );
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.profileSection}>
                 <Image
-                    source={{ uri: user.imageUrl }}
+                    source={{ uri: user.image_url }}
                     style={styles.profileImage}
                 />
                 <View style={styles.profileInfo}>
@@ -58,7 +76,7 @@ export default function ProfileScreen() {
                         <Feather name="settings" size={24} color="black" />
                     </TouchableOpacity>
                     <View style={styles.profileText}>
-                        <Text style={styles.userName}>@{user.fullName}</Text>
+                        <Text style={styles.userName}>@{user.username}</Text>
                         <Text style={styles.userBio}>trevor | 😃😃😃😃</Text>
                         <View style={styles.insContainer}>
                             <Text style={styles.insTitle}>INS:</Text>
@@ -79,8 +97,8 @@ export default function ProfileScreen() {
                     </Text>
                 </TouchableOpacity>
                 <View style={styles.followSection}>
-                    <Followers />
-                    <Following />
+                    <Followers user={user}/>
+                    <Following user={user}/>
                 </View>
             </View>
             <TabView
