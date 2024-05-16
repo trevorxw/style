@@ -4,6 +4,9 @@ from flask import jsonify
 db = firestore.client()
 bucket = storage.bucket("postImages")
 
+
+#Post
+
 def get_post(post_id):
     """
     Retrieves a post from Firestore based on the post_id.
@@ -44,6 +47,53 @@ def add_tags_to_firestore(filename, tags):
         'filename': filename,
         'tags': tags,
     })
+
+#User
+def get_user_posts(user_id):
+    """
+    Retrieves all post IDs from Firestore based on the user_id.
+    """
+    try:
+        # Ensure to reference the posts subcollection for the specific user
+        posts_ref = db.collection('posts').document(user_id).collection('posts')
+        posts = posts_ref.stream()
+        
+        # Create a list of post IDs from the posts subcollection
+        post_ids = [{'post_id': post.id} for post in posts]
+        return post_ids
+    except Exception as e:
+        return {"error": str(e)}
+
+def get_user_details(user_id):
+    """
+    Retrieves all user data from Firestore based on the user_id.
+    """
+    try:
+        # Fetch the user document to get bio
+        user_doc = db.collection('users').document(user_id).get()
+        if not user_doc.exists:
+            return jsonify({"error": "User not found"}), 404
+
+        user_data = user_doc.to_dict()
+        bio = user_data.get('bio', 'No bio available')
+
+        # Fetch following
+        following_refs = db.collection('users').document(user_id).collection('userFollowing').stream()
+        following = [doc.id for doc in following_refs]  # Assumes you store user IDs or use document IDs as user IDs
+
+        # Fetch followers
+        followers_refs = db.collection('users').document(user_id).collection('userFollows').stream()
+        followers = [doc.id for doc in followers_refs]  # Similarly, assumes user IDs are document IDs
+
+        # Compile and return all data
+        return {
+            "bio": bio,
+            "following": following,
+            "followers": followers
+        }
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 def save_user_interaction(data):
     """
