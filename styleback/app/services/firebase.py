@@ -12,7 +12,7 @@ def get_post(post_id):
     """
     try:
         # Directly reference the document with the provided post_id
-        doc_ref = db.collection('UserPost').document(post_id)
+        doc_ref = db.collection('all_posts').document(post_id)
         doc = doc_ref.get()
         if doc.exists:
             # Convert the document to dictionary format and return it as JSON
