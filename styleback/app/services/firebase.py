@@ -59,7 +59,8 @@ def upload_file_to_storage(file_path, filename):
     return blob.public_url  # Ensure the file is publicly accessible
 
 def add_data_to_firestore(filename, userId, file_metadata):
-    doc_ref = db.collection('posts').document(userId).collection('userPosts').document(filename)
+    doc_ref = db.collection('posts').document(userId).collection('userPosts').document(filename).set({})
+    doc_ref = db.collection('all_posts').document(filename)
     doc_ref.set(file_metadata)
 
 #User
