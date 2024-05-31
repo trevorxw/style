@@ -72,24 +72,7 @@ export default function OtherProfileScreen() {
                     </Text>
                 </TouchableOpacity>
             </View> */}
-            {/* <TabView
-                navigationState={{ index, routes }}
-                renderScene={renderScene}
-                renderTabBar={(props) => (
-                    <TabBar
-                        {...props}
-                        indicatorStyle={{ backgroundColor: "white" }}
-                        style={{ backgroundColor: "pink" }}
-                        renderLabel={({ route, focused, color }) => (
-                            <Text style={{ color, margin: 8 }}>
-                                {route.title}
-                            </Text>
-                        )}
-                    />
-                )}
-                onIndexChange={setIndex}
-                initialLayout={{ width: layout.width }}
-            /> */}
+            <Posts style={styles.posts} user={user} />
         </View>
     );
 }
