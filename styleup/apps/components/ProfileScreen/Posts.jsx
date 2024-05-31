@@ -20,7 +20,7 @@ import { FlatGrid } from "react-native-super-grid";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Posts({user}) {
+export default function Posts({ user }) {
     const [loading, setLoading] = useState(true);
     const [userPosts, setUserPosts] = useState([]);
 
@@ -30,16 +30,30 @@ export default function Posts({user}) {
         }
     }, [user]);
 
-    const getUserPosts = async () => {
-        try {
-            const response = await fetch(`https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/${user.id}`);
-            const fetchedCards = await response.json();
-            setUserPosts(fetchedCards);
-        } catch (error) {
-            console.error("Error fetching user posts", error);
-        }
-    };
+    console.log({user});
 
+    const getUserPosts = async () => {
+        const posts = [];
+        setLoading(true);
+
+        // Fetch details for each post using the post ID
+        for (const post of user.post_ids) {
+            try {
+                console.log(post);
+                const response = await fetch(
+                    `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/${post.post_id}`
+                );
+                const postData = await response.json();
+                if (postData) {
+                    posts.push(postData);
+                }
+            } catch (error) {
+                console.error("Error fetching post data", error);
+            }
+        }
+
+        setUserPosts(posts);
+    };
 
     const onLoadEnd = () => {
         setLoading(false);
@@ -79,13 +93,12 @@ export default function Posts({user}) {
 const styles = StyleSheet.create({
     gridView: {
         flex: 1,
-
     },
     itemContainer: {
         flex: 1,
         justifyContent: "flex-end",
         borderRadius: 5,
-        width: screenWidth/3,
+        width: screenWidth / 3,
         height: 150,
     },
     image: {
