@@ -4,10 +4,18 @@ import { FontAwesome } from "@expo/vector-icons";
 import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(2) + "M";
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + "K";
+    } else {
+        return num.toString();
+    }
+}
+
 export default function Like({ card }) {
     const db = getFirestore(app);
-    
-    console.log('like:', card);
     const likesRef = doc(db, "all_posts", card.id);
 
     // State to track if the icon is liked
@@ -41,7 +49,11 @@ export default function Like({ card }) {
                     color={isLiked ? "red" : "white"}
                 />
             </TouchableOpacity>
-            <Text style={styles.buttonText}>{card.likes}</Text>
+            <Text style={styles.buttonText}>
+                {isLiked
+                    ? formatNumber(card.likes + 1)
+                    : formatNumber(card.likes)}
+            </Text>
         </View>
     );
 }
