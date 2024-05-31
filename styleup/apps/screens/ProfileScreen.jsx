@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     useWindowDimensions,
-    ActivityIndicator
+    ActivityIndicator,
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
@@ -15,22 +15,7 @@ import Following from "../components/ProfileScreen/Following";
 import { TabView, TabBar } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
 import { useNavigation } from "@react-navigation/native";
-import useFetchUser from '../../hooks/useFetchUser';
-
-const renderScene = ({ route }) => {
-    switch (route.key) {
-        case "posts":
-            return <Posts style={styles.posts}/>;
-        case "swipes":
-            return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
-        case "saved":
-            return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
-        case "wardrobe":
-            return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
-        default:
-            return null;
-    }
-};
+import useFetchUser from "../../hooks/useFetchUser";
 
 export default function ProfileScreen() {
     const layout = useWindowDimensions();
@@ -45,6 +30,21 @@ export default function ProfileScreen() {
         { key: "saved", title: "Saved" },
         { key: "wardrobe", title: "Wardrobe" },
     ]);
+
+    const renderScene = ({ route }) => {
+        switch (route.key) {
+            case "posts":
+                return <Posts style={styles.posts} user={user} />;
+            case "swipes":
+                return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            case "saved":
+                return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            case "wardrobe":
+                return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            default:
+                return null;
+        }
+    };
 
     if (loading) {
         return (
@@ -86,11 +86,10 @@ export default function ProfileScreen() {
                         </View>
                     </View>
                 </View>
-                
             </View>
             <View style={styles.followSection}>
-                    <Followers user={user}/>
-                    <Following user={user}/>
+                <Followers user={user} />
+                <Following user={user} />
             </View>
             {/* Edit Profile Section to be completed */}
             {/* <View style={styles.editProfileSection}>
@@ -127,7 +126,7 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
     settingsButton: {
-        justifyContent: 'flex-end',
+        justifyContent: "flex-end",
         zIndex: 10, // Tailwind z-1
     },
     container: {
@@ -165,7 +164,7 @@ const styles = StyleSheet.create({
     },
     followSection: {
         flexDirection: "row",
-        justifyContent: 'center',
+        justifyContent: "center",
         alignItems: "center",
         marginTop: 20,
         marginBottom: 20,
@@ -173,7 +172,7 @@ const styles = StyleSheet.create({
         padding: 2,
     },
     posts: {
-        borderColor: 'black',
+        borderColor: "black",
         borderWidth: 2,
-    }
+    },
 });

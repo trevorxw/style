@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_user_posts, get_user_details
+from app.services.firebase import get_posts_by_user, get_user_details
 from app.services.auth import token_required
 import requests
 
@@ -20,7 +20,7 @@ def get_user_profile(user_id):
     response_json = response.json()
 
     # Retrieve posts from firestore
-    user_posts = get_user_posts(user_id)
+    user_posts = get_posts_by_user(user_id)
     user_data = get_user_details(user_id)
 
     if not user_data:

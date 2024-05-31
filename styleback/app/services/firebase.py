@@ -4,7 +4,6 @@ from flask import jsonify
 db = firestore.client()
 bucket = storage.bucket()
 
-
 #Post
 
 def get_post(post_id):
@@ -38,14 +37,17 @@ def get_all_posts():
     
 def get_posts_by_user(user_id):
     """
-    Retrieves all posts from user_id.
+    Retrieves all post IDs from Firestore based on the user_id.
     """
     try:
-        query_snapshot = db.collection('posts').document(user_id).collection('userPosts').stream()
-        cards = [{'id': doc.id, **doc.to_dict()} for doc in query_snapshot]
-        return jsonify(cards), 200
+        # Ensure to reference the posts subcollection for the specific user
+        posts = db.collection('posts').document(user_id).collection('userPosts').stream()
+        
+        # Create a list of post IDs from the posts subcollection
+        post_ids = [{'post_id': post.id} for post in posts]
+        return post_ids
     except Exception as e:
-        return jsonify({"error": str(e)}), 500    
+        return {"error": str(e)}  
 
 def upload_file_to_storage(file_path, filename):
     # Specify the path within the bucket
@@ -61,20 +63,6 @@ def add_data_to_firestore(filename, userId, file_metadata):
     doc_ref.set(file_metadata)
 
 #User
-def get_user_posts(user_id):
-    """
-    Retrieves all post IDs from Firestore based on the user_id.
-    """
-    try:
-        # Ensure to reference the posts subcollection for the specific user
-        posts_ref = db.collection('posts').document(user_id).collection('posts')
-        posts = posts_ref.stream()
-        
-        # Create a list of post IDs from the posts subcollection
-        post_ids = [{'post_id': post.id} for post in posts]
-        return post_ids
-    except Exception as e:
-        return {"error": str(e)}
 
 def get_user_details(user_id):
     """

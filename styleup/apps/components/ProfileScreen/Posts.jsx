@@ -20,28 +20,26 @@ import { FlatGrid } from "react-native-super-grid";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Posts() {
-    const db = getFirestore(app);
-    const { user } = useUser();
-    const [userPosts, setUserPosts] = useState([]);
+export default function Posts({user}) {
     const [loading, setLoading] = useState(true);
+    const [userPosts, setUserPosts] = useState([]);
 
     useEffect(() => {
-        user && getUserPost();
-    }, []);
+        if (user) {
+            getUserPosts();
+        }
+    }, [user]);
 
-    // Query firebase database for UserPost data
-    const getUserPost = async () => {
-        setUserPosts([]);
-        const q = query(
-            collection(db, "UserPost"),
-            where("userId", "==", user.id)
-        );
-        const snapshot = await getDocs(q);
-        snapshot.forEach((doc) => {
-            setUserPosts((userPosts) => [...userPosts, doc.data()]);
-        });
+    const getUserPosts = async () => {
+        try {
+            const response = await fetch(`https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/${user.id}`);
+            const fetchedCards = await response.json();
+            setUserPosts(fetchedCards);
+        } catch (error) {
+            console.error("Error fetching user posts", error);
+        }
     };
+
 
     const onLoadEnd = () => {
         setLoading(false);
