@@ -46,17 +46,50 @@ export default function OtherProfileScreen() {
                 <View style={styles.profileInfo}>
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
-                        <Text style={styles.userBio}>
-                            {user.bio || "No bio available"}
-                        </Text>
+                        <Text style={styles.userBio}>trevor | 😃😃😃😃</Text>
+                        <View style={styles.insContainer}>
+                            <Text style={styles.insTitle}>INS:</Text>
+                            <Text style={styles.insDescription}>
+                                currently obsessed with...
+                            </Text>
+                        </View>
                     </View>
                 </View>
+                
             </View>
             <View style={styles.followSection}>
-                <Followers user={user} />
-                <Following user={user} />
+                    <Followers user={user}/>
+                    <Following user={user}/>
             </View>
-            <Posts user={user} />
+            {/* Edit Profile Section to be completed */}
+            {/* <View style={styles.editProfileSection}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("edit-profile")}
+                    style={styles.editProfileButton}
+                >
+                    <Text style={styles.editProfileButtonText}>
+                        edit profile
+                    </Text>
+                </TouchableOpacity>
+            </View> */}
+            {/* <TabView
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                renderTabBar={(props) => (
+                    <TabBar
+                        {...props}
+                        indicatorStyle={{ backgroundColor: "white" }}
+                        style={{ backgroundColor: "pink" }}
+                        renderLabel={({ route, focused, color }) => (
+                            <Text style={{ color, margin: 8 }}>
+                                {route.title}
+                            </Text>
+                        )}
+                    />
+                )}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }}
+            /> */}
         </View>
     );
 }
@@ -97,13 +130,11 @@ const styles = StyleSheet.create({
     },
     followSection: {
         flexDirection: "row",
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: "center",
-        borderWidth: 2,
-        borderColor: "black",
         marginTop: 20,
         marginBottom: 20,
         marginRight: 20,
-        padding: 1,
+        padding: 2,
     },
 });
