@@ -17,25 +17,8 @@ import Posts from "../components/ProfileScreen/Posts";
 export default function OtherProfileScreen() {
     const layout = useWindowDimensions();
     const route = useRoute();
-    const userId = route.params?.user;
+    const { user } = route.params;
 
-    const { user, loading, error } = useFetchUser(userId);
-
-    if (loading) {
-        return (
-            <View style={styles.center}>
-                <ActivityIndicator size="large" color="#00ffff" />
-            </View>
-        );
-    }
-    if (!user) {
-        return (
-            <View style={styles.center}>
-                <Text>No user data available.</Text>
-            </View>
-        );
-    }
-    console.log(user);
     return (
         <View style={styles.container}>
             <View style={styles.profileSection}>
@@ -55,11 +38,10 @@ export default function OtherProfileScreen() {
                         </View>
                     </View>
                 </View>
-                
             </View>
             <View style={styles.followSection}>
-                    <Followers user={user}/>
-                    <Following user={user}/>
+                <Followers user={user} />
+                <Following user={user} />
             </View>
             {/* Edit Profile Section to be completed */}
             {/* <View style={styles.editProfileSection}>
@@ -113,7 +95,7 @@ const styles = StyleSheet.create({
     },
     followSection: {
         flexDirection: "row",
-        justifyContent: 'center',
+        justifyContent: "center",
         alignItems: "center",
         marginTop: 20,
         marginBottom: 20,

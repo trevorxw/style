@@ -9,9 +9,7 @@ import {
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import React, { useState } from "react";
-import Like from "./Like";
-import Share from "./Share";
-import ProfilePicture from "./ProfilePicture";
+import Post from "./Post";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -56,17 +54,7 @@ export default function Discover({ latestCards }) {
                 cards={latestCards}
                 renderCard={(card) => {
                     return (
-                        <View style={styles.card}>
-                            <View style={styles.buttonsContainer}>
-                                <ProfilePicture card={card} />
-                                <Like card={card} />
-                                <Share card={card} />
-                            </View>
-                            <Image
-                                source={{ uri: card.image }}
-                                style={styles.image}
-                            />
-                        </View>
+                        <Post card={card}/>
                     );
                 }}
                 onSwiped={(cardIndex) => console.log(cardIndex)}

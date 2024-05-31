@@ -2,17 +2,17 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-export default function ProfilePicture({ card }) {
+export default function ProfilePicture({ user }) {
     const navigation = useNavigation();
     return (
         <View>
             <TouchableOpacity
                 onPress={() => {
-                    navigation.navigate("profile", { user: card.userId });
+                    navigation.navigate("profile", { user: user});
                 }}
             >
                 <Image
-                    source={{ uri: card.userImage }}
+                    source={{ uri: user.image_url }}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>
