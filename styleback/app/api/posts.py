@@ -8,6 +8,7 @@ from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
 import tempfile
 from datetime import datetime
+import pytz
 
 posts_blueprint = Blueprint('posts', __name__)
 
@@ -75,8 +76,8 @@ def upload_file(user_id):
             tags = tag_image(filepath)
             
             # Upload file to Firebase Storage and add tags to Firestore
-            unique_filename = f"{user_id}{datetime.now().strftime('%Y%m%d%H%M%S')}.jpg"
-            file_url = upload_file_to_storage(filepath, unique_filename)
+            unique_filename = f"{user_id}{datetime.now().astimezone(pytz.timezone('America/Los_Angeles')).strftime('%Y%m%d%H%M%S')}"
+            file_url = upload_file_to_storage(filepath, unique_filename+'.jpg')
 
             # Add file metadata and tags to Firestore
             file_metadata = {
