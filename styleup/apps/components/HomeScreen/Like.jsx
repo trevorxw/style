@@ -6,8 +6,9 @@ import { app } from "../../../firebaseConfig";
 
 export default function Like({ card }) {
     const db = getFirestore(app);
-    // Assuming card.id is the document ID. Adjust according to your data structure.
-    const likesRef = doc(db, "UserPost", card.id);
+    
+    console.log('like:', card);
+    const likesRef = doc(db, "all_posts", card.id);
 
     // State to track if the icon is liked
     const [isLiked, setIsLiked] = useState(false);
