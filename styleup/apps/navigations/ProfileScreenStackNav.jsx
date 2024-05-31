@@ -15,8 +15,16 @@ export default function ProfileScreenStackNav() {
                 component={ProfileScreen}
                 options={{ headerShown: false }}
             />
-            <Stack.Screen name="settings" component={Settings} />
-            <Stack.Screen name="edit-profile" component={EditProfile} />
+            <Stack.Screen
+                name="settings"
+                component={Settings}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="edit-profile"
+                component={EditProfile}
+                options={{ headerShown: false }}
+            />
         </Stack.Navigator>
     );
 }
