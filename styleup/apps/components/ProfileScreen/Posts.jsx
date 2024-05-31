@@ -73,7 +73,7 @@ export default function Posts({ user }) {
                     ]}
                 >
                     <Image
-                        source={{ uri: item.image }}
+                        source={{ uri: item.url }}
                         onLoadEnd={onLoadEnd}
                         style={styles.image}
                     />
