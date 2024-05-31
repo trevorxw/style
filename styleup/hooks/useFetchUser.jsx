@@ -18,7 +18,7 @@ const useFetchUser = (userId) => {
             setError(null);
 
             try {
-                const response = await axios.get(`https://46b3-2600-1700-3680-2110-4943-4220-72a0-761.ngrok-free.app/user/${userId}`);
+                const response = await axios.get(`https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/user/${userId}`);
                 if (response.data && typeof response.data === "object") {
                     setUser(response.data);
                 } else {

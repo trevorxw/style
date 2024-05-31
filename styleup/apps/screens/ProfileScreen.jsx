@@ -86,8 +86,14 @@ export default function ProfileScreen() {
                         </View>
                     </View>
                 </View>
+                
             </View>
-            <View style={styles.editProfileSection}>
+            <View style={styles.followSection}>
+                    <Followers user={user}/>
+                    <Following user={user}/>
+            </View>
+            {/* Edit Profile Section to be completed */}
+            {/* <View style={styles.editProfileSection}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate("edit-profile")}
                     style={styles.editProfileButton}
@@ -96,11 +102,7 @@ export default function ProfileScreen() {
                         edit profile
                     </Text>
                 </TouchableOpacity>
-                <View style={styles.followSection}>
-                    <Followers user={user}/>
-                    <Following user={user}/>
-                </View>
-            </View>
+            </View> */}
             <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
@@ -188,8 +190,8 @@ const styles = StyleSheet.create({
         textAlign: "center",
     },
     followSection: {
-        flex: 4 / 5, // Tailwind w-3/5
         flexDirection: "row",
         justifyContent: "center",
+        padding: 5
     },
 });
