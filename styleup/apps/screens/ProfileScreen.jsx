@@ -20,7 +20,7 @@ import useFetchUser from '../../hooks/useFetchUser';
 const renderScene = ({ route }) => {
     switch (route.key) {
         case "posts":
-            return <Posts />;
+            return <Posts style={styles.posts}/>;
         case "swipes":
             return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
         case "saved":
@@ -126,72 +126,54 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+    settingsButton: {
+        justifyContent: 'flex-end',
+        zIndex: 10, // Tailwind z-1
+    },
     container: {
         flex: 1,
     },
     profileSection: {
         flexDirection: "row",
-        marginTop: 56, // mt-14 in Tailwind
-        marginLeft: 24, // ml-6 in Tailwind
+        marginTop: 56,
+        marginLeft: 24,
     },
     profileImage: {
-        width: 120, // Tailwind w-[120px]
-        height: 120, // Tailwind h-[120px]
-        borderRadius: 60, // Tailwind rounded-full
+        width: 120,
+        height: 120,
+        borderRadius: 60,
     },
     profileInfo: {
-        flex: 7/8, // Tailwind w-3/5
+        flex: 1,
+        marginLeft: 20,
     },
     settingsButton: {
         position: "absolute",
-        right: 0, // Approximation of right-1 in Tailwind
-        zIndex: 10, // Tailwind z-1
+        right: 0,
+        zIndex: 10,
     },
     profileText: {
-        marginLeft: 20, // ml-5 in Tailwind
+        marginTop: 32,
     },
     userName: {
-        marginTop: 32, // mt-8 in Tailwind
         fontWeight: "bold",
-        fontSize: 25, // Tailwind text-[25px]
+        fontSize: 25,
     },
     userBio: {
-        marginLeft: 16, // ml-4 in Tailwind
-        marginTop: 4, // mt-1 in Tailwind
-        fontSize: 20, // Tailwind text-[20px]
-    },
-    insContainer: {
-        flexDirection: "row",
-        marginTop: 12, // mt-3 in Tailwind
-    },
-    insTitle: {
-        fontWeight: "bold",
-        fontSize: 20, // Tailwind text-[20px]
-    },
-    insDescription: {
-        fontSize: 20, // Tailwind text-[20px]
-    },
-    editProfileSection: {
-        flexDirection: "row",
-        marginTop: 20, // mt-5 in Tailwind
-        marginBottom: 20,
-        alignItems: "center",
-    },
-    editProfileButton: {
-        marginLeft: 24, // ml-6 in Tailwind
-        borderWidth: 2, // Tailwind border-2
-        borderRadius: 4, // Tailwind rounded-sm
-        paddingVertical: 4, // Tailwind py-1
-        paddingHorizontal: 0, // Adjusted for React Native
-        width: 112, // Tailwind w-28
-    },
-    editProfileButtonText: {
-        fontSize: 20, // Tailwind text-[20px]
-        textAlign: "center",
+        marginTop: 4,
+        fontSize: 20,
     },
     followSection: {
         flexDirection: "row",
-        justifyContent: "center",
-        padding: 5
+        justifyContent: 'center',
+        alignItems: "center",
+        marginTop: 20,
+        marginBottom: 20,
+        marginRight: 20,
+        padding: 2,
     },
+    posts: {
+        borderColor: 'black',
+        borderWidth: 2,
+    }
 });
