@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     },
     settingsButton: {
         position: "absolute",
-        right: 25,
+        right: '10%',
         zIndex: 10,
     },
     profileText: {
