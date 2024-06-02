@@ -60,33 +60,25 @@ export default function AddPostScreen() {
     const onSubmitMethod = async (values) => {
         setLoading(true);
         try {
-            // Convert local image URI to blob if it's from the image picker
-            const resp = await fetch(image);
-            const blob = await resp.blob();
-
             // Create a FormData object to encapsulate the file data
             let formData = new FormData();
             formData.append("file", {
                 uri: image,
-                name: `post_${Date.now()}`,
+                name: `post_${Date.now()}.jpg`,
                 type: "image/jpeg",
             });
 
             // Append other form values that you want to send along with the file
-            formData.append("description", values.desc);
+            // formData.append("description", values.desc);
+            // formData.append("shop_url", values.shop_url);
+            // formData.append("category", values.category);
             // formData.append("price", values.price);
-            formData.append("shop_url", values.shop_url);
-            formData.append("category", values.category);
-
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
                 `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/upload/${user.id}`,
                 {
                     method: "POST",
                     body: formData,
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
                 }
             );
 
