@@ -147,10 +147,10 @@ export default function Discover() {
                     );
                 }}
                 onSwipedLeft={(index) =>
-                    onSwiped(index, "left", latestCards[index])
+                    onSwiped(index, "left", cards[index])
                 }
                 onSwipedRight={(index) =>
-                    onSwiped(index, "right", latestCards[index])
+                    onSwiped(index, "right", cards[index])
                 }
                 onSwipedAll={() => console.log("onSwipedAll")}
                 cardIndex={0}
