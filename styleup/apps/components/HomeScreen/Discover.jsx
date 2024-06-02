@@ -25,16 +25,41 @@ export default function Discover({ latestCards }) {
 
     const onSwiped = (index, direction) => {
         const duration = Date.now() - swipeTimer.current;
-        console.log(`Card ${index} swiped ${direction} after ${duration} milliseconds.`);
-        setSwipeTimes(prevTimes => ({
+        console.log(
+            `Card ${index} swiped ${direction} after ${duration} milliseconds.`
+        );
+        setSwipeTimes((prevTimes) => ({
             ...prevTimes,
             [index]: {
                 direction,
-                duration
-            }
+                duration,
+            },
         }));
         setCardIndex(index + 1); // Update card index to the next card
         swipeTimer.current = Date.now(); // Reset the timer for the new card
+    };
+
+    const overlayLabels = {
+        left: {
+            element: (
+                <View style={styles.overlayLabel}>
+                    <Text style={styles.overlayLabelText}>NOPE</Text>
+                </View>
+            ),
+            style: {
+                wrapper: styles.leftOverlay,
+            },
+        },
+        right: {
+            element: (
+                <View style={styles.overlayLabel}>
+                    <Text style={styles.overlayLabelText}>LIKE</Text>
+                </View>
+            ),
+            style: {
+                wrapper: styles.rightOverlay,
+            },
+        },
     };
 
     if (!latestCards || latestCards.length === 0) {
@@ -50,10 +75,8 @@ export default function Discover({ latestCards }) {
             <Swiper
                 cards={latestCards}
                 renderCard={(card) => {
-                    return (
-                        <Post card={card}/>
-                    );
-                }}   
+                    return <Post card={card} />;
+                }}
                 onSwipedLeft={(index) => onSwiped(index, "left")}
                 onSwipedRight={(index) => onSwiped(index, "right")}
                 onSwipedAll={() => console.log("onSwipedAll")}
@@ -63,9 +86,12 @@ export default function Discover({ latestCards }) {
                 stackScale={0}
                 stackSeparation={0}
                 verticalSwipe={false}
-                outputRotationRange={["0deg", "0deg", "0deg"]}
+                outputRotationRange={["-5deg", "0deg", "5deg"]}
                 cardVerticalMargin={0}
                 cardHorizontalMargin={0}
+                // overlayLabels={overlayLabels}
+                animateCardOpacity={true}
+                infinite={true}
             />
         </View>
     );
@@ -74,5 +100,28 @@ export default function Discover({ latestCards }) {
 const styles = StyleSheet.create({
     swiperContainer: {
         flex: 1,
+    },
+    overlayLabel: {
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 10,
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: "white",
+    },
+    overlayLabelText: {
+        fontSize: 32,
+        color: "white",
+        fontWeight: "bold",
+    },
+    leftOverlay: {
+        position: "absolute",
+        top: 50,
+        right: 20,
+    },
+    rightOverlay: {
+        position: "absolute",
+        top: 50,
+        left: 20,
     },
 });
