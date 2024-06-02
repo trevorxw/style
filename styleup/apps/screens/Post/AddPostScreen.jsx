@@ -21,6 +21,7 @@ import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { Feather } from "@expo/vector-icons";
 import { app } from "../../../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
+import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
 
 export default function AddPostScreen() {
     const [image, setImage] = useState(null);
@@ -58,20 +59,49 @@ export default function AddPostScreen() {
 
     const onSubmitMethod = async (values) => {
         setLoading(true);
-        const resp = await fetch(image);
-        const blob = await resp.blob();
-        const storageRef = ref(storage, `communityPost/${Date.now()}.jpg`);
+        try {
+            // Convert local image URI to blob if it's from the image picker
+            const resp = await fetch(image);
+            const blob = await resp.blob();
 
-        uploadBytes(storageRef, blob).then(() => {
-            getDownloadURL(storageRef).then(async (downloadUrl) => {
-                values.image = downloadUrl;
-                values.userId = user.id;
-                values.userImage = user.imageUrl;
-                await addDoc(collection(db, "UserPost"), values);
-                setLoading(false);
-                Alert.alert("Success!", "Post Added Successfully.");
+            // Create a FormData object to encapsulate the file data
+            let formData = new FormData();
+            formData.append("file", {
+                uri: image,
+                name: `post_${Date.now()}`,
+                type: "image/jpeg",
             });
-        });
+
+            // Append other form values that you want to send along with the file
+            formData.append("description", values.desc);
+            // formData.append("price", values.price);
+            formData.append("shop_url", values.shop_url);
+            formData.append("category", values.category);
+
+            // Post request to Flask endpoint
+            const response = await fetchWithTimeout(
+                `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/upload/${user.id}`,
+                {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            const result = await response.json();
+            if (response.ok) {
+                Alert.alert("Success!", "Post Added Successfully.");
+            } else {
+                Alert.alert("Error", result.message || "An error occurred");
+            }
+        } catch (error) {
+            console.error("Error uploading post", error);
+            Alert.alert("Error", "Failed to upload post.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -80,12 +110,9 @@ export default function AddPostScreen() {
                 <Formik
                     initialValues={{
                         desc: "",
-                        url: "",
+                        shop_url: "",
                         price: "",
-                        image: "",
                         category: "",
-                        userName: "",
-                        userImage: "",
                         createdAt: Date.now(),
                         likes: 0,
                         shares: 0,
@@ -145,7 +172,7 @@ export default function AddPostScreen() {
                                     placeholder="description (optional)"
                                     multiline
                                     numberOfLines={4}
-                                    onChangeText={handleChange("desc")}
+                                    onChangeText={handleChange("description")}
                                 />
                                 <Text style={styles.linkHeader}>
                                     LINKS: (max 5)
@@ -161,13 +188,11 @@ export default function AddPostScreen() {
                                 <TextInput
                                     style={styles.input}
                                     placeholder="Shop Address"
-                                    onChangeText={handleChange("url")}
+                                    onChangeText={handleChange("shop_url")}
                                 />
                             </View>
                             <View style={styles.tags}>
-                                <Text style={styles.tagsText}>
-                                    Tags: 
-                                </Text>
+                                <Text style={styles.tagsText}>Tags:</Text>
                                 <TextInput
                                     style={styles.input}
                                     placeholder="#xxx ..."
@@ -175,17 +200,17 @@ export default function AddPostScreen() {
                                 />
                             </View>
                             {loading ? (
-                                    <ActivityIndicator color="#0000ff" />
-                                ) : (
-                                    <TouchableOpacity
-                                        onPress={handleSubmit}
-                                        style={styles.submitButton}
-                                    >
-                                        <Text style={styles.submitButtonText}>
-                                            Submit
-                                        </Text>
-                                    </TouchableOpacity>
-                                )}
+                                <ActivityIndicator color="#0000ff" />
+                            ) : (
+                                <TouchableOpacity
+                                    onPress={handleSubmit}
+                                    style={styles.submitButton}
+                                >
+                                    <Text style={styles.submitButtonText}>
+                                        Submit
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
                     )}
                 </Formik>
@@ -257,7 +282,7 @@ const styles = StyleSheet.create({
     },
     tags: {
         flex: 1,
-        flexDirection: 'row',
+        flexDirection: "row",
         marginTop: 10,
         paddingHorizontal: 20,
     },
