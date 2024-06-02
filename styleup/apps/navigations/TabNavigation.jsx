@@ -23,7 +23,13 @@ export default function TabNavigation() {
         <Tab.Navigator
             screenOptions={{
                 headerShown: false,
-                tabBarActiveTintColor: "#000",
+                // tabBarActiveTintColor: "#000",
+                tabBarActiveTintColor: "#fff", // Active tab color set to white
+                tabBarInactiveTintColor: "#888", // Inactive tab color set to grey
+                tabBarStyle: {
+                    backgroundColor: "#000", // Tab bar background color set to black
+                    borderTopColor: "#000" // Tab bar top border color set to black
+                },
                 lazy: true,
             }}
         >
