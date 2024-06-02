@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_posts_by_user, get_user_details
+from app.services.firebase import get_posts_by_user, get_user_details, add_swipe_history
 from app.services.auth import token_required
 import requests
 
@@ -50,4 +50,13 @@ def get_user_profile(user_id):
         print(f"Failed to fetch user: {response.status_code}, {response.text}")
         abort(response.status_code, description="Failed to fetch user profile from Clerk")
         
-        
+# Upload Post Metrics
+@users_blueprint.route('/like/<user_id>/<post_id>', methods=['POST'])
+def add_user_like(user_id, post_id):
+    try:
+        metrics = request.form.get('metrics', '')
+        add_swipe_history(user_id, post_id, metrics)
+        return jsonify(metrics), 200
+    except Exception as e:
+            # Attempt to clean up even if there is an error
+            return jsonify(error=str(e)), 500

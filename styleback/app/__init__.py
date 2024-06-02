@@ -16,14 +16,10 @@ def create_app():
         'storageBucket': 'style-d2141.appspot.com'
     })
 
-    from .api.views import api_blueprint
     from .api.posts import posts_blueprint
-    from .api.interactions import interactions_blueprint
     from .api.users import users_blueprint
     
-    app.register_blueprint(api_blueprint)
     app.register_blueprint(posts_blueprint)
-    app.register_blueprint(interactions_blueprint)
     app.register_blueprint(users_blueprint)
 
     return app

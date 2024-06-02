@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
 import app
-from app.services.firebase import get_post, get_all_posts, save_user_interaction, upload_file_to_storage, add_data_to_firestore, get_posts_by_user
+from app.services.firebase import get_post, get_all_posts, upload_file_to_storage, add_data_to_firestore, get_posts_by_user
 from app.services.auth import token_required
 from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
