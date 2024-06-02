@@ -13,11 +13,35 @@ import useFetchUser from "../../hooks/useFetchUser";
 import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
+import { TabView, TabBar } from "react-native-tab-view";
 
 export default function OtherProfileScreen() {
     const layout = useWindowDimensions();
     const route = useRoute();
     const { user } = route.params;
+
+    const [index, setIndex] = React.useState(0);
+    const [routes] = React.useState([
+        { key: "posts", title: "Posts" },
+        // { key: "swipes", title: "Swipes" },
+        // { key: "saved", title: "Saved" },
+        // { key: "wardrobe", title: "Wardrobe" },
+    ]);
+
+    const renderScene = ({ route }) => {
+        switch (route.key) {
+            case "posts":
+                return <Posts style={styles.posts} user={user} />;
+            // case "swipes":
+            //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            // case "saved":
+            //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            // case "wardrobe":
+            //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -54,7 +78,24 @@ export default function OtherProfileScreen() {
                     </Text>
                 </TouchableOpacity>
             </View> */}
-            <Posts style={styles.posts} user={user} />
+            <TabView
+                navigationState={{ index, routes }}
+                renderScene={renderScene}
+                renderTabBar={(props) => (
+                    <TabBar
+                        {...props}
+                        indicatorStyle={{ backgroundColor: "white" }}
+                        style={{ backgroundColor: "pink" }}
+                        renderLabel={({ route, focused, color }) => (
+                            <Text style={{ color, margin: 8 }}>
+                                {route.title}
+                            </Text>
+                        )}
+                    />
+                )}
+                onIndexChange={setIndex}
+                initialLayout={{ width: layout.width }}
+            />
         </View>
     );
 }
