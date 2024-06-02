@@ -11,6 +11,7 @@ import {
 import Swiper from "react-native-deck-swiper";
 import React, { useState, useRef, useEffect } from "react";
 import Post from "./Post";
+import { AntDesign } from '@expo/vector-icons';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -42,7 +43,8 @@ export default function Discover({ latestCards }) {
     const overlayLabels = {
         left: {
             element: (
-                <View style={styles.overlayLabel}>
+                <View style={styles.overlayLabelLeft}>
+                    <AntDesign name="close" size={28} color="red" />
                     <Text style={styles.overlayLabelText}>NOPE</Text>
                 </View>
             ),
@@ -52,7 +54,8 @@ export default function Discover({ latestCards }) {
         },
         right: {
             element: (
-                <View style={styles.overlayLabel}>
+                <View style={styles.overlayLabelRight}>
+                    <AntDesign name="heart" size={28} color="green" />
                     <Text style={styles.overlayLabelText}>LIKE</Text>
                 </View>
             ),
@@ -93,7 +96,7 @@ export default function Discover({ latestCards }) {
                 outputRotationRange={["-5deg", "0deg", "5deg"]}
                 cardVerticalMargin={0}
                 cardHorizontalMargin={0}
-                // overlayLabels={overlayLabels}
+                overlayLabels={overlayLabels}
                 animateCardOpacity={true}
                 infinite={true}
             />
@@ -112,26 +115,39 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "black",
     },
-    overlayLabel: {
-        alignItems: "center",
-        justifyContent: "center",
+    overlayLabelLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
         padding: 10,
         borderRadius: 5,
         borderWidth: 2,
-        borderColor: "white",
+        borderColor: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.5)', // Semi-transparent background
+    },
+    overlayLabelRight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: 'green',
+        backgroundColor: 'rgba(0, 128, 0, 0.5)', // Semi-transparent background
     },
     overlayLabelText: {
-        fontSize: 32,
-        color: "white",
-        fontWeight: "bold",
+        fontSize: 24,
+        color: 'white',
+        fontWeight: 'bold',
+        marginLeft: 5,
     },
     leftOverlay: {
-        position: "absolute",
+        position: 'absolute',
         top: 50,
         right: 20,
     },
     rightOverlay: {
-        position: "absolute",
+        position: 'absolute',
         top: 50,
         left: 20,
     },
