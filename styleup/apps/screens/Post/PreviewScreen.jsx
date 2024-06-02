@@ -18,18 +18,16 @@ export default function PreviewScreen({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-    outerContainer: {
-        flex: 1,
-    },
     card: {
         flex: 1,
         width: screenWidth,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: 'black',
     },
     image: {
         width: "100%",
         height: "100%",
-        resizeMode: "cover",
+        resizeMode: "contain",
     },
 });
