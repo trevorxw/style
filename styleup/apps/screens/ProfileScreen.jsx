@@ -92,16 +92,6 @@ export default function ProfileScreen() {
                 <Following user={user} />
             </View>
             {/* Edit Profile Section to be completed */}
-            {/* <View style={styles.editProfileSection}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("edit-profile")}
-                    style={styles.editProfileButton}
-                >
-                    <Text style={styles.editProfileButtonText}>
-                        edit profile
-                    </Text>
-                </TouchableOpacity>
-            </View> */}
             <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
