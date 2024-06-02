@@ -77,46 +77,4 @@ const styles = StyleSheet.create({
     swiperContainer: {
         flex: 1,
     },
-    card: {
-        flex: 1,
-        width: screenWidth,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    image: {
-        width: "100%",
-        height: "100%",
-        resizeMode: "cover",
-    },
-    placeholderimage: {
-        width: "80%",
-        height: "80%",
-        resizeMode: "cover",
-    },
-    buttonsContainer: {
-        position: "absolute",
-        zIndex: 10,
-        right: (screenWidth * 1) / 30,
-        top: (screenHeight * 5) / 8,
-        justifyContent: "center",
-    },
-    profileImage: {
-        marginBottom: 20,
-        width: 44, // Tailwind w-[120px]
-        height: 44, // Tailwind h-[120px]
-        borderRadius: 60, // Tailwind rounded-full
-        borderWidth: 2,
-        borderColor: "white",
-    },
-    buttons: {
-        alignSelf: "center",
-    },
-    buttonText: {
-        marginTop: 2,
-        marginBottom: 12,
-        fontSize: 15,
-        alignSelf: "center",
-        color: "white",
-        fontWeight: "bold",
-    },
 });
