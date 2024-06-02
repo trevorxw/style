@@ -17,6 +17,7 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Discover({ latestCards }) {
     const [cardIndex, setCardIndex] = useState(0);
+    const [swipeTimes, setSwipeTimes] = useState({});
     const swipeTimer = useRef(null);
 
     useEffect(() => {
