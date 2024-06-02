@@ -18,7 +18,7 @@ export default function Post({ card }) {
     const { user, loading, error } = useFetchUser(card.user_id);
 
     if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" />;
+        return <ActivityIndicator size="large" color="#888" />;
     }
 
     if (error) {

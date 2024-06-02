@@ -30,7 +30,6 @@ export default function Posts({ user }) {
         }
     }, [user]);
 
-    console.log({user});
 
     const getUserPosts = async () => {
         const posts = [];
@@ -39,7 +38,6 @@ export default function Posts({ user }) {
         // Fetch details for each post using the post ID
         for (const post of user.post_ids) {
             try {
-                console.log(post);
                 const response = await fetch(
                     `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/${post.post_id}`
                 );

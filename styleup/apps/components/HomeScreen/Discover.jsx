@@ -6,6 +6,7 @@ import {
     Dimensions,
     TouchableOpacity,
     Text,
+    Animated,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import React, { useState, useRef, useEffect } from "react";
@@ -15,7 +16,6 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Discover({ latestCards }) {
     const [cardIndex, setCardIndex] = useState(0);
-    const [swipeTimes, setSwipeTimes] = useState({});
     const swipeTimer = useRef(null);
 
     useEffect(() => {
@@ -65,7 +65,7 @@ export default function Discover({ latestCards }) {
     if (!latestCards || latestCards.length === 0) {
         return (
             <View style={styles.swiperContainer}>
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color="#888" />
             </View>
         );
     }
@@ -75,13 +75,17 @@ export default function Discover({ latestCards }) {
             <Swiper
                 cards={latestCards}
                 renderCard={(card) => {
-                    return <Post card={card} />;
+                    return (
+                        <View style={styles.postContainer}>
+                            <Post card={card} />
+                        </View>
+                    );
                 }}
                 onSwipedLeft={(index) => onSwiped(index, "left")}
                 onSwipedRight={(index) => onSwiped(index, "right")}
                 onSwipedAll={() => console.log("onSwipedAll")}
                 cardIndex={0}
-                backgroundColor={"#4FD0E9"}
+                backgroundColor={"black"}
                 stackSize={3}
                 stackScale={0}
                 stackSeparation={0}
@@ -100,6 +104,13 @@ export default function Discover({ latestCards }) {
 const styles = StyleSheet.create({
     swiperContainer: {
         flex: 1,
+    },
+    postContainer: {
+        flex: 1,
+        width: screenWidth,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "black",
     },
     overlayLabel: {
         alignItems: "center",
