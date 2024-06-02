@@ -24,7 +24,10 @@ export default function Discover() {
     const [cardIndex, setCardIndex] = useState(0);
     const [swipeTimes, setSwipeTimes] = useState({});
     const [cards, setCards] = useState([])
+    const [loading, setLoading] = useState(false);
     const swipeTimer = useRef(null);
+
+    const MAX_CARDS = 20; // Max number of cards to hold in memory
 
     useEffect(() => {
         // Start the timer when the card is rendered
@@ -45,6 +48,26 @@ export default function Discover() {
         }
     };
 
+    const fetchAndReplaceCards = async () => {
+        if (loading) return;
+        setLoading(true);
+        try {
+            const newCards = await //fetchCardsFromAPI();
+            setCards(prevCards => {
+                // Remove old cards if exceeding max allowed cards after adding new ones
+                if (prevCards.length + newCards.length > MAX_CARDS) {
+                    return [...prevCards.slice(newCards.length), ...newCards];
+                } else {
+                    return [...prevCards, ...newCards];
+                }
+            });
+        } catch (error) {
+            console.error("Error fetching new cards:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const incrementLike = async (card) => {
         const likesRef = doc(db, "all_posts", card.id);
         await updateDoc(likesRef, {
@@ -53,6 +76,8 @@ export default function Discover() {
     };
 
     const onSwiped = (index, direction, card) => {
+
+        // Metric Tracker
         const duration = Date.now() - swipeTimer.current;
         console.log(
             `Card ${index} swiped ${direction} after ${duration} milliseconds.`
@@ -66,6 +91,12 @@ export default function Discover() {
         }));
         setCardIndex(index + 1); // Update card index to the next card
         swipeTimer.current = Date.now(); // Reset the timer for the new card
+
+        // Lazy Loading
+        if (index === cards.length - 5) {
+            fetchAndReplaceCards();  // Fetch more cards when 5 cards are left
+        }
+
         if (direction === "right") {
             incrementLike(card);
         }
