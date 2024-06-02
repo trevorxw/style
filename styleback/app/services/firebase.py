@@ -96,7 +96,7 @@ def get_user_details(user_id):
     except Exception as e:
         return jsonify({"error": str(e)})
 
-def save_user_interaction(data):
+def add_swipe_history(user_id, post_id, metrics):
     """
     Saves user interaction data to Firestore. Data should include user_id and details
     of the interaction (like swipe right, swipe left, time spent, etc.).
@@ -104,8 +104,6 @@ def save_user_interaction(data):
     """
     try:
         # Add additional data validation or processing here if necessary
-        collection_ref = db.collection('interactions')
-        doc_ref = collection_ref.add(data)
-        return {'id': doc_ref[1].id}  # doc_ref is a tuple (WriteResult, DocumentReference)
+        doc_ref = db.collection('users').document(user_id).collection('swipeHistory').document(post_id).add(metrics)
     except Exception as e:
         raise Exception(f"Failed to save user interaction: {str(e)}")
