@@ -15,8 +15,7 @@ __pycache__
 styleback/__pycache__/styleback.cpython-312.pyc
 styleback/.venv/*
 
-# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
-
+styleup/%ProgramData%/
 # dependencies
 node_modules/
 

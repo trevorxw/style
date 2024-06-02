@@ -1,29 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
     View,
     Text,
     TextInput,
     StyleSheet,
-    Button,
     Image,
     TouchableOpacity,
     ActivityIndicator,
     Alert,
-    Pressable,
     ScrollView,
     KeyboardAvoidingView,
+    Dimensions,
+    Animated,
 } from "react-native";
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
 import { useUser } from "@clerk/clerk-expo";
 import { getFirestore, collection, getDocs, addDoc } from "firebase/firestore";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
-import { Feather } from "@expo/vector-icons";
+import { Feather, SimpleLineIcons } from "@expo/vector-icons";
 import { app } from "../../../firebaseConfig";
 import { useNavigation } from "@react-navigation/native";
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
 
 export default function AddPostScreen() {
+    const { width: screenWidth, height: screenHeight } =
+        Dimensions.get("window");
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
     const db = getFirestore(app);
@@ -31,6 +33,13 @@ export default function AddPostScreen() {
     const { user } = useUser();
     const [categoryList, setCategoryList] = useState([]);
     const navigation = useNavigation();
+    const [isScrolled, setIsScrolled] = useState(false);
+    const scrollY = useRef(new Animated.Value(0)).current;
+    const arrowOpacity = scrollY.interpolate({
+        inputRange: [0, 50],
+        outputRange: [1, 0],
+        extrapolate: "clamp",
+    });
 
     useEffect(() => {
         const getCategoryList = async () => {
@@ -44,6 +53,17 @@ export default function AddPostScreen() {
 
         getCategoryList();
     }, []);
+
+    const handleScroll = Animated.event(
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        {
+            listener: (event) => {
+                const y = event.nativeEvent.contentOffset.y;
+                setIsScrolled(y > 0);
+            },
+            useNativeDriver: true,
+        }
+    );
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -97,8 +117,11 @@ export default function AddPostScreen() {
     };
 
     return (
-        <KeyboardAvoidingView style={styles.container}>
-            <ScrollView>
+        <View style={styles.container}>
+            <Animated.ScrollView
+                onScroll={handleScroll}
+                scrollEventThrottle={16}
+            >
                 <Formik
                     initialValues={{
                         desc: "",
@@ -206,22 +229,45 @@ export default function AddPostScreen() {
                         </View>
                     )}
                 </Formik>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                
+            </Animated.ScrollView>
+            <Animated.View
+                style={[
+                    styles.arrowView,
+                    {
+                        opacity: arrowOpacity,
+                    },
+                ]}
+            >
+                <SimpleLineIcons name="arrow-down" size={24} color="black" style={styles.arrow}/>
+            </Animated.View>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
+    arrowView: {
+        alignItems: "center", // Horizontally center
+        position: 'absolute',
+        bottom: -12,
+        left: '50%',
+        transform: [{ translateX: -12 }, { translateY: -12 }],
+    },
+    arrow: {
+        alignItems: "center", // Horizontally center
+        backgroundColor: "transparent",
+        borderColor: 'black',
+        borderRadius: 2,
+    },
     container: {
-        flex: 1,
     },
     imagePickerContainer: {
         alignItems: "center",
         marginTop: 43,
     },
     image: {
-        width: 300,
-        height: 300,
+        width: 350,
+        height: 400,
         borderRadius: 15,
     },
     navIconsContainer: {
