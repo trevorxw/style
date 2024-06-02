@@ -19,31 +19,7 @@ export default function Discover({ latestCards }) {
     if (!latestCards || latestCards.length === 0) {
         return (
             <View style={styles.swiperContainer}>
-                <Swiper
-                    cards={['Loading', 'Loading', 'Loading', 'Loading']}
-                    renderCard={(card) => {
-                        return (
-                            <View style={styles.card}>
-                                {/* <Image
-                                    source={ require("../../../assets/images/placeholder.jpg") }
-                                    style={styles.placeholderimage}
-                                /> */}
-                                <ActivityIndicator size="large" color="#0000ff" />
-                            </View>
-                        );
-                    }}
-                    onSwiped={(cardIndex) => console.log(cardIndex)}
-                    onSwipedAll={() => console.log("onSwipedAll")}
-                    cardIndex={0}
-                    backgroundColor={"#808080"}
-                    stackSize={3}
-                    stackScale={0}
-                    stackSeparation={0}
-                    verticalSwipe={false}
-                    outputRotationRange={["0deg", "0deg", "0deg"]}
-                    cardVerticalMargin={0}
-                    cardHorizontalMargin={0}
-                />
+                <ActivityIndicator size="large" color="#0000ff" />
             </View>
         );
     }
