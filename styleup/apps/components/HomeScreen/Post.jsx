@@ -34,7 +34,7 @@ export default function Post({ card }) {
             <View style={styles.buttonsContainer}>
                 <ProfilePicture user={user} />
                 <Like card={card} />
-                <Share card={card} />
+                {/* <Share card={card} /> */}
             </View>
             <Image source={{ uri: card.url }} style={styles.image} />
         </View>
