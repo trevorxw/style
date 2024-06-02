@@ -45,7 +45,7 @@ export default function Like({ card }) {
             >
                 <FontAwesome
                     name={isLiked ? "heart" : "heart-o"}
-                    size={35}
+                    size={30}
                     color={isLiked ? "red" : "white"}
                 />
             </TouchableOpacity>

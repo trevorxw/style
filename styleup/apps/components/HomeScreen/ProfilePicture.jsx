@@ -23,8 +23,8 @@ export default function ProfilePicture({ user }) {
 const styles = StyleSheet.create({
     profileImage: {
         marginBottom: 20,
-        width: 44, // Tailwind w-[120px]
-        height: 44, // Tailwind h-[120px]
+        width: 38, // Tailwind w-[120px]
+        height: 38, // Tailwind h-[120px]
         borderRadius: 60, // Tailwind rounded-full
         borderWidth: 2,
         borderColor: "white",

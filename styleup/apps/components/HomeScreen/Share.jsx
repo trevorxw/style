@@ -29,7 +29,7 @@ export default function Share({ card }) {
                 }}
                 style={styles.buttons}
             >
-                <FontAwesome5 name="share" size={35} color="white" />
+                <FontAwesome5 name="share" size={24} color="white" />
             </TouchableOpacity>
             <Text style={styles.buttonText}>{card.shares}</Text>
         </View>
