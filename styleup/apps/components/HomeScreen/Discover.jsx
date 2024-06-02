@@ -18,17 +18,32 @@ import { app } from "../../../firebaseConfig";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Discover({ latestCards }) {
+export default function Discover() {
     const db = getFirestore(app);
 
     const [cardIndex, setCardIndex] = useState(0);
     const [swipeTimes, setSwipeTimes] = useState({});
+    const [cards, setCards] = useState([])
     const swipeTimer = useRef(null);
 
     useEffect(() => {
         // Start the timer when the card is rendered
         swipeTimer.current = Date.now();
     }, [cardIndex]);
+
+    useEffect(() => {
+        getCards();
+    }, []);
+
+    const getCards = async () => {
+        try {
+            const response = await fetch('https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/');
+            const fetchedCards = await response.json();
+            setCards(fetchedCards);
+        } catch (error) {
+            console.error("Error fetching cards:", error);
+        }
+    };
 
     const incrementLike = async (card) => {
         const likesRef = doc(db, "all_posts", card.id);
@@ -81,7 +96,7 @@ export default function Discover({ latestCards }) {
         },
     };
 
-    if (!latestCards || latestCards.length === 0) {
+    if (!cards || cards.length === 0) {
         return (
             <View style={styles.swiperContainer}>
                 <ActivityIndicator size="large" color="#888" />
@@ -92,7 +107,7 @@ export default function Discover({ latestCards }) {
     return (
         <View style={styles.swiperContainer}>
             <Swiper
-                cards={latestCards}
+                cards={cards}
                 renderCard={(card) => {
                     return (
                         <View style={styles.postContainer}>
