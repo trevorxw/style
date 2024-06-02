@@ -15,6 +15,11 @@ import { AntDesign } from "@expo/vector-icons";
 //Firebase
 import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
+//Request
+import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
+//User
+import useFetchUser from "../../../hooks/useFetchUser";
+import { useUser } from "@clerk/clerk-expo";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -26,14 +31,19 @@ export default function Discover() {
     const [cards, setCards] = useState([])
     const [loading, setLoading] = useState(false);
     const swipeTimer = useRef(null);
+    //User
+    const { isLoading, isSignedIn, user: userClerk } = useUser();
+    const { user, loadingUser, error } = useFetchUser(userClerk.id);
 
     const MAX_CARDS = 20; // Max number of cards to hold in memory
 
+    // Start the timer when the card is rendered
     useEffect(() => {
-        // Start the timer when the card is rendered
+        
         swipeTimer.current = Date.now();
     }, [cardIndex]);
 
+    // Fetch initial cards
     useEffect(() => {
         getCards();
     }, []);
@@ -68,6 +78,37 @@ export default function Discover() {
         }
     };
 
+    const uploadMetrics = async (user, card, liked, duration, shared) => {
+        try {
+            // Create a data object for JSON body
+            const postData = {
+                liked: liked,
+                duration: duration,
+                shared: shared
+            };
+            // Post request to Flask endpoint
+            const response = await fetchWithTimeout(
+                `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/like/${user.id}/${card.id}`,
+                {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(postData)
+                }
+            );
+    
+            const result = await response.json();
+            if (response.ok) {
+                console.log(`Uploaded metrics successfully for user: ${user.id}. Metrics:`, postData);
+            } else {
+                console.error("Failed to upload metrics. Server responded with: ", result);
+            }
+        } catch (error) {
+            console.error("Error uploading user post metrics:", error);
+        }
+    };
+
     const incrementLike = async (card) => {
         const likesRef = doc(db, "all_posts", card.id);
         await updateDoc(likesRef, {
@@ -99,6 +140,10 @@ export default function Discover() {
 
         if (direction === "right") {
             incrementLike(card);
+            uploadMetrics(user, card, 1, duration, 0);
+        }
+        else{
+            uploadMetrics(user, card, 0, duration, 0);
         }
     };
 
