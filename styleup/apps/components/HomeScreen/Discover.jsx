@@ -93,9 +93,9 @@ export default function Discover() {
         swipeTimer.current = Date.now(); // Reset the timer for the new card
 
         // Lazy Loading
-        if (index === cards.length - 5) {
-            fetchAndReplaceCards();  // Fetch more cards when 5 cards are left
-        }
+        // if (index === cards.length - 5) {
+        //     fetchAndReplaceCards();  // Fetch more cards when 5 cards are left
+        // }
 
         if (direction === "right") {
             incrementLike(card);
