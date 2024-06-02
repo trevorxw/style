@@ -11,11 +11,16 @@ import {
 import Swiper from "react-native-deck-swiper";
 import React, { useState, useRef, useEffect } from "react";
 import Post from "./Post";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
+//Firebase
+import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
+import { app } from "../../../firebaseConfig";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Discover({ latestCards }) {
+    const db = getFirestore(app);
+
     const [cardIndex, setCardIndex] = useState(0);
     const [swipeTimes, setSwipeTimes] = useState({});
     const swipeTimer = useRef(null);
@@ -25,7 +30,14 @@ export default function Discover({ latestCards }) {
         swipeTimer.current = Date.now();
     }, [cardIndex]);
 
-    const onSwiped = (index, direction) => {
+    const incrementLike = async (card) => {
+        const likesRef = doc(db, "all_posts", card.id);
+        await updateDoc(likesRef, {
+            likes: increment(1),
+        });
+    };
+
+    const onSwiped = (index, direction, card) => {
         const duration = Date.now() - swipeTimer.current;
         console.log(
             `Card ${index} swiped ${direction} after ${duration} milliseconds.`
@@ -39,6 +51,9 @@ export default function Discover({ latestCards }) {
         }));
         setCardIndex(index + 1); // Update card index to the next card
         swipeTimer.current = Date.now(); // Reset the timer for the new card
+        if (direction === "right") {
+            incrementLike(card);
+        }
     };
 
     const overlayLabels = {
@@ -85,8 +100,12 @@ export default function Discover({ latestCards }) {
                         </View>
                     );
                 }}
-                onSwipedLeft={(index) => onSwiped(index, "left")}
-                onSwipedRight={(index) => onSwiped(index, "right")}
+                onSwipedLeft={(index) =>
+                    onSwiped(index, "left", latestCards[index])
+                }
+                onSwipedRight={(index) =>
+                    onSwiped(index, "right", latestCards[index])
+                }
                 onSwipedAll={() => console.log("onSwipedAll")}
                 cardIndex={0}
                 backgroundColor={"black"}
@@ -117,38 +136,38 @@ const styles = StyleSheet.create({
         backgroundColor: "black",
     },
     overlayLabelLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         padding: 10,
         borderRadius: 5,
         borderWidth: 2,
-        borderColor: 'red',
-        backgroundColor: 'rgba(255, 0, 0, 0.5)', // Semi-transparent background
+        borderColor: "red",
+        backgroundColor: "rgba(255, 0, 0, 0.5)", // Semi-transparent background
     },
     overlayLabelRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
         padding: 10,
         borderRadius: 5,
         borderWidth: 2,
-        borderColor: 'green',
-        backgroundColor: 'rgba(0, 128, 0, 0.5)', // Semi-transparent background
+        borderColor: "green",
+        backgroundColor: "rgba(0, 128, 0, 0.5)", // Semi-transparent background
     },
     overlayLabelText: {
         fontSize: 24,
-        color: 'white',
-        fontWeight: 'bold',
+        color: "white",
+        fontWeight: "bold",
         marginLeft: 5,
     },
     leftOverlay: {
-        position: 'absolute',
+        position: "absolute",
         top: 50,
         right: 20,
     },
     rightOverlay: {
-        position: 'absolute',
+        position: "absolute",
         top: 50,
         left: 20,
     },
