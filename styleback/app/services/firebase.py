@@ -104,6 +104,6 @@ def add_swipe_history(user_id, post_id, metrics):
     """
     try:
         # Add additional data validation or processing here if necessary
-        doc_ref = db.collection('users').document(user_id).collection('swipeHistory').document(post_id).add(metrics)
+        doc_ref = db.collection('users').document(user_id).collection('swipeHistory').document(post_id).set(metrics)
     except Exception as e:
         raise Exception(f"Failed to save user interaction: {str(e)}")

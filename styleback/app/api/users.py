@@ -54,7 +54,16 @@ def get_user_profile(user_id):
 @users_blueprint.route('/like/<user_id>/<post_id>', methods=['POST'])
 def add_user_like(user_id, post_id):
     try:
-        metrics = request.form.get('metrics', '')
+        data = request.get_json()  # Use .get_json() to parse JSON body
+        liked = data.get('liked', 0)
+        duration = data.get('duration', 0)
+        shared = data.get('shared', 0)
+
+        metrics = {
+                'liked': liked,
+                'duration': duration,
+                'shared': shared,
+            }
         add_swipe_history(user_id, post_id, metrics)
         return jsonify(metrics), 200
     except Exception as e:
