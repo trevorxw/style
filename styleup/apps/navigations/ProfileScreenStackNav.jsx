@@ -4,10 +4,15 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ProfileScreen from "../screens/ProfileScreen";
 import Settings from "../screens/Settings";
 import EditProfile from "../screens/EditProfile";
+import { useFonts, JosefinSans_400Regular, JosefinSans_700Bold } from '@expo-google-fonts/josefin-sans';
 
 const Stack = createStackNavigator();
 
 export default function ProfileScreenStackNav() {
+    const [fontsLoaded] = useFonts({
+        JosefinSans_400Regular,
+        JosefinSans_700Bold,
+    });
     return (
         <Stack.Navigator>
             <Stack.Screen
@@ -18,7 +23,14 @@ export default function ProfileScreenStackNav() {
             <Stack.Screen
                 name="settings"
                 component={Settings}
-                options={{ headerShown: false }}
+                options={{
+                    headerTitle: 'settings',
+                    headerTitleStyle: {
+                        fontFamily: 'JosefinSans_700Bold', // Using bold for headers
+                        fontSize: 22,
+                    },
+                    headerBackTitle: ' ',  // Hides the text next to the back button
+                }}
             />
             <Stack.Screen
                 name="edit-profile"

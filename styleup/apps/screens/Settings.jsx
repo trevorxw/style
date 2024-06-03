@@ -1,10 +1,4 @@
-import {
-    View,
-    Text,
-    StyleSheet,
-    ScrollView,
-    TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import LogoutButton from "../components/Settings/LogoutButton";
 import { useNavigation } from "@react-navigation/native";
@@ -19,27 +13,25 @@ export default function Settings() {
     });
     const navigation = useNavigation();
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.container}>
             {/* Other settings options can go here */}
-            <Text style={styles.header}>Settings</Text>
-            {/* Other components or settings elements */}
             {/* Logout button at the bottom */}
-            <LogoutButton />
-        </ScrollView>
+            <LogoutButton style={{ justifyContent: "center" }} />
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "space-between", // Ensures the button can stick to the bottom
-        padding: 20, // Padding around the container
+
         alignItems: "center",
+        padding: 20,
     },
     header: {
         fontSize: 22,
         fontWeight: "bold",
-        marginTop: 20,
+        marginTop: 25,
         marginBottom: 20,
         fontFamily: "JosefinSans_400Regular",
     },
