@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     profileSection: {
         flexDirection: "row",
         marginTop: 56,
-        marginLeft: 24,
+        marginHorizontal: 24,
     },
     profileImage: {
         width: 120,
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     },
     settingsButton: {
         position: "absolute",
-        right: "10%",
+        right: "0%",
         zIndex: 10,
     },
     profileText: {
