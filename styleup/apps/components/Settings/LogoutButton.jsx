@@ -1,8 +1,15 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 import { useClerk } from "@clerk/clerk-expo";
+import {
+    useFonts,
+    JosefinSans_400Regular,
+} from "@expo-google-fonts/josefin-sans";
 
 export default function LogoutButton() {
+    let [fontsLoaded] = useFonts({
+        JosefinSans_400Regular,
+    });
     const { signOut } = useClerk();
 
     const handleLogout = async () => {
@@ -39,5 +46,6 @@ const styles = StyleSheet.create({
         color: "white", // White text color
         fontWeight: "bold", // Bold font weight
         fontSize: 16, // Slightly larger font size
+        fontFamily: "JosefinSans_400Regular",
     },
 });
