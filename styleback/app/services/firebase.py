@@ -45,7 +45,7 @@ def get_posts_by_user(user_id):
         
         # Create a list of post IDs from the posts subcollection
         post_ids = [{'post_id': post.id} for post in posts]
-        return post_ids
+        return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
     except Exception as e:
         return {"error": str(e)}  
 
