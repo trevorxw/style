@@ -16,17 +16,6 @@ export default function Settings() {
             {/* Other settings options can go here */}
             <Text style={styles.header}>Settings</Text>
             {/* Other components or settings elements */}
-            {/* Edit User Profile */}
-            {/* <View style={styles.editProfileSection}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("edit-profile")}
-                    style={styles.editProfileButton}
-                >
-                    <Text style={styles.editProfileButtonText}>
-                        Edit Profile
-                    </Text>
-                </TouchableOpacity>
-            </View> */}
             {/* Logout button at the bottom */}
             <LogoutButton />
         </ScrollView>
