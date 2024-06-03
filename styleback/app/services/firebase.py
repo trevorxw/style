@@ -47,7 +47,22 @@ def get_posts_by_user(user_id):
         post_ids = [{'post_id': post.id} for post in posts]
         return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
     except Exception as e:
-        return {"error": str(e)}  
+        return {"error": str(e)}
+
+def get_liked_posts_by_user(user_id):
+    try:
+        # Ensure to reference the posts subcollection for the specific user
+        posts = db.collection('users').document(user_id).collection('swipeHistory').where("liked", "==", 1).stream()
+        
+        # Create a list of post IDs from the posts subcollection
+
+        post_ids = [
+            {'post_id': post.id} for post in posts
+            if not post.id.startswith(user_id)
+        ]
+        return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
+    except Exception as e:
+        return {"error": str(e)}
 
 def upload_file_to_storage(file_path, filename):
     # Specify the path within the bucket
