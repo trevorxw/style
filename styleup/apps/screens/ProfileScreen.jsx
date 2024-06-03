@@ -93,21 +93,25 @@ export default function ProfileScreen() {
                     </View>
                 </View>
             </View>
-            <View style={styles.followSection}>
-                <Followers user={user} />
-                <Following user={user} />
+            <View style={styles.subheader}>
+                <View style={styles.editProfileSection}>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("edit-profile")}
+                        style={styles.editProfileButton}
+                    >
+                        <Text style={styles.editProfileButtonText}>
+                            edit profile
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.followSection}>
+                    <Followers user={user} />
+                    <Following user={user} />
+                </View>
             </View>
+
             {/* Edit Profile Section to be completed */}
-            {/* <View style={styles.editProfileSection}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("edit-profile")}
-                    style={styles.editProfileButton}
-                >
-                    <Text style={styles.editProfileButtonText}>
-                        Edit Profile
-                    </Text>
-                </TouchableOpacity>
-            </View> */}
+
             <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
@@ -168,6 +172,23 @@ const styles = StyleSheet.create({
     profileInfo: {
         flex: 1,
         marginLeft: 20,
+    },
+    subheader: {
+        flexDirection: "row",
+        marginLeft: 24,
+        alignItems: "center",
+    },
+    editProfileButton: {
+        backgroundColor: "#D9D9D9",
+        borderRadius: 2,
+        width: 120,
+        alignItems:'center',
+        padding: 6,
+        margin: 2,
+    },
+    editProfileButtonText: {
+        fontSize: 20,
+        fontFamily: "JosefinSans_400Regular",
     },
     settingsButton: {
         position: "absolute",
