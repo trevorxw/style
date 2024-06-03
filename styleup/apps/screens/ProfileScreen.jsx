@@ -14,6 +14,7 @@ import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import { TabView, TabBar } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
+import Swipes from "../components/ProfileScreen/Swipes";
 import { useNavigation } from "@react-navigation/native";
 import useFetchUser from "../../hooks/useFetchUser";
 import {
@@ -43,7 +44,7 @@ export default function ProfileScreen() {
             case "posts":
                 return <Posts style={styles.posts} user={user} />;
             case "swipes":
-                return <View style={{ flex: 1, backgroundColor: "white" }} />;
+                return <Swipes style={styles.posts} user={user} />;
             case "saved":
                 return <View style={{ flex: 1, backgroundColor: "white" }} />;
             case "wardrobe":

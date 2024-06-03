@@ -39,7 +39,7 @@ export default function Swipes({ user }) {
         for (const post of user.post_ids) {
             try {
                 const response = await fetch(
-                    `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/${post.post_id}`
+                    `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/likes/${user.id}`
                 );
                 const postData = await response.json();
                 if (postData) {
