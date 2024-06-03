@@ -14,17 +14,24 @@ import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
 import { TabView, TabBar } from "react-native-tab-view";
+import {
+    useFonts,
+    JosefinSans_400Regular,
+} from "@expo-google-fonts/josefin-sans";
 
 export default function OtherProfileScreen() {
+    let [fontsLoaded] = useFonts({
+        JosefinSans_400Regular,
+    });
     const layout = useWindowDimensions();
     const route = useRoute();
     const { user } = route.params;
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
-        { key: "posts", title: "Posts" },
+        { key: "posts", title: "posts" },
         // { key: "swipes", title: "Swipes" },
-        // { key: "saved", title: "Saved" },
+        { key: "collection", title: "collection" },
         // { key: "wardrobe", title: "Wardrobe" },
     ]);
 
@@ -34,8 +41,8 @@ export default function OtherProfileScreen() {
                 return <Posts style={styles.posts} user={user} />;
             // case "swipes":
             //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
-            // case "saved":
-            //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+            case "collection":
+                return <View style={{ flex: 1, backgroundColor: "white" }} />;
             // case "wardrobe":
             //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
             default:
@@ -53,10 +60,9 @@ export default function OtherProfileScreen() {
                 <View style={styles.profileInfo}>
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
-                        <Text style={styles.userBio}>trevor | 😃😃😃😃</Text>
-                        <View style={styles.insContainer}>
-                            <Text style={styles.insTitle}>INS:</Text>
-                            <Text style={styles.insDescription}>
+                        <Text style={styles.userEmoji}>trevor | 😃😃😃😃</Text>
+                        <View>
+                            <Text style={styles.userBio}>
                                 currently obsessed with...
                             </Text>
                         </View>
@@ -85,14 +91,30 @@ export default function OtherProfileScreen() {
                     <TabBar
                         {...props}
                         indicatorStyle={{ backgroundColor: "white" }}
-                        style={{ backgroundColor: "pink" }}
+                        style={{ backgroundColor: "#EFEFEF" }}
                         renderLabel={({ route, focused, color }) => (
-                            <Text style={{ color, margin: 8 }}>
-                                {route.title}
-                            </Text>
+                            <View
+                                style={[
+                                    styles.tabLabel,
+                                    focused
+                                        ? styles.focusedLabel
+                                        : styles.unfocusedLabel,
+                                ]}
+                            >
+                                <Text
+                                    style={
+                                        focused
+                                            ? styles.focusedText
+                                            : styles.unfocusedText
+                                    }
+                                >
+                                    {route.title}
+                                </Text>
+                            </View>
                         )}
                     />
                 )}
+                lazy
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }}
             />
@@ -103,6 +125,7 @@ export default function OtherProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white'
     },
     profileSection: {
         flexDirection: "row",
@@ -127,12 +150,19 @@ const styles = StyleSheet.create({
         marginTop: 32,
     },
     userName: {
-        fontWeight: "bold",
-        fontSize: 25,
+        fontSize: 20,
+        fontFamily: "JosefinSans_400Regular",
     },
     userBio: {
         marginTop: 4,
+        fontSize: 15,
+        fontFamily: "JosefinSans_400Regular",
+    },
+    userEmoji: {
+        alignContent: "center",
+        marginTop: 4,
         fontSize: 20,
+        fontFamily: "JosefinSans_400Regular",
     },
     followSection: {
         flexDirection: "row",
@@ -142,5 +172,25 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         marginRight: 20,
         padding: 2,
+    },
+    focusedLabel: {
+        flex: 1,
+        // backgroundColor: "#CFE8FF", // Dark blue background when the tab is focused
+        backgroundColor: "transparent",
+        height: 30,
+    },
+    unfocusedLabel: {
+        backgroundColor: "transparent", // Light grey background when the tab is not focused
+    },
+
+    focusedText: {
+        color: "black",
+        fontFamily: "JosefinSans_400Regular",
+        fontSize: 19,
+    },
+    unfocusedText: {
+        color: "#D9D9D9",
+        fontFamily: "JosefinSans_400Regular",
+        fontSize: 19,
     },
 });

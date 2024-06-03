@@ -85,7 +85,7 @@ export default function ProfileScreen() {
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
                         <Text style={styles.userEmoji}>trevor | 😃😃😃😃</Text>
-                        <View style={styles.insContainer}>
+                        <View>
                             <Text style={styles.userBio}>
                                 currently obsessed with...
                             </Text>
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         marginRight: 20,
+        marginLeft: 12,
         padding: 2,
     },
     posts: {
