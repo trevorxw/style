@@ -39,7 +39,7 @@ export default function TabNavigation() {
                 options={{
                     tabBarLabel: ({ color }) => <Text style={{ color }}>Home</Text>,
                     tabBarIcon: ({ color, size }) => (
-                        <IconComponent library={Foundation} name="home" color={color} size={size} />
+                        <IconComponent library={Foundation} name="home" color={color} size={size} style={styles.icon}/>
                     ),
                     accessibilityLabel: "Home Tab",
                 }}
@@ -61,7 +61,7 @@ export default function TabNavigation() {
                 options={{
                     tabBarLabel: ({ color }) => <Text style={{ color }}>Post</Text>,
                     tabBarIcon: ({ color, size }) => (
-                        <IconComponent library={AntDesign} name="skin" color={color} size={size} />
+                        <IconComponent library={AntDesign} name="skin" color={color} size={size-3} style={styles.icon}/>
                     ),
                     accessibilityLabel: "Add Post Tab",
                 }}
@@ -83,7 +83,7 @@ export default function TabNavigation() {
                 options={{
                     tabBarLabel: ({ color }) => <Text style={{ color }}>Profile</Text>,
                     tabBarIcon: ({ color, size }) => (
-                        <IconComponent library={FontAwesome5} name="user-alt" color={color} size={size - 1} />
+                        <IconComponent library={FontAwesome5} name="user-alt" color={color} size={size - 5} style={styles.icon}/>
                     ),
                     accessibilityLabel: "Profile Tab",
                 }}
@@ -91,3 +91,10 @@ export default function TabNavigation() {
         </Tab.Navigator>
     );
 }
+
+const styles = StyleSheet.create({
+    icon: {
+        paddingTop: 1,
+    },
+});
+
