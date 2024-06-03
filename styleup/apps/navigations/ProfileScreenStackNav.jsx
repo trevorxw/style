@@ -33,9 +33,16 @@ export default function ProfileScreenStackNav() {
                 }}
             />
             <Stack.Screen
-                name="edit-profile"
+                name="edit profile"
                 component={EditProfile}
-                options={{ headerShown: false }}
+                options={{
+                    headerTitle: 'edit profile',
+                    headerTitleStyle: {
+                        fontFamily: 'JosefinSans_700Bold', // Using bold for headers
+                        fontSize: 22,
+                    },
+                    headerBackTitle: ' ',  // Hides the text next to the back button
+                }}
             />
         </Stack.Navigator>
     );

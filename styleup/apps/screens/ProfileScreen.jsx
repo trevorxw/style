@@ -96,7 +96,7 @@ export default function ProfileScreen() {
             <View style={styles.subheader}>
                 <View style={styles.editProfileSection}>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate("edit-profile")}
+                        onPress={() => navigation.navigate("edit profile")}
                         style={styles.editProfileButton}
                     >
                         <Text style={styles.editProfileButtonText}>
