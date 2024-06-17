@@ -50,7 +50,7 @@ export default function Discover() {
 
     const getCards = async () => {
         try {
-            const response = await fetch('https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/cards/');
+            const response = await fetch('https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/');
             const fetchedCards = await response.json();
             setCards(fetchedCards);
         } catch (error) {
@@ -88,7 +88,7 @@ export default function Discover() {
             };
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
-                `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/like/${user.id}/${card.id}`,
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/like/${user.id}/${card.id}`,
                 {
                     method: "POST",
                     headers: {

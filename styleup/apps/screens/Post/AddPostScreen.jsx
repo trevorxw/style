@@ -95,7 +95,7 @@ export default function AddPostScreen() {
             // formData.append("price", values.price);
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
-                `https://5025-2600-1700-3680-2110-7567-7952-aacc-8b36.ngrok-free.app/upload/${user.id}`,
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/upload/${user.id}`,
                 {
                     method: "POST",
                     body: formData,
