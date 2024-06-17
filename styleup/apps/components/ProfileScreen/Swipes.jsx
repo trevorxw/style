@@ -7,15 +7,6 @@ import {
     Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import {
-    collection,
-    getDocs,
-    getFirestore,
-    query,
-    where,
-} from "firebase/firestore";
-import { app } from "../../../firebaseConfig";
-import { useUser } from "@clerk/clerk-expo";
 import { FlatGrid } from "react-native-super-grid";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
