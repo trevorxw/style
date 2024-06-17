@@ -9,13 +9,49 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useUser, useClerk } from "@clerk/clerk-expo";
+import { useNavigation } from "@react-navigation/native";
 
-export default function EditProfileScreen({ navigation }) {
+export default function EditProfileScreen() {
     const [username, setUsername] = useState("");
     const [bio, setBio] = useState("");
     const [profileImage, setProfileImage] = useState(null);
     const { user, setUser } = useUser();
-    const clerk = useClerk();
+    const [loading, setLoading] = useState(false);
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (!userId) {
+                setError("No User ID provided");
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+
+            try {
+                const response = await axios.get(
+                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/user/${userId}`
+                );
+                if (response.data && typeof response.data === "object") {
+                    setUser(response.data);
+                } else {
+                    throw new Error("Received null or invalid user data");
+                }
+            } catch (error) {
+                console.error(
+                    "Failed to fetch user or process response",
+                    error
+                );
+                setError(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUser();
+    }, [profileImage]); // Dependency array ensures the effect runs only when userId changes
 
     useEffect(() => {
         if (user) {
@@ -26,21 +62,16 @@ export default function EditProfileScreen({ navigation }) {
     }, [user]);
 
     const handleSaveProfile = async () => {
-        if (!clerk || !user) {
-            console.error("Clerk or user context is not ready.");
+        if (!user) {
+            console.error("User context is not ready.");
             return;
         }
 
         try {
-            await clerk.users.updateProfile(user.id, {
-                username,
-                publicMetadata: { bio },
-            });
             if (profileImage) {
                 // Code to handle profile image upload goes here
             }
-            setUser({ ...user, username, bio });
-            navigation.navigate("Main");
+            navigation.navigate("profile-tab");
         } catch (error) {
             console.error("Failed to update profile:", error);
         }
@@ -112,7 +143,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "100%",
         borderRadius: 50,
-        resizeMode: 'cover'
+        resizeMode: "cover",
     },
     input: {
         width: "80%",
