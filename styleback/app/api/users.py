@@ -26,13 +26,17 @@ def get_user_profile(user_id):
     if not user_data:
         return jsonify({"error": "User not found in Firestore"}), 404
     
+    bio = ''
+
+    if 'bio' in response_json['unsafe_metadata']:
+         bio = response_json['unsafe_metadata']['bio']
 
     # Create fields of user data
     user = {
         'id': response_json['id'],
         'username': response_json['username'],
         'image_url': response_json['image_url'],
-        'bio': response_json['unsafe_metadata'],
+        'bio': bio,
         'following': user_data['following'],
         'followers': user_data['followers'],
         'post_ids': user_posts,
