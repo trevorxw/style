@@ -32,7 +32,7 @@ def get_user_profile(user_id):
         'id': response_json['id'],
         'username': response_json['username'],
         'image_url': response_json['image_url'],
-        'bio': user_data['bio'],
+        'bio': response_json['unsafe_metadata'],
         'following': user_data['following'],
         'followers': user_data['followers'],
         'post_ids': user_posts,
