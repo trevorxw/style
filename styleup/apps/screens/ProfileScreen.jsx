@@ -15,7 +15,7 @@ import Following from "../components/ProfileScreen/Following";
 import { TabView, TabBar } from "react-native-tab-view";
 import Posts from "../components/ProfileScreen/Posts";
 import Swipes from "../components/ProfileScreen/Swipes";
-import { useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
 import useFetchUser from "../../hooks/useFetchUser";
 import {
     useFonts,
@@ -23,13 +23,14 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 
 export default function ProfileScreen() {
+    const isFocused = useIsFocused();
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
     });
     const layout = useWindowDimensions();
+    const route = useRoute();
     const navigation = useNavigation();
     const { isLoading, isSignedIn, user: userClerk } = useUser();
-    const { user, loading, error } = useFetchUser(userClerk.id);
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -53,6 +54,16 @@ export default function ProfileScreen() {
                 return null;
         }
     };
+
+    const { user, loading, error, refreshUserData } = useFetchUser(userClerk.id);
+
+    useEffect(() => {
+        // Check if the screen is focused and if navigation came from the 'Settings' page
+        if (isFocused && route.params?.from === 'settings') {
+            refreshUserData();
+            route.params.from = undefined
+        }
+    }, [isFocused, route.params, refreshUserData]);
 
     if (loading) {
         return (
@@ -85,10 +96,12 @@ export default function ProfileScreen() {
                     </TouchableOpacity>
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
-                        <Text style={styles.userEmoji}>trevor | 😃😃😃😃</Text>
+                        {/* <Text style={styles.userEmoji}>trevor | 😃😃😃😃</Text> */}
                         <View>
                             <Text style={styles.userBio}>
-                                currently obsessed with...
+                                {user.bio == ""
+                                    ? "currrently obessed with..."
+                                    : user.bio}
                             </Text>
                         </View>
                     </View>
@@ -183,7 +196,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#D9D9D9",
         borderRadius: 2,
         width: 120,
-        alignItems:'center',
+        alignItems: "center",
         padding: 6,
         margin: 2,
     },
@@ -204,7 +217,7 @@ const styles = StyleSheet.create({
         fontFamily: "JosefinSans_400Regular",
     },
     userBio: {
-        marginTop: 4,
+        marginTop: 10,
         fontSize: 15,
         fontFamily: "JosefinSans_400Regular",
     },

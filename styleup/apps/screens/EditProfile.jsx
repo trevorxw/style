@@ -6,60 +6,19 @@ import {
     TouchableOpacity,
     Image,
     StyleSheet,
+    KeyboardAvoidingView,
+    Platform
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useUser, useClerk } from "@clerk/clerk-expo";
 import { useNavigation } from "@react-navigation/native";
 
 export default function EditProfileScreen() {
-    const [username, setUsername] = useState("");
-    const [bio, setBio] = useState("");
-    const [profileImage, setProfileImage] = useState(null);
-    const { user, setUser } = useUser();
-    const [loading, setLoading] = useState(false);
+    const { isLoaded, user } = useUser();
+    const [username, setUsername] = useState(user?.username);
+    const [bio, setBio] = useState(user?.unsafeMetadata["bio"]);
+    const [profileImage, setProfileImage] = useState(user?.imageUrl);
     const navigation = useNavigation();
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            if (!userId) {
-                setError("No User ID provided");
-                setLoading(false);
-                return;
-            }
-
-            setLoading(true);
-            setError(null);
-
-            try {
-                const response = await axios.get(
-                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/user/${userId}`
-                );
-                if (response.data && typeof response.data === "object") {
-                    setUser(response.data);
-                } else {
-                    throw new Error("Received null or invalid user data");
-                }
-            } catch (error) {
-                console.error(
-                    "Failed to fetch user or process response",
-                    error
-                );
-                setError(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUser();
-    }, [profileImage]); // Dependency array ensures the effect runs only when userId changes
-
-    useEffect(() => {
-        if (user) {
-            setUsername(user.username || "");
-            setBio(user.bio || "");
-            setProfileImage(user.profileImageUrl || null);
-        }
-    }, [user]);
 
     const handleSaveProfile = async () => {
         if (!user) {
@@ -68,13 +27,18 @@ export default function EditProfileScreen() {
         }
 
         try {
-            if (profileImage) {
-                // Code to handle profile image upload goes here
-            }
-            navigation.navigate("profile-tab");
+            await user.update({
+                username: username,
+                unsafeMetadata: {
+                    bio,
+                },
+            });
+
+            await user.reload();
         } catch (error) {
-            console.error("Failed to update profile:", error);
+            console.error("Failed to update profile:", error.message);
         }
+        navigation.navigate("profile-tab", { from: "settings" });
     };
 
     const pickImage = async () => {
@@ -83,42 +47,69 @@ export default function EditProfileScreen() {
             allowsEditing: true,
             aspect: [1, 1],
             quality: 1,
+            base64: true,
         });
+        try {
+            if (!result.canceled && result.assets[0].base64) {
+                const base64 = result.assets[0].base64;
+                const mimeType = result.assets[0].mimeType;
 
-        if (!result.cancelled) {
-            setProfileImage(result.uri);
+                const image = `data:${mimeType};base64,${base64}`;
+
+                await user?.setProfileImage({
+                    file: image,
+                });
+
+                await user.reload();
+                navigation.navigate("profile-tab", { from: "settings" });
+            }
+        } catch (error) {
+            console.error("Failed to update profile picture:", error);
         }
     };
 
     return (
-        <View style={styles.container}>
-            <TouchableOpacity onPress={pickImage} style={styles.imagePicker}>
-                {profileImage ? (
-                    <Image
-                        source={{ uri: profileImage }}
-                        style={styles.profileImage}
-                    />
-                ) : (
-                    <Text>Select Image</Text>
-                )}
-            </TouchableOpacity>
-            <TextInput
-                style={styles.input}
-                onChangeText={setUsername}
-                value={username}
-                placeholder="Username"
-            />
-            <TextInput
-                style={styles.input}
-                onChangeText={setBio}
-                value={bio}
-                placeholder="Bio"
-                multiline
-            />
-            <TouchableOpacity onPress={handleSaveProfile} style={styles.button}>
-                <Text style={styles.buttonText}>Save Profile</Text>
-            </TouchableOpacity>
-        </View>
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}
+        >
+            <View style={styles.container}>
+                <TouchableOpacity
+                    onPress={pickImage}
+                    style={styles.imagePicker}
+                >
+                    {profileImage ? (
+                        <Image
+                            source={{ uri: profileImage }}
+                            style={styles.profileImage}
+                        />
+                    ) : (
+                        <Image
+                            source={require("../../assets/images/blank-profile-picture.png")}
+                            style={styles.profileImage}
+                        />
+                    )}
+                </TouchableOpacity>
+                <Text>Profile Picture changes immediately.</Text>
+                <Text>Username can only have letters, numbers, -, _</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setUsername}
+                    placeholder={username ? username : "Set Username"}
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setBio}
+                    placeholder={bio ? bio : "currently obsessed with..."}
+                />
+                <TouchableOpacity
+                    onPress={handleSaveProfile}
+                    style={styles.button}
+                >
+                    <Text style={styles.buttonText}>Save Profile</Text>
+                </TouchableOpacity>
+            </View>
+        </KeyboardAvoidingView>
     );
 }
 
@@ -140,9 +131,9 @@ const styles = StyleSheet.create({
         backgroundColor: "#dddddd",
     },
     profileImage: {
-        width: "100%",
-        height: "100%",
-        borderRadius: 50,
+        width: 200,
+        height: 200,
+        borderRadius: 100,
         resizeMode: "cover",
     },
     input: {
