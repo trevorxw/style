@@ -59,7 +59,7 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         // Check if the screen is focused and if navigation came from the 'Settings' page
-        if (isFocused && route.params?.from === 'settings') {
+        if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost')) {
             refreshUserData();
             route.params.from = undefined
         }

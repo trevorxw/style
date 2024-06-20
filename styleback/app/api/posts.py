@@ -82,7 +82,7 @@ def upload_file(user_id):
             # Additional data
             description = request.form.get('description', '')
             category = request.form.get('category', '')
-            shop_url = request.form.get('shop_url', '')
+            shops = request.form.get('shops', '')
 
             # Tag the image
             tags = tag_image(filepath)
@@ -96,7 +96,7 @@ def upload_file(user_id):
                 'user_id': user_id,
                 'created_at': datetime.now(),
                 'url': file_url,
-                'shop_url': shop_url,
+                'shops': shops,
                 'description': description,
                 'category': category,
                 'likes': 0,
