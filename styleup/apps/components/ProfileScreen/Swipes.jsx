@@ -27,18 +27,16 @@ export default function Swipes({ user }) {
         setLoading(true);
 
         // Fetch details for each post using the post ID
-        for (const post of user.post_ids) {
-            try {
-                const response = await fetch(
-                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/likes/${user.id}`
-                );
-                const postData = await response.json();
-                if (postData) {
-                    posts.push(postData);
-                }
-            } catch (error) {
-                console.error("Error fetching post data", error);
+        try {
+            const response = await fetch(
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/likes/${user.id}`
+            );
+            const postData = await response.json();
+            if (postData.length != 0) {
+                posts.push(postData);
             }
+        } catch (error) {
+            console.error("Error fetching post data", error);
         }
 
         setUserPosts(posts);
