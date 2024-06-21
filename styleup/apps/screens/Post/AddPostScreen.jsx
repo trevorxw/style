@@ -13,6 +13,7 @@ import {
     Button,
     KeyboardAvoidingView,
     Platform,
+    ScrollView,
 } from "react-native";
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
@@ -31,7 +32,7 @@ import {
     JosefinSans_400Regular,
     JosefinSans_700Bold,
 } from "@expo-google-fonts/josefin-sans";
-import * as MediaLibrary from 'expo-media-library';                                
+import * as MediaLibrary from "expo-media-library";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -48,6 +49,7 @@ export default function AddPostScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const [facing, setFacing] = useState("back");
     const camera = useRef(null);
+    const [shops, setShops] = useState([]);
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -81,7 +83,7 @@ export default function AddPostScreen() {
     const saveImage = async () => {
         try {
             const asset = await MediaLibrary.saveToLibraryAsync(image); // Saves the photo to the gallery
-            console.log('Image saved successfully!');
+            console.log("Image saved successfully!");
         } catch (error) {
             console.log("Error saving photo: ", error);
         }
@@ -131,6 +133,12 @@ export default function AddPostScreen() {
     function toggleCameraFacing() {
         setFacing((current) => (current === "back" ? "front" : "back"));
     }
+
+    const addShop = () => {
+        // Add a new box and keep the placeholder as the last item
+        const newShop = `Shop ${shops.length + 1}`;
+        setShops([...shops, newShop]);
+    };
 
     if (!permission) {
         // Camera permissions are still loading.
@@ -184,6 +192,13 @@ export default function AddPostScreen() {
                                         </Text>
                                     </TouchableOpacity>
                                 </View>
+                                {loading ? (
+                                    <View style={styles.loading}>
+                                        <ActivityIndicator size='large'/>
+                                    </View>
+                                ) : (
+                                    <Text></Text>
+                                )}
                                 <Image
                                     source={{ uri: image }}
                                     style={styles.camera}
@@ -200,11 +215,45 @@ export default function AddPostScreen() {
                                     <TextInput
                                         style={styles.inputText}
                                         placeholder="description(optional)"
-                                        placeholderTextColor={"white"}
+                                        placeholderTextColor={
+                                            "rgba(256, 256, 256, 0.75)"
+                                        }
                                         onChangeText={handleChange(
                                             "description"
                                         )}
                                     />
+                                    <ScrollView
+                                        style={styles.shops}
+                                        horizontal={true}
+                                    >
+                                        {shops.map((shop, index) => (
+                                            <View
+                                                key={index}
+                                                style={styles.box}
+                                            >
+                                                <TouchableOpacity
+                                                    style={styles.shopBox}
+                                                >
+                                                    <Text
+                                                        style={styles.shopText}
+                                                    >
+                                                        {shop}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        ))}
+                                        {/* Placeholder box */}
+                                        <TouchableOpacity
+                                            onPress={addShop}
+                                            style={styles.placeholderBox}
+                                        >
+                                            <Ionicons
+                                                name="add"
+                                                size={24}
+                                                color="white"
+                                            />
+                                        </TouchableOpacity>
+                                    </ScrollView>
                                 </KeyboardAvoidingView>
                             </View>
                         ) : (
@@ -294,16 +343,27 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     inputContainer: {
-        flexDirection: "row",
         position: "absolute",
-        bottom: 60,
+        justifyContent: "center",
+        bottom: 15,
         paddingLeft: 10,
     },
     inputText: {
         fontSize: 18,
-        color: "white",
+        color: "rgba(256, 256, 256, 0.75)",
         fontFamily: "JosefinSans_400Regular",
         backGroundColor: "white",
+    },
+    shops: {
+        marginTop: 20,
+    },
+    shopBox: {
+        backgroundColor: "rgba(128, 128, 128, 0.5)",
+        marginRight: 4,
+        padding: 4,
+    },
+    shopText: {
+        color: "white",
     },
     button: {
         flex: 1,
@@ -331,6 +391,21 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "white",
         fontFamily: "JosefinSans_700Bold",
+    },
+    loading: {
+        position: 'absolute',
+        marginTop: screenHeight*1.3/3 ,
+        left: screenWidth/2,
+        transform: [
+            // Center horizontally by subtracting half the width of the indicator
+            { translateX: -18 },
+            // Center vertically by subtracting half the height of the indicator
+            { translateY: -18 }
+        ],
+        zIndex: 1,
+        padding: 3,
+        justifyContent: 'center',
+        alignContent: 'center',
     },
     text: {
         fontSize: 22,
