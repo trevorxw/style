@@ -14,6 +14,7 @@ import {
     KeyboardAvoidingView,
     Platform,
     ScrollView,
+    Modal,
 } from "react-native";
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
@@ -46,10 +47,20 @@ export default function AddPostScreen() {
     const [loading, setLoading] = useState(false);
     const { user } = useUser();
     const navigation = useNavigation();
+
+    // Camera
     const [permission, requestPermission] = useCameraPermissions();
     const [facing, setFacing] = useState("back");
     const camera = useRef(null);
+
+    // Shops
     const [shops, setShops] = useState([]);
+    const [isEditing, setIsEditing] = useState(false);
+    const [currentShop, setCurrentShop] = useState({
+        index: -1,
+        name: "",
+        url: "",
+    });
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -80,6 +91,10 @@ export default function AddPostScreen() {
         setImage(null);
     };
 
+    const clearShops = () => {
+        setShops([]);
+    };
+
     const saveImage = async () => {
         try {
             const asset = await MediaLibrary.saveToLibraryAsync(image); // Saves the photo to the gallery
@@ -102,8 +117,8 @@ export default function AddPostScreen() {
 
             // Append other form values that you want to send along with the file
             formData.append("description", values.description);
-            formData.append("shops", values.shops);
-            formData.append("category", values.category);
+            formData.append("shops", shops);
+            console.log(formData);
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
                 `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/upload/${user.id}`,
@@ -116,15 +131,21 @@ export default function AddPostScreen() {
             const result = await response.json();
             if (response.ok) {
                 saveImage(image);
-                setImage(null);
+                clearImage();
+                clearShops();
                 Alert.alert("Success!", "Post Added Successfully.");
                 navigation.navigate("Profile", { from: "AddPost" });
             } else {
                 Alert.alert("Error", result.message || "An error occurred");
             }
         } catch (error) {
-            console.error("Error uploading post", error);
-            Alert.alert("Error", "Failed to upload post.");
+            if (error.name === "AbortError") {
+                console.error("Fetch aborted:", error);
+                Alert.alert("Error", "Request timed out, please try again");
+            } else {
+                console.error("Error uploading post", error);
+                Alert.alert("Error", "Failed to upload post.");
+            }
         } finally {
             setLoading(false);
         }
@@ -134,10 +155,46 @@ export default function AddPostScreen() {
         setFacing((current) => (current === "back" ? "front" : "back"));
     }
 
-    const addShop = () => {
-        // Add a new box and keep the placeholder as the last item
-        const newShop = `Shop ${shops.length + 1}`;
-        setShops([...shops, newShop]);
+    const handleAddShop = () => {
+        setCurrentShop({ index: shops.length, name: "", url: "" });
+        setIsEditing(true);
+    };
+
+    const handleEditShop = (index) => {
+        setCurrentShop({
+            index,
+            name: shops[index].name,
+            url: shops[index].url,
+        });
+        setIsEditing(true);
+    };
+
+    const saveShop = () => {
+        const { index, name, url } = currentShop;
+        const updatedShops = [...shops];
+        if (index >= shops.length) {
+            updatedShops.push({ name, url }); // Add new shop
+        } else {
+            updatedShops[index] = { name, url }; // Update existing shop
+        }
+        setShops(updatedShops);
+        setIsEditing(false);
+    };
+
+    const delShop = () => {
+        const { index, name, url } = currentShop;
+        const updatedShops = [...shops];
+        if (index < shops.length) {
+            updatedShops.splice(index, 1); // delete shop
+        } else {
+            updatedShops[index] = { name, url }; // Update existing shop
+        }
+        setShops(updatedShops);
+        setIsEditing(false);
+    };
+
+    const closeModal = () => {
+        setIsEditing(false);
     };
 
     if (!permission) {
@@ -165,7 +222,6 @@ export default function AddPostScreen() {
             <Formik
                 initialValues={{
                     description: "",
-                    shops: "",
                     createdAt: Date.now(),
                     likes: 0,
                     shares: 0,
@@ -177,7 +233,12 @@ export default function AddPostScreen() {
                         {image ? (
                             <View style={styles.image}>
                                 <View style={styles.exitButton}>
-                                    <TouchableOpacity onPress={clearImage}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            clearImage();
+                                            clearShops();
+                                        }}
+                                    >
                                         <Feather
                                             name="x"
                                             size={24}
@@ -194,7 +255,7 @@ export default function AddPostScreen() {
                                 </View>
                                 {loading ? (
                                     <View style={styles.loading}>
-                                        <ActivityIndicator size='large'/>
+                                        <ActivityIndicator size="large" />
                                     </View>
                                 ) : (
                                     <Text></Text>
@@ -233,24 +294,27 @@ export default function AddPostScreen() {
                                             >
                                                 <TouchableOpacity
                                                     style={styles.shopBox}
+                                                    onPress={() =>
+                                                        handleEditShop(index)
+                                                    }
                                                 >
                                                     <Text
                                                         style={styles.shopText}
                                                     >
-                                                        {shop}
+                                                        {shop.name}
                                                     </Text>
                                                 </TouchableOpacity>
                                             </View>
                                         ))}
                                         {/* Placeholder box */}
                                         <TouchableOpacity
-                                            onPress={addShop}
-                                            style={styles.placeholderBox}
+                                            onPress={handleAddShop}
+                                            style={styles.shopBox}
                                         >
                                             <Ionicons
                                                 name="add"
-                                                size={24}
-                                                color="white"
+                                                size={16}
+                                                color="rgba(0, 0, 0, 0.5)"
                                             />
                                         </TouchableOpacity>
                                     </ScrollView>
@@ -297,6 +361,75 @@ export default function AddPostScreen() {
                                     </TouchableOpacity>
                                 </View>
                             </CameraView>
+                        )}
+                        {isEditing && (
+                            <Modal
+                                animationType="slide"
+                                transparent={true}
+                                visible={isEditing}
+                                onRequestClose={closeModal}
+                            >
+                                <View style={styles.modalView}>
+                                    <View style={styles.modalInput}>
+                                        <TextInput
+                                            style={styles.modalText}
+                                            onChangeText={(text) =>
+                                                setCurrentShop({
+                                                    ...currentShop,
+                                                    name: text,
+                                                })
+                                            }
+                                            value={currentShop.name}
+                                            placeholder="item"
+                                            placeholderTextColor={
+                                                "rgba(0, 0, 0, 0.5)"
+                                            }
+                                        />
+                                        <View style={styles.divider} />
+                                        <TextInput
+                                            style={styles.modalText}
+                                            onChangeText={(text) =>
+                                                setCurrentShop({
+                                                    ...currentShop,
+                                                    url: text,
+                                                })
+                                            }
+                                            value={currentShop.url}
+                                            placeholder="link"
+                                            placeholderTextColor={
+                                                "rgba(0, 0, 0, 0.5)"
+                                            }
+                                        />
+                                    </View>
+                                    <View style={{ flexDirection: "row" }}>
+                                        <View style={styles.modalSave}>
+                                            <TouchableOpacity
+                                                style={styles.saveButton}
+                                                onPress={saveShop}
+                                            >
+                                                <Feather
+                                                    name="check"
+                                                    size={24}
+                                                    color="white"
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+
+                                        <View style={styles.modalDel}>
+                                            <TouchableOpacity
+                                                style={styles.saveButton}
+                                                onPress={delShop}
+                                            >
+                                                <Ionicons
+                                                    name="remove"
+                                                    size={24}
+                                                    color="white"
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                </View>
+                            </Modal>
                         )}
                     </View>
                 )}
@@ -356,14 +489,17 @@ const styles = StyleSheet.create({
     },
     shops: {
         marginTop: 20,
+        width: "100%",
     },
     shopBox: {
-        backgroundColor: "rgba(128, 128, 128, 0.5)",
+        backgroundColor: "rgba(256, 256, 256, 0.9)",
+        borderRadius: 30,
         marginRight: 4,
-        padding: 4,
+        paddingHorizontal: 5,
+        paddingVertical: 2,
     },
     shopText: {
-        color: "white",
+        color: "rgba(0, 0, 0, 0.5)",
     },
     button: {
         flex: 1,
@@ -393,23 +529,71 @@ const styles = StyleSheet.create({
         fontFamily: "JosefinSans_700Bold",
     },
     loading: {
-        position: 'absolute',
-        marginTop: screenHeight*1.3/3 ,
-        left: screenWidth/2,
+        position: "absolute",
+        marginTop: (screenHeight * 1.3) / 3,
+        left: screenWidth / 2,
         transform: [
             // Center horizontally by subtracting half the width of the indicator
             { translateX: -18 },
             // Center vertically by subtracting half the height of the indicator
-            { translateY: -18 }
+            { translateY: -18 },
         ],
         zIndex: 1,
         padding: 3,
-        justifyContent: 'center',
-        alignContent: 'center',
+        justifyContent: "center",
+        alignContent: "center",
     },
     text: {
         fontSize: 22,
         fontWeight: "bold",
         color: "white",
+    },
+    modalView: {
+        marginTop: screenHeight / 3,
+        marginHorizontal: 40,
+        padding: 15,
+        alignItems: "center",
+    },
+    modalSave: {
+        transform: [
+            // Center horizontally by subtracting half the width of the indicator
+            { translateX: 176 / 2 - 12 },
+            // Center vertically by subtracting half the height of the indicator
+        ],
+    },
+    modalDel: {
+        transform: [
+            // Center horizontally by subtracting half the width of the indicator
+            { translateX: -(176 / 2 - 12) },
+            // Center vertically by subtracting half the height of the indicator
+        ],
+    },
+    modalInput: {
+        backgroundColor: "rgba(256, 256, 256, 0.6)",
+        borderRadius: 20,
+        justifyContent: "center",
+        paddingVertical: 10,
+        paddingHorizontal: 10,
+        height: 70,
+        width: 176,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        fontSize: 18,
+        fontFamily: "JosefinSans_400Regular",
+        color: "rgba(0, 0, 0, 0.5)",
+        paddingVertical: 3,
+    },
+    divider: {
+        height: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+        marginVertical: 3,
     },
 });
