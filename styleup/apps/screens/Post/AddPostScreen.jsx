@@ -187,7 +187,6 @@ export default function AddPostScreen() {
         if (index < shops.length) {
             updatedShops.splice(index, 1); // delete shop
         } else {
-            updatedShops[index] = { name, url }; // Update existing shop
         }
         setShops(updatedShops);
         setIsEditing(false);
