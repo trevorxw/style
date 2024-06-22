@@ -117,8 +117,7 @@ export default function AddPostScreen() {
 
             // Append other form values that you want to send along with the file
             formData.append("description", values.description);
-            formData.append("shops", shops);
-            console.log(formData);
+            formData.append("shops", JSON.stringify(shops));
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
                 `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/upload/${user.id}`,
@@ -184,9 +183,8 @@ export default function AddPostScreen() {
     const delShop = () => {
         const { index, name, url } = currentShop;
         const updatedShops = [...shops];
-        if (index < shops.length) {
+        if (index !== -1) {
             updatedShops.splice(index, 1); // delete shop
-        } else {
         }
         setShops(updatedShops);
         setIsEditing(false);
