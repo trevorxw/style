@@ -13,16 +13,15 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Swipes({ user }) {
     const [loading, setLoading] = useState(true);
-    const [userPosts, setUserPosts] = useState([]);
+    const [userSwipedPosts, setSwipedPosts] = useState([]);
 
     useEffect(() => {
         if (user) {
-            getUserPosts();
+            getUserLikes();
         }
     }, [user]);
 
-
-    const getUserPosts = async () => {
+    const getUserLikes = async () => {
         const posts = [];
         setLoading(true);
 
@@ -31,15 +30,25 @@ export default function Swipes({ user }) {
             const response = await fetch(
                 `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/likes/${user.id}`
             );
-            const postData = await response.json();
-            if (postData.length != 0) {
-                posts.push(postData);
+            const likesData = await response.json();
+            for (const post of likesData) {
+                try {
+                    const response = await fetch(
+                        `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
+                    );
+                    const postData = await response.json();
+                    if (postData) {
+                        posts.push(postData);
+                    }
+                } catch (error) {
+                    console.error("Error fetching post data", error);
+                }
             }
         } catch (error) {
             console.error("Error fetching post data", error);
         }
 
-        setUserPosts(posts);
+        setSwipedPosts(posts);
     };
 
     const onLoadEnd = () => {
@@ -49,15 +58,12 @@ export default function Swipes({ user }) {
     return (
         <FlatGrid
             itemDimension={130}
-            data={userPosts}
+            data={userSwipedPosts}
             style={styles.gridView}
             spacing={0}
             renderItem={({ item }) => (
                 <View
-                    style={[
-                        styles.itemContainer,
-                        { backgroundColor: item.code },
-                    ]}
+                    style={styles.itemContainer}
                 >
                     <Image
                         source={{ uri: item.url }}
