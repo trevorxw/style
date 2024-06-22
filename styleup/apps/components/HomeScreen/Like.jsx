@@ -35,6 +35,7 @@ export default function Like({ card }) {
     return (
         <View>
             <TouchableOpacity
+                disabled={true}
                 onPress={() => {
                     {
                         isLiked ? decrementLike() : incrementLike();
