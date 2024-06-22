@@ -100,7 +100,7 @@ export default function ProfileScreen() {
                         <View>
                             <Text style={styles.userBio}>
                                 {user.bio == ""
-                                    ? "currrently obessed with..."
+                                    ? "currrently obsessed with..."
                                     : user.bio}
                             </Text>
                         </View>

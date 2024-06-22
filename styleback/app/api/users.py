@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_posts_by_user, get_user_details, add_swipe_history
+from app.services.firebase import get_posts_by_user, get_user_details, add_swipe_history, create_new_user
 from app.services.auth import token_required
 import requests
 
@@ -18,6 +18,8 @@ def get_user_profile(user_id):
     clerk_endpoint = f'https://api.clerk.com/v1/users/{user_id}'
     response = requests.get(clerk_endpoint, headers=headers)
     response_json = response.json()
+
+    create_new_user(user_id)
 
     # Retrieve posts from firestore
     user_posts = get_posts_by_user(user_id)

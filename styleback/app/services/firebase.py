@@ -44,7 +44,7 @@ def get_posts_by_user(user_id):
         posts = db.collection('posts').document(user_id).collection('userPosts').stream()
         
         # Create a list of post IDs from the posts subcollection
-        post_ids = [{'post_id': post.id} for post in posts]
+        post_ids = [{'post_id': post.id} for post in posts if post.id != 1]
         return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
     except Exception as e:
         return {"error": str(e)}
@@ -79,6 +79,42 @@ def add_data_to_firestore(filename, userId, file_metadata):
     doc_ref.set(file_metadata)
 
 #User
+
+def create_new_user(user_id):
+    """
+    Creates new user if user does not exist, else do nothing.
+    """
+    user_ref = db.collection('users').document(user_id)
+    user_doc = user_ref.get()
+    if user_doc.exists:
+        return jsonify({'message': 'User already exists'}), 200
+    
+
+    #add user_id to users collection
+    user_ref.set({
+        'bio': 'This is a default bio',
+        'created_at': firestore.SERVER_TIMESTAMP
+    })
+
+    # Initialize empty collections with a dummy document to make the collection exist
+    # Posts
+    user_ref.collection('posts').document('initial_post').set({
+        'title': 'First Post',
+        'content': 'Welcome to your new social media!'
+    })
+
+    # Following
+    user_ref.collection('following').document('dummy_user').set({
+        'following_since': firestore.SERVER_TIMESTAMP
+    })
+
+    # Followers
+    user_ref.collection('followers').document('dummy_user').set({
+        'followed_since': firestore.SERVER_TIMESTAMP
+    })
+
+    return jsonify({'message': 'New user created with initial settings'}), 201
+    
 
 def get_user_details(user_id):
     """
