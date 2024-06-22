@@ -51,6 +51,7 @@ export default function AddPostScreen() {
     // Camera
     const [permission, requestPermission] = useCameraPermissions();
     const [facing, setFacing] = useState("back");
+    const [fromCamera, setFromCamera] = useState(false);
     const camera = useRef(null);
 
     // Shops
@@ -84,11 +85,13 @@ export default function AddPostScreen() {
             };
             let photo = await camera.current.takePictureAsync(options);
             setImage(photo.uri);
+            setFromCamera(true);
         }
     };
 
     const clearImage = () => {
         setImage(null);
+        setFromCamera(false);
     };
 
     const clearShops = () => {
@@ -129,7 +132,9 @@ export default function AddPostScreen() {
 
             const result = await response.json();
             if (response.ok) {
-                saveImage(image);
+                if (fromCamera) {
+                    saveImage(image);
+                }
                 clearImage();
                 clearShops();
                 Alert.alert("Success!", "Post Added Successfully.");

@@ -6,15 +6,25 @@ import {
     StyleSheet,
     ActivityIndicator,
     Dimensions,
+    ScrollView,
 } from "react-native";
 import useFetchUser from "../../../hooks/useFetchUser";
 import Like from "./Like";
 import Share from "./Share";
 import ProfilePicture from "./ProfilePicture";
+import {
+    useFonts,
+    JosefinSans_400Regular,
+    JosefinSans_700Bold,
+} from "@expo-google-fonts/josefin-sans";
+import * as WebBrowser from "expo-web-browser";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Post({ card }) {
+    let [fontsLoaded] = useFonts({
+        JosefinSans_400Regular,
+    });
     const { user, loading, error } = useFetchUser(card.user_id);
 
     if (loading) {
@@ -29,12 +39,37 @@ export default function Post({ card }) {
         return <Text>No user data available.</Text>;
     }
 
+    const openWebBrowser = async (url) => {
+        try {
+            await WebBrowser.dismissBrowser()
+            const result = await WebBrowser.openBrowserAsync(`https://${url}`)
+        } catch (error) {
+            console.error("Failed to open URL: ", error);
+            Alert.alert("Error", "Failed to open link");
+        }
+    };
+
     return (
         <View style={styles.card}>
             <View style={styles.buttonsContainer}>
                 <ProfilePicture user={user} />
                 <Like card={card} />
                 {/* <Share card={card} /> */}
+            </View>
+            <View style={styles.fieldsContainer}>
+                <Text style={styles.descriptionText}>{card.description}</Text>
+                <ScrollView style={styles.shops} horizontal={true}>
+                    {JSON.parse(card.shops).map((shop, index) => (
+                        <View key={index} style={styles.box}>
+                            <TouchableOpacity
+                                style={styles.shopBox}
+                                onPress={() => openWebBrowser(shop.url)}
+                            >
+                                <Text style={styles.shopText}>{shop.name}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    ))}
+                </ScrollView>
             </View>
             <Image source={{ uri: card.url }} style={styles.image} />
         </View>
@@ -44,10 +79,7 @@ export default function Post({ card }) {
 const styles = StyleSheet.create({
     card: {
         flex: 1,
-        width: screenWidth,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: 'black',
+        backgroundColor: "black",
     },
     image: {
         width: "100%",
@@ -60,5 +92,31 @@ const styles = StyleSheet.create({
         right: (screenWidth * 1) / 30,
         top: (screenHeight * 5) / 8,
         justifyContent: "center",
+    },
+    descriptionText: {
+        fontSize: 18,
+        color: "rgba(256, 256, 256, 0.75)",
+        fontFamily: "JosefinSans_400Regular",
+    },
+    shops: {
+        marginTop: 20,
+        width: "100%",
+    },
+    shopBox: {
+        backgroundColor: "rgba(256, 256, 256, 0.9)",
+        borderRadius: 30,
+        marginRight: 4,
+        paddingHorizontal: 5,
+        paddingVertical: 2,
+    },
+    shopText: {
+        color: "rgba(0, 0, 0, 0.5)",
+    },
+    fieldsContainer: {
+        position: "absolute",
+        justifyContent: "center",
+        top: (screenHeight * 9) / 11,
+        paddingLeft: 10,
+        zIndex: 1,
     },
 });

@@ -221,10 +221,6 @@ const styles = StyleSheet.create({
     },
     postContainer: {
         flex: 1,
-        width: screenWidth,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "black",
     },
     overlayLabelLeft: {
         flexDirection: "row",
