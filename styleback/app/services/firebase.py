@@ -44,7 +44,7 @@ def get_posts_by_user(user_id):
         posts = db.collection('posts').document(user_id).collection('userPosts').stream()
         
         # Create a list of post IDs from the posts subcollection
-        post_ids = [{'post_id': post.id} for post in posts if post.id != 1]
+        post_ids = [{'post_id': post.id} for post in posts if post.id != 'initial_post']
         return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
     except Exception as e:
         return {"error": str(e)}
@@ -98,18 +98,26 @@ def create_new_user(user_id):
 
     # Initialize empty collections with a dummy document to make the collection exist
     # Posts
-    user_ref.collection('posts').document('initial_post').set({
+    db.collection('posts').document(user_id).collection('userPosts').document('initial_post').set({
         'title': 'First Post',
         'content': 'Welcome to your new social media!'
     })
 
     # Following
-    user_ref.collection('following').document('dummy_user').set({
+    user_ref.collection('userFollowing').document('dummy_user').set({
         'following_since': firestore.SERVER_TIMESTAMP
     })
 
     # Followers
-    user_ref.collection('followers').document('dummy_user').set({
+    user_ref.collection('userFollows').document('dummy_user').set({
+        'followed_since': firestore.SERVER_TIMESTAMP
+    })
+    # SwipeHistory
+    user_ref.collection('swipeHistory').document('dummy_history').set({
+        'followed_since': firestore.SERVER_TIMESTAMP
+    })
+    # Collections
+    user_ref.collection('collections').document('dummy_collection').set({
         'followed_since': firestore.SERVER_TIMESTAMP
     })
 
