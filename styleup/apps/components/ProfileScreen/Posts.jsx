@@ -15,13 +15,15 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 export default function Posts({ user }) {
     const [loading, setLoading] = useState(true);
     const [userPosts, setUserPosts] = useState([]);
+    const numColumns = 3;
+    const spacing = 1; // Space between items
+    const itemWidth = (screenWidth - (numColumns - 1) * spacing) / numColumns;
 
     useEffect(() => {
         if (user) {
             getUserPosts();
         }
     }, [user]);
-
 
     const getUserPosts = async () => {
         const posts = [];
@@ -51,23 +53,26 @@ export default function Posts({ user }) {
 
     return (
         <FlatGrid
-            itemDimension={130}
             data={userPosts}
             style={styles.gridView}
             spacing={0}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
                 <View
                     style={[
                         styles.itemContainer,
-                        { backgroundColor: item.code },
+                        {
+                            marginRight:
+                                (index + 1) % numColumns === 0 ? 0 : 1, // Right margin for items not in the last column
+                            marginBottom: 1, // Bottom margin for all items
+                        },
                     ]}
                 >
                     <TouchableOpacity>
-                    <Image
-                        source={{ uri: item.url }}
-                        onLoadEnd={onLoadEnd}
-                        style={styles.image}
-                    />
+                        <Image
+                            source={{ uri: item.url }}
+                            onLoadEnd={onLoadEnd}
+                            style={styles.image}
+                        />
                     </TouchableOpacity>
                     {loading && (
                         <ActivityIndicator
@@ -89,8 +94,6 @@ const styles = StyleSheet.create({
     itemContainer: {
         flex: 1,
         justifyContent: "flex-end",
-        borderRadius: 5,
-        width: screenWidth / 3,
         height: 150,
     },
     image: {
