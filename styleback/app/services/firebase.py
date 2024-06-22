@@ -29,7 +29,7 @@ def get_all_posts():
     Retrieves all posts from Firestore.
     """
     try:
-        query_snapshot = db.collection('all_posts').stream()
+        query_snapshot = db.collection('all_posts').order_by('created_at', direction=firestore.Query.DESCENDING).stream()
         cards = [{'id': doc.id, **doc.to_dict()} for doc in query_snapshot]
         return jsonify(cards), 200
     except Exception as e:
