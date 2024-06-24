@@ -9,6 +9,9 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FlatGrid } from "react-native-super-grid";
+import { formatNumber } from "../../../utils/formatNumber";
+import { FontAwesome6 } from '@expo/vector-icons';
+
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -68,11 +71,17 @@ export default function Posts({ user }) {
                     ]}
                 >
                     <TouchableOpacity>
+
                         <Image
                             source={{ uri: item.url }}
                             onLoadEnd={onLoadEnd}
                             style={styles.image}
                         />
+                        <View style = {styles.corner}>
+                        <FontAwesome6 name="heart" size={16} color="white" />
+                        <Text style={styles.text}>{formatNumber(item.likes)}</Text>
+                        </View>
+                        
                     </TouchableOpacity>
                     {loading && (
                         <ActivityIndicator
@@ -108,4 +117,26 @@ const styles = StyleSheet.create({
         top: 0,
         bottom: 0,
     },
+    text: {
+        color: "#D9D9D9",
+        fontFamily: "JosefinSans_400Regular",
+        fontSize: 16,
+        color: 'white',
+        opacity: 1,
+        position: 'absolute',
+        left: 19,
+        bottom: -1,
+        //backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        // padding: 5,
+        // borderRadius: 3,
+    },
+    corner: {
+        flexDirection: 'row',
+        position: 'absolute',
+        bottom: 5,
+        left: 5,
+        alignItems: 'center'
+
+    },
+
 });

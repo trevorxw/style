@@ -3,16 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
+import { formatNumber } from "../../../utils/formatNumber";
 
-function formatNumber(num) {
-    if (num >= 1000000) {
-        return (num / 1000000).toFixed(2) + "M";
-    } else if (num >= 1000) {
-        return (num / 1000).toFixed(1) + "K";
-    } else {
-        return num.toString();
-    }
-}
 
 export default function Like({ card }) {
     const db = getFirestore(app);
