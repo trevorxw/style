@@ -228,7 +228,10 @@ export default function AddPostScreen() {
                     likes: 0,
                     shares: 0,
                 }}
-                onSubmit={(values) => onSubmitMethod(values)}
+                onSubmit={(values, { resetForm }) => {
+                    onSubmitMethod(values);
+                    resetForm();
+                }}
             >
                 {({ handleChange, handleSubmit, values }) => (
                     <View style={styles.container}>

@@ -85,7 +85,7 @@ export default function EditProfileScreen() {
                         />
                     ) : (
                         <Image
-                            source={require("../../assets/images/blank-profile-picture.png")}
+                            source={require("../../../assets/images/blank-profile-picture.png")}
                             style={styles.profileImage}
                         />
                     )}

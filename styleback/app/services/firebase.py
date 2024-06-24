@@ -52,7 +52,7 @@ def get_posts_by_user(user_id):
 def get_liked_posts_by_user(user_id):
     try:
         # Ensure to reference the posts subcollection for the specific user
-        posts = db.collection('users').document(user_id).collection('swipeHistory').where("liked", "==", 1).stream()
+        posts = db.collection('users').document(user_id).collection('swipeHistory').where("liked", "==", 1).order_by('time', direction=firestore.Query.DESCENDING).stream()
         
         # Create a list of post IDs from the posts subcollection
 
@@ -67,6 +67,15 @@ def get_liked_posts_by_user(user_id):
 def upload_file_to_storage(file_path, filename):
     # Specify the path within the bucket
     blob = bucket.blob(f'postImages/{filename}')
+    print(f"Uploading to: {blob.path}")  # Check the path
+    blob.upload_from_filename(file_path)
+    blob.make_public()
+    print(f"File URL: {blob.public_url}")  # Verify the URL
+    return blob.public_url  # Ensure the file is publicly accessible
+
+def upload_file_to_collections(file_path, filename):
+    # Specify the path within the bucket
+    blob = bucket.blob(f'collections/{filename}')
     print(f"Uploading to: {blob.path}")  # Check the path
     blob.upload_from_filename(file_path)
     blob.make_public()
@@ -134,6 +143,7 @@ def get_user_details(user_id):
         if not user_doc.exists:
             return jsonify({"error": "User not found"}), 404
 
+        # Fetch bio
         user_data = user_doc.to_dict()
         bio = user_data.get('bio', 'No bio available')
 
@@ -154,6 +164,87 @@ def get_user_details(user_id):
 
     except Exception as e:
         return jsonify({"error": str(e)})
+
+def get_user_collections(user_id):
+    """
+    Retrieves collection data from Firestore based on the user_id.
+    """
+    try:
+        #Fetch collections
+        collections_ref = db.collection('users').document(user_id).collection('collections').get()
+
+        collections_list = []
+
+        # Iterate over each document in the collections
+        for doc in collections_ref:
+            # Each doc is a DocumentSnapshot
+            doc_data = doc.to_dict()
+            uri = doc_data.get('uri', '')
+            description = doc_data.get('description', '')
+            posts = doc_data.get('posts', [])
+            title = doc_data.get('title', '')
+
+            # Append each collection's data to the list
+            if doc.id != 'dummy_collection':
+                collections_list.insert(0, {
+                    "id": doc.id,
+                    "uri": uri,
+                    "description": description,
+                    "posts": posts,
+                    'title': title
+                })
+
+        # Return a JSON response containing the collections
+        return jsonify({"collections": collections_list})
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+def get_user_collection(user_id, collection_id):
+    """
+    Retrieves collection data from Firestore based on the user_id and collection_id.
+    """
+    try:
+        collection = db.collection('users').document(user_id).collection('collections').document(collection_id).get()
+        if collection.exists:
+            # Convert the document to dictionary format and return it as JSON
+            return jsonify(collection.to_dict()), 200
+        else:
+            # Return a JSON response indicating that no document was found
+            return jsonify({"message": "No post found with the given ID"}), 404
+    except Exception as e:
+            return jsonify({"error": str(e)})
+
+def add_new_collection(user_id, data):
+    collection_ref = db.collection('users').document(user_id).collection('collections').document() 
+    collection_ref.set(data)
+    return collection_ref.id
+    
+def edit_collection_user(user_id, collection_id, data):
+    try:
+        collection_ref = db.collection('users').document(user_id).collection('collections').document(collection_id) 
+        collection_ref.update(data)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+def del_collection(user_id, collection_id):
+    bucket = storage.bucket()
+    file_path = f'collections/{user_id}/{collection_id}'
+    blob = bucket.blob(file_path)
+    
+    try:
+        blob.delete()
+        collection_ref = db.collection('users').document(user_id).collection('collections').document(collection_id)
+        collection = collection_ref.get()
+        if collection.exists:
+            collection_ref.delete()
+            print(f"Collection {collection_id} deleted from Firestore.")
+            return True
+        else:
+            print(f"No such collection {collection_id} to delete.")
+            return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 def add_swipe_history(user_id, post_id, metrics):
     """

@@ -84,7 +84,8 @@ export default function Discover() {
             const postData = {
                 liked: liked,
                 duration: duration,
-                shared: shared
+                shared: shared,
+                time: Date.now(),
             };
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(

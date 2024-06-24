@@ -1,9 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import ProfileScreen from "../screens/ProfileScreen";
-import Settings from "../screens/Settings";
-import EditProfile from "../screens/EditProfile";
+import ProfileScreen from "../screens/Profile/ProfileScreen";
+import Settings from "../screens/Profile/Settings";
+import EditProfile from "../screens/Profile/EditProfile";
+import AddCollection from "../screens/Profile/AddCollection";
+import ViewCollection from "../screens/Profile/ViewCollection";
 import { useFonts, JosefinSans_400Regular, JosefinSans_700Bold } from '@expo-google-fonts/josefin-sans';
 
 const Stack = createStackNavigator();
@@ -42,6 +44,20 @@ export default function ProfileScreenStackNav() {
                         fontSize: 22,
                     },
                     headerBackTitle: ' ',  // Hides the text next to the back button
+                }}
+            />
+            <Stack.Screen
+                name="add collection"
+                component={AddCollection}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="view collection"
+                component={ViewCollection}
+                options={{
+                    headerShown: false,
                 }}
             />
         </Stack.Navigator>

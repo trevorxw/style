@@ -10,13 +10,14 @@ import {
 } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
-import Followers from "../components/ProfileScreen/Followers";
-import Following from "../components/ProfileScreen/Following";
+import Followers from "../../components/ProfileScreen/Followers";
+import Following from "../../components/ProfileScreen/Following";
 import { TabView, TabBar } from "react-native-tab-view";
-import Posts from "../components/ProfileScreen/Posts";
-import Swipes from "../components/ProfileScreen/Swipes";
+import Posts from "../../components/ProfileScreen/Posts";
+import Swipes from "../../components/ProfileScreen/Swipes";
+import Collection from "../../components/ProfileScreen/Collection";
 import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
-import useFetchUser from "../../hooks/useFetchUser";
+import useFetchUser from "../../../hooks/useFetchUser";
 import {
     useFonts,
     JosefinSans_400Regular,
@@ -47,7 +48,7 @@ export default function ProfileScreen() {
             case "swipes":
                 return <Swipes style={styles.posts} user={user} />;
             case "saved":
-                return <View style={{ flex: 1, backgroundColor: "white" }} />;
+                return <Collection style={styles.posts} user={user} />;
             case "wardrobe":
                 return <View style={{ flex: 1, backgroundColor: "white" }} />;
             default:
@@ -59,7 +60,7 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         // Check if the screen is focused and if navigation came from the 'Settings' page
-        if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost')) {
+        if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost' || route.params?.from === 'edited collection'|| route.params?.from === 'add collection')) {
             refreshUserData();
             route.params.from = undefined
         }
