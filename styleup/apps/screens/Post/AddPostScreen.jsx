@@ -266,7 +266,7 @@ export default function AddPostScreen() {
                                     <Text></Text>
                                 )}
                                 <Image
-                                    source={{ uri: image }}
+                                    source={image}
                                     style={styles.camera}
                                 />
                                 <KeyboardAvoidingView
