@@ -558,7 +558,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        resizeMode: "cover",
+        contentFit: "cover",
         backgroundColor: "#C4C4C4",
     },
     selectionOverlay: {

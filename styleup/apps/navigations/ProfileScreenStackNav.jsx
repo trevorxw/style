@@ -6,6 +6,7 @@ import Settings from "../screens/Profile/Settings";
 import EditProfile from "../screens/Profile/EditProfile";
 import AddCollection from "../screens/Profile/AddCollection";
 import ViewCollection from "../screens/Profile/ViewCollection";
+import OotdCamera from "../screens/Profile/OotdCamera";
 import { useFonts, JosefinSans_400Regular, JosefinSans_700Bold } from '@expo-google-fonts/josefin-sans';
 
 const Stack = createStackNavigator();
@@ -56,6 +57,13 @@ export default function ProfileScreenStackNav() {
             <Stack.Screen
                 name="view collection"
                 component={ViewCollection}
+                options={{
+                    headerShown: false,
+                }}
+            />
+            <Stack.Screen
+                name="ootdCamera"
+                component={OotdCamera}
                 options={{
                     headerShown: false,
                 }}

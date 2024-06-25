@@ -16,6 +16,7 @@ import { TabView, TabBar } from "react-native-tab-view";
 import Posts from "../../components/ProfileScreen/Posts";
 import Swipes from "../../components/ProfileScreen/Swipes";
 import Collection from "../../components/ProfileScreen/Collection";
+import Ootd from "../../components/ProfileScreen/Ootd";
 import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
 import useFetchUser from "../../../hooks/useFetchUser";
 import {
@@ -50,7 +51,7 @@ export default function ProfileScreen() {
             case "saved":
                 return <Collection style={styles.posts} user={user} />;
             case "wardrobe":
-                return <View style={{ flex: 1, backgroundColor: "white" }} />;
+                return <Ootd style={styles.posts} user={user} />;
             default:
                 return null;
         }
@@ -60,7 +61,7 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         // Check if the screen is focused and if navigation came from the 'Settings' page
-        if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost' || route.params?.from === 'edited collection'|| route.params?.from === 'add collection')) {
+        if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost' || route.params?.from === 'edited collection'|| route.params?.from === 'add collection' || route.params?.from === 'ootd')) {
             refreshUserData();
             route.params.from = undefined
         }

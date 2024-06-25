@@ -38,6 +38,7 @@ export default function Collection({ user }) {
                 `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collections/${user.id}`
             );
             const collectionsData = await response.json();
+            // Add addButton to end of collections
             if (collectionsData && collectionsData.collections) {
                 const collectionsWithAddButton = [
                     ...collectionsData.collections,
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        resizeMode: "cover",
+        contentFit: "cover",
         borderRadius: 4,
     },
 });

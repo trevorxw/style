@@ -39,7 +39,7 @@ import { PinchGestureHandler, State } from "react-native-gesture-handler";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function AddPostScreen() {
+export default function OotdCamera() {
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
     });
@@ -53,7 +53,6 @@ export default function AddPostScreen() {
     // Camera
     const [permission, requestPermission] = useCameraPermissions();
     const [facing, setFacing] = useState("back");
-    const [fromCamera, setFromCamera] = useState(false);
     const [zoom, setZoom] = useState(0);
     const [lastZoom, setLastZoom] = useState(0);
     const camera = useRef(null);
@@ -67,6 +66,23 @@ export default function AddPostScreen() {
         url: "",
     });
 
+    // ootd
+    const [privateOotd, setPrivateOotd] = useState(false);
+    const toggleSwitch = () =>
+        setPrivateOotd((previousState) => !previousState);
+
+    // tooltip
+    const [tooltipVisible, setTooltipVisible] = useState(false);
+
+    const handlePressIn = () => {
+        setTooltipVisible(true);
+    };
+
+    const handlePressOut = () => {
+        setTooltipVisible(false);
+    };
+
+    // camera zoom
     const onPinchGestureEvent = (event) => {
         if (event.nativeEvent.state === State.ACTIVE) {
             // Calculate new zoom level based on the pinch scale and the last committed zoom level
@@ -83,18 +99,7 @@ export default function AddPostScreen() {
         }
     };
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            aspect: [16, 9],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
-        }
-    };
-
+    // camera
     const takePicture = async () => {
         if (camera.current) {
             const options = {
@@ -105,13 +110,11 @@ export default function AddPostScreen() {
             };
             let photo = await camera.current.takePictureAsync(options);
             setImage(photo.uri);
-            setFromCamera(true);
         }
     };
 
     const clearImage = () => {
         setImage(null);
-        setFromCamera(false);
     };
 
     const clearShops = () => {
@@ -153,13 +156,11 @@ export default function AddPostScreen() {
 
             const result = await response.json();
             if (response.ok) {
-                if (fromCamera) {
-                    saveImage(image);
-                }
+                saveImage(image);
                 clearImage();
                 clearShops();
                 Alert.alert("Success!", "Post Added Successfully.");
-                navigation.navigate("Profile", { from: "AddPost" });
+                navigation.navigate("profile-tab", { from: "ootd" });
             } else {
                 Alert.alert("Error", result.message || "An error occurred");
             }
@@ -248,7 +249,7 @@ export default function AddPostScreen() {
                     createdAt: Date.now(),
                     likes: 0,
                     shares: 0,
-                    category: "",
+                    category: privateOotd ? "privateootd" : "ootd",
                 }}
                 enableReinitialize={true}
                 onSubmit={(values, { resetForm }) => {
@@ -259,7 +260,7 @@ export default function AddPostScreen() {
                 {({ handleChange, handleSubmit, values }) => (
                     <View style={styles.container}>
                         {image ? (
-                            <View style={styles.imageContainer}>
+                            <View style={styles.image}>
                                 <View style={styles.exitButton}>
                                     <TouchableOpacity
                                         onPress={() => {
@@ -378,90 +379,126 @@ export default function AddPostScreen() {
                                             />
                                         </TouchableOpacity>
                                     </View>
-                                    <View style={styles.galleryContainer}>
+                                    <View style={styles.privateContainer}>
                                         <TouchableOpacity
-                                            style={styles.button}
-                                            onPress={pickImage}
+                                            onPressIn={handlePressIn}
+                                            onPressOut={handlePressOut}
+                                            delayLongPress={100} // Delay in ms before onLongPress is called
+                                            onLongPress={handlePressIn} // Alternative for a longer hold
                                         >
-                                            <Ionicons
-                                                name="images-outline"
+                                            <Text style={styles.privateText}>
+                                                hide
+                                            </Text>
+                                        </TouchableOpacity>
+                                        <Modal
+                                            animationType="fade"
+                                            transparent={true}
+                                            visible={tooltipVisible}
+                                            onRequestClose={() => {
+                                                setTooltipVisible(
+                                                    !tooltipVisible
+                                                );
+                                            }}
+                                        >
+                                            <View style={styles.centeredView}>
+                                                <View style={styles.tooltipView}>
+                                                    <Text
+                                                        style={styles.tooltipText}
+                                                    >
+                                                        This ootd won't appear on
+                                                        other people's home
+                                                        screen.
+                                                    </Text>
+                                                </View>
+                                            </View>
+                                        </Modal>
+                                        <Switch
+                                            trackColor={{
+                                                false: "rgba(118, 117, 119, 1)",
+                                                true: "rgba(129, 176, 255, 1)",
+                                            }}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={toggleSwitch}
+                                            value={privateOotd}
+                                            style={{
+                                                transform: [
+                                                    { scaleX: 0.65 },
+                                                    { scaleY: 0.65 },
+                                                ],
+                                            }}
+                                        />
+                                    </View>
+                                </CameraView>
+                            </PinchGestureHandler>
+                        )}
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={isEditing}
+                            onRequestClose={closeModal}
+                        >
+                            <View style={styles.modalView}>
+                                <View style={styles.modalInput}>
+                                    <TextInput
+                                        style={styles.modalText}
+                                        onChangeText={(text) =>
+                                            setCurrentShop({
+                                                ...currentShop,
+                                                name: text,
+                                            })
+                                        }
+                                        value={currentShop.name}
+                                        placeholder="item"
+                                        placeholderTextColor={
+                                            "rgba(0, 0, 0, 0.5)"
+                                        }
+                                    />
+                                    <View style={styles.divider} />
+                                    <TextInput
+                                        style={styles.modalText}
+                                        onChangeText={(text) =>
+                                            setCurrentShop({
+                                                ...currentShop,
+                                                url: text,
+                                            })
+                                        }
+                                        value={currentShop.url}
+                                        placeholder="link"
+                                        placeholderTextColor={
+                                            "rgba(0, 0, 0, 0.5)"
+                                        }
+                                    />
+                                </View>
+                                <View style={{ flexDirection: "row" }}>
+                                    <View style={styles.modalSave}>
+                                        <TouchableOpacity
+                                            style={styles.saveButton}
+                                            onPress={saveShop}
+                                        >
+                                            <Feather
+                                                name="check"
                                                 size={24}
                                                 color="white"
                                             />
                                         </TouchableOpacity>
                                     </View>
-                                </CameraView>
-                            </PinchGestureHandler>
-                        )}
-                        {isEditing && (
-                            <Modal
-                                animationType="slide"
-                                transparent={true}
-                                visible={isEditing}
-                                onRequestClose={closeModal}
-                            >
-                                <View style={styles.modalView}>
-                                    <View style={styles.modalInput}>
-                                        <TextInput
-                                            style={styles.modalText}
-                                            onChangeText={(text) =>
-                                                setCurrentShop({
-                                                    ...currentShop,
-                                                    name: text,
-                                                })
-                                            }
-                                            value={currentShop.name}
-                                            placeholder="item"
-                                            placeholderTextColor={
-                                                "rgba(0, 0, 0, 0.5)"
-                                            }
-                                        />
-                                        <View style={styles.divider} />
-                                        <TextInput
-                                            style={styles.modalText}
-                                            onChangeText={(text) =>
-                                                setCurrentShop({
-                                                    ...currentShop,
-                                                    url: text,
-                                                })
-                                            }
-                                            value={currentShop.url}
-                                            placeholder="link"
-                                            placeholderTextColor={
-                                                "rgba(0, 0, 0, 0.5)"
-                                            }
-                                        />
-                                    </View>
-                                    <View style={{ flexDirection: "row" }}>
-                                        <View style={styles.modalSave}>
-                                            <TouchableOpacity
-                                                style={styles.saveButton}
-                                                onPress={saveShop}
-                                            >
-                                                <Feather
-                                                    name="check"
-                                                    size={24}
-                                                    color="white"
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
 
-                                        <View style={styles.modalDel}>
-                                            <TouchableOpacity
-                                                style={styles.saveButton}
-                                                onPress={delShop}
-                                            >
-                                                <Ionicons
-                                                    name="remove"
-                                                    size={24}
-                                                    color="white"
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
+                                    <View style={styles.modalDel}>
+                                        <TouchableOpacity
+                                            style={styles.saveButton}
+                                            onPress={delShop}
+                                        >
+                                            <Ionicons
+                                                name="remove"
+                                                size={24}
+                                                color="white"
+                                            />
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
-                            </Modal>
-                        )}
+                            </View>
+                        </Modal>
                     </View>
                 )}
             </Formik>
@@ -485,10 +522,6 @@ const styles = StyleSheet.create({
         resizeMode: "contain",
         alignItems: "left",
     },
-    imageContainer: {
-        flex: 1,
-        width: '100%'
-    },
     container: {
         flex: 1,
         backgroundColor: "black",
@@ -509,6 +542,18 @@ const styles = StyleSheet.create({
         right: 120,
         width: 36,
         justifyContent: "center",
+    },
+    privateContainer: {
+        position: "absolute",
+        right: 10,
+        bottom: 10,
+        alignItems: "center",
+    },
+    privateText: {
+        fontSize: 18,
+        color: "rgba(256, 256, 256, 0.75)",
+        fontFamily: "JosefinSans_400Regular",
+        backGroundColor: "white",
     },
     inputContainer: {
         position: "absolute",
@@ -631,4 +676,30 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         marginVertical: 3,
     },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+    },
+    tooltipView: {
+        margin: 20,
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        borderRadius: 20,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    tooltipText: {
+        color: 'white',
+        textAlign: 'center',
+        fontFamily: "JosefinSans_400Regular",
+    }
 });
