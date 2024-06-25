@@ -2,13 +2,13 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     ActivityIndicator,
     Dimensions,
     TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { FlatGrid } from "react-native-super-grid";
+import { Image } from 'expo-image';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -69,7 +69,7 @@ export default function Posts({ user }) {
                 >
                     <TouchableOpacity>
                         <Image
-                            source={{ uri: item.url }}
+                            source={item.url}
                             onLoadEnd={onLoadEnd}
                             style={styles.image}
                         />

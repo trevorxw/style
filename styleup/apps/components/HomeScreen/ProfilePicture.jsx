@@ -1,5 +1,6 @@
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
+import { Image } from 'expo-image';
 import { useNavigation } from "@react-navigation/native";
 
 export default function ProfilePicture({ user }) {
@@ -12,7 +13,7 @@ export default function ProfilePicture({ user }) {
                 }}
             >
                 <Image
-                    source={{ uri: user.image_url }}
+                    source={user.image_url}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>

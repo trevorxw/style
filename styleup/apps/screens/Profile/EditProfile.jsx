@@ -4,11 +4,11 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    Image,
     StyleSheet,
     KeyboardAvoidingView,
     Platform
 } from "react-native";
+import { Image } from 'expo-image';
 import * as ImagePicker from "expo-image-picker";
 import { useUser, useClerk } from "@clerk/clerk-expo";
 import { useNavigation } from "@react-navigation/native";
@@ -80,7 +80,7 @@ export default function EditProfileScreen() {
                 >
                     {profileImage ? (
                         <Image
-                            source={{ uri: profileImage }}
+                            source={profileImage}
                             style={styles.profileImage}
                         />
                     ) : (

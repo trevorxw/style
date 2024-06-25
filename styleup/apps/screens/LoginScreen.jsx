@@ -1,8 +1,9 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import * as WebBrowser from "expo-web-browser";
 import { useOAuth, useSession } from "@clerk/clerk-expo";
 import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser";
+import { Image } from 'expo-image';
 
 WebBrowser.maybeCompleteAuthSession();
 

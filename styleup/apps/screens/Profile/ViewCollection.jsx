@@ -6,9 +6,9 @@ import {
     StyleSheet,
     TouchableOpacity,
     TextInput,
-    Image,
     ActivityIndicator,
 } from "react-native";
+import { Image } from 'expo-image';
 import { useNavigation } from "@react-navigation/native";
 import {
     useFonts,
@@ -337,12 +337,12 @@ export default function ViewCollection({ route, navigation }) {
                                 >
                                     {image ? (
                                         <Image
-                                            source={{ uri: image }}
+                                            source={image}
                                             style={styles.coverImage}
                                         />
                                     ) : collection.uri ? (
                                         <Image
-                                            source={{ uri: collection.uri }}
+                                            source={collection.uri}
                                             style={styles.coverImage}
                                         />
                                     ) : (
@@ -451,7 +451,7 @@ export default function ViewCollection({ route, navigation }) {
                                 onPress={() => toggleSelection(item)}
                             >
                                 <Image
-                                    source={{ uri: item.url }}
+                                    source={item.url}
                                     style={styles.image}
                                 />
 
@@ -467,7 +467,7 @@ export default function ViewCollection({ route, navigation }) {
                             </TouchableOpacity>
                         ) : (
                             <Image
-                                source={{ uri: item.url }}
+                                source={item.url}
                                 style={styles.image}
                             />
                         )}

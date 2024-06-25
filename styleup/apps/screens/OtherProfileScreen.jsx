@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
     View,
     Text,
-    Image,
     TouchableOpacity,
     StyleSheet,
     useWindowDimensions,
@@ -18,6 +17,7 @@ import {
     useFonts,
     JosefinSans_400Regular,
 } from "@expo-google-fonts/josefin-sans";
+import { Image } from 'expo-image';
 
 export default function OtherProfileScreen() {
     let [fontsLoaded] = useFonts({
@@ -54,7 +54,7 @@ export default function OtherProfileScreen() {
         <View style={styles.container}>
             <View style={styles.profileSection}>
                 <Image
-                    source={{ uri: user.image_url }}
+                    source={user.image_url}
                     style={styles.profileImage}
                 />
                 <View style={styles.profileInfo}>

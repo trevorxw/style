@@ -2,12 +2,12 @@ import React, { useEffect } from "react";
 import {
     View,
     Text,
-    Image,
     TouchableOpacity,
     StyleSheet,
     useWindowDimensions,
     ActivityIndicator,
 } from "react-native";
+import { Image } from 'expo-image';
 import { useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import Followers from "../../components/ProfileScreen/Followers";
@@ -85,7 +85,7 @@ export default function ProfileScreen() {
         <View style={styles.container}>
             <View style={styles.profileSection}>
                 <Image
-                    source={{ uri: user.image_url }}
+                    source={user.image_url}
                     style={styles.profileImage}
                 />
                 <View style={styles.profileInfo}>

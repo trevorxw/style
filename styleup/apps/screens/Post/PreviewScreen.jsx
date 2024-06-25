@@ -9,7 +9,7 @@ export default function PreviewScreen({ route, navigation }) {
     return (
         <View style={styles.card}>
             {image ? (
-                <Image source={{ uri: image }} style={styles.image} />
+                <Image source={image} style={styles.image} />
             ) : (
                 <Text>Add Image to Post</Text>
             )}

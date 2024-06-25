@@ -2,7 +2,6 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Image,
     StyleSheet,
     ActivityIndicator,
     Dimensions,
@@ -18,6 +17,7 @@ import {
     JosefinSans_700Bold,
 } from "@expo-google-fonts/josefin-sans";
 import * as WebBrowser from "expo-web-browser";
+import { Image } from 'expo-image';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -41,8 +41,8 @@ export default function Post({ card }) {
 
     const openWebBrowser = async (url) => {
         try {
-            await WebBrowser.dismissBrowser()
-            const result = await WebBrowser.openBrowserAsync(`https://${url}`)
+            await WebBrowser.dismissBrowser();
+            const result = await WebBrowser.openBrowserAsync(`https://${url}`);
         } catch (error) {
             console.error("Failed to open URL: ", error);
             Alert.alert("Error", "Failed to open link");
@@ -71,7 +71,10 @@ export default function Post({ card }) {
                     ))}
                 </ScrollView>
             </View>
-            <Image source={{ uri: card.url }} style={styles.image} />
+            <Image
+                source={card.url}
+                style={styles.image}
+            />
         </View>
     );
 }

@@ -4,7 +4,6 @@ import {
     Text,
     TextInput,
     StyleSheet,
-    Image,
     TouchableOpacity,
     ActivityIndicator,
     Alert,
@@ -16,6 +15,7 @@ import {
     ScrollView,
     Modal,
 } from "react-native";
+import { Image } from 'expo-image';
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
 import { useUser } from "@clerk/clerk-expo";

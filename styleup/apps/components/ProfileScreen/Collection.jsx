@@ -3,9 +3,9 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    Image,
     ActivityIndicator,
 } from "react-native";
+import { Image } from 'expo-image';
 import React, { useState, useEffect } from "react";
 import {
     useFonts,
@@ -140,7 +140,7 @@ export default function Collection({ user }) {
                     >
                         {item.uri ? (
                         <Image
-                            source={{ uri: item.uri }}
+                            source={item.uri}
                             onLoadEnd={onLoadEnd}
                             style={styles.image}
                         />

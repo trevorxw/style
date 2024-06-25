@@ -2,12 +2,12 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     ActivityIndicator,
     Dimensions,
     TouchableOpacity
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { Image } from 'expo-image';
 import { FlatGrid } from "react-native-super-grid";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -76,7 +76,7 @@ export default function Swipes({ user }) {
                     <TouchableOpacity>
                         {item.url != "" ? (
                             <Image
-                                source={{ uri: item.url }}
+                                source={item.url}
                                 onLoadEnd={onLoadEnd}
                                 style={styles.image}
                             />

@@ -45,7 +45,8 @@
     "react-native-super-grid": "^5.1.0",
     "react-native-tab-view": "^3.5.2",
     "typescript": "~5.3.3",
-    "expo-media-library": "~16.0.3"
+    "expo-media-library": "~16.0.3",
+    "expo-image": "~1.12.12"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

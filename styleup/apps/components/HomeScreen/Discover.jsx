@@ -1,12 +1,9 @@
 import {
     View,
     StyleSheet,
-    Image,
     ActivityIndicator,
     Dimensions,
-    TouchableOpacity,
     Text,
-    Animated,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
 import React, { useState, useRef, useEffect } from "react";
@@ -210,7 +207,6 @@ export default function Discover() {
                 cardHorizontalMargin={0}
                 overlayLabels={overlayLabels}
                 animateCardOpacity={true}
-                infinite={true}
             />
         </View>
     );
