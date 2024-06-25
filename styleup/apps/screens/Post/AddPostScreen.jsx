@@ -14,8 +14,9 @@ import {
     Platform,
     ScrollView,
     Modal,
+    Switch,
 } from "react-native";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
 import { useUser } from "@clerk/clerk-expo";
@@ -34,6 +35,7 @@ import {
     JosefinSans_700Bold,
 } from "@expo-google-fonts/josefin-sans";
 import * as MediaLibrary from "expo-media-library";
+import { PinchGestureHandler, State } from "react-native-gesture-handler";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -52,6 +54,8 @@ export default function AddPostScreen() {
     const [permission, requestPermission] = useCameraPermissions();
     const [facing, setFacing] = useState("back");
     const [fromCamera, setFromCamera] = useState(false);
+    const [zoom, setZoom] = useState(0);
+    const [lastZoom, setLastZoom] = useState(0);
     const camera = useRef(null);
 
     // Shops
@@ -62,6 +66,26 @@ export default function AddPostScreen() {
         name: "",
         url: "",
     });
+
+    // ootd
+    const [ootd, setOotd] = useState(false);
+    const toggleSwitch = () => setOotd((previousState) => !previousState);
+
+    const onPinchGestureEvent = (event) => {
+        if (event.nativeEvent.state === State.ACTIVE) {
+            // Calculate new zoom level based on the pinch scale and the last committed zoom level
+            let newZoom = lastZoom + (event.nativeEvent.scale - 1) / 20; // Adjust divisor for sensitivity
+            newZoom = Math.max(0, Math.min(newZoom, 1)); // Ensure zoom level is within the allowed range
+            setZoom(newZoom);
+        }
+    };
+
+    const onPinchHandlerStateChange = (event) => {
+        if (event.nativeEvent.state === State.END) {
+            // When the pinch gesture ends, commit the zoom level
+            setLastZoom(zoom);
+        }
+    };
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -227,7 +251,9 @@ export default function AddPostScreen() {
                     createdAt: Date.now(),
                     likes: 0,
                     shares: 0,
+                    category: ootd ? "ootd" : "",
                 }}
+                enableReinitialize={true}
                 onSubmit={(values, { resetForm }) => {
                     onSubmitMethod(values);
                     resetForm();
@@ -265,10 +291,7 @@ export default function AddPostScreen() {
                                 ) : (
                                     <Text></Text>
                                 )}
-                                <Image
-                                    source={image}
-                                    style={styles.camera}
-                                />
+                                <Image source={image} style={styles.camera} />
                                 <KeyboardAvoidingView
                                     behavior={
                                         Platform.OS === "ios"
@@ -326,46 +349,77 @@ export default function AddPostScreen() {
                                 </KeyboardAvoidingView>
                             </View>
                         ) : (
-                            <CameraView
-                                style={styles.camera}
-                                facing={facing}
-                                ref={camera}
+                            <PinchGestureHandler
+                                onGestureEvent={onPinchGestureEvent}
+                                onHandlerStateChange={onPinchHandlerStateChange}
                             >
-                                <TouchableOpacity
-                                    style={styles.submitButton}
-                                    onPress={toggleCameraFacing}
+                                <CameraView
+                                    style={styles.camera}
+                                    facing={facing}
+                                    ref={camera}
+                                    zoom={zoom}
                                 >
-                                    <Ionicons
-                                        name="camera-reverse-outline"
-                                        size={24}
-                                        color="white"
-                                    />
-                                </TouchableOpacity>
-                                <View style={styles.buttonContainer}>
                                     <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={takePicture}
-                                    >
-                                        <FontAwesome5
-                                            name="circle"
-                                            size={52}
-                                            color="white"
-                                        />
-                                    </TouchableOpacity>
-                                </View>
-                                <View style={styles.galleryContainer}>
-                                    <TouchableOpacity
-                                        style={styles.button}
-                                        onPress={pickImage}
+                                        style={styles.submitButton}
+                                        onPress={toggleCameraFacing}
                                     >
                                         <Ionicons
-                                            name="images-outline"
+                                            name="camera-reverse-outline"
                                             size={24}
                                             color="white"
                                         />
                                     </TouchableOpacity>
-                                </View>
-                            </CameraView>
+                                    <View style={styles.buttonContainer}>
+                                        <TouchableOpacity
+                                            style={styles.button}
+                                            onPress={takePicture}
+                                        >
+                                            <FontAwesome5
+                                                name="circle"
+                                                size={52}
+                                                color="white"
+                                            />
+                                        </TouchableOpacity>
+                                    </View>
+                                    {ootd ? (
+                                        <View></View>
+                                    ) : (
+                                        <View style={styles.galleryContainer}>
+                                            <TouchableOpacity
+                                                style={styles.button}
+                                                onPress={pickImage}
+                                            >
+                                                <Ionicons
+                                                    name="images-outline"
+                                                    size={24}
+                                                    color="white"
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )}
+
+                                    {/* <View style={styles.ootdContainer}>
+                                        <Text style={styles.ootdText}>
+                                            ootd?
+                                        </Text>
+                                        <Switch
+                                            trackColor={{
+                                                false: "rgba(118, 117, 119, 1)",
+                                                true: "rgba(129, 176, 255, 1)",
+                                            }}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={toggleSwitch}
+                                            value={ootd}
+                                            style={{
+                                                transform: [
+                                                    { scaleX: 0.65 },
+                                                    { scaleY: 0.65 },
+                                                ],
+                                            }}
+                                        />
+                                    </View> */}
+                                </CameraView>
+                            </PinchGestureHandler>
                         )}
                         {isEditing && (
                             <Modal
@@ -479,6 +533,18 @@ const styles = StyleSheet.create({
         right: 120,
         width: 36,
         justifyContent: "center",
+    },
+    ootdContainer: {
+        position: "absolute",
+        right: 10,
+        bottom: 10,
+        alignItems: "center",
+    },
+    ootdText: {
+        fontSize: 18,
+        color: "rgba(256, 256, 256, 0.75)",
+        fontFamily: "JosefinSans_400Regular",
+        backGroundColor: "white",
     },
     inputContainer: {
         position: "absolute",
