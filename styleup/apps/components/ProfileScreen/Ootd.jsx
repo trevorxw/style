@@ -48,6 +48,20 @@ export default function Ootd({ user }) {
         return mostRecentPostDate.toDateString() === today.toDateString();
     };
 
+    const formatDate = (date) => {
+        date = parseCustomDateString(date);
+        const day = date.getDate();
+        const month = date.getMonth() + 1; // getMonth() is zero-indexed
+        const year = date.getFullYear();
+    
+        // Pad the day and month with zeros if they are less than 10
+        // const formattedDay = day < 10 ? `0${day}` : day;
+        // const formattedMonth = month < 10 ? `0${month}` : month;
+        const formattedYear = year.toString().slice(-2);
+    
+        return `${month}/${day}/${formattedYear}`;
+    };
+
     const getUserOotd = async () => {
         const posts = [];
         setLoading(true);
@@ -131,6 +145,14 @@ export default function Ootd({ user }) {
                                 onLoadEnd={onLoadEnd}
                                 style={styles.image}
                             />
+                            <View style={styles.infoContainer}>
+                                <Feather
+                                    name="calendar"
+                                    size={12}
+                                    color="white"
+                                />
+                                <Text style={styles.infoText}>{formatDate(item.created_at)}</Text>
+                            </View>
                         </TouchableOpacity>
                         {loading && (
                             <ActivityIndicator
@@ -154,6 +176,19 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "flex-end",
         height: 150,
+    },
+    infoContainer: {
+        flexDirection: "row",
+        position: "absolute",
+        bottom: 5,
+        left: 5,
+    },
+    infoText: {
+        fontFamily: "JosefinSans_400Regular",
+        fontSize: 12,
+        color: 'white',
+        marginLeft: 3,
+        bottom: -3,
     },
     image: {
         width: (screenWidth * 1) / 3,

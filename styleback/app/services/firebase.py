@@ -30,7 +30,11 @@ def get_all_posts():
     """
     try:
         query_snapshot = db.collection('all_posts').order_by('created_at', direction=firestore.Query.DESCENDING).stream()
-        cards = [{'id': doc.id, **doc.to_dict()} for doc in query_snapshot]
+        cards = [
+            {'id': doc.id, **doc.to_dict()} 
+            for doc in query_snapshot 
+            if 'private' not in doc.to_dict().get('category', {})
+        ]
         return jsonify(cards), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -42,6 +46,20 @@ def get_posts_by_user(user_id):
     try:
         # Ensure to reference the posts subcollection for the specific user
         posts = db.collection('posts').document(user_id).collection('userPosts').stream()
+        
+        # Create a list of post IDs from the posts subcollection
+        post_ids = [{'post_id': post.id} for post in posts if post.id != 'initial_post']
+        return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
+    except Exception as e:
+        return {"error": str(e)}
+
+def get_ootd_by_user(user_id):
+    """
+    Retrieves all ootd IDs from Firestore based on the user_id.
+    """
+    try:
+        # Ensure to reference the posts subcollection for the specific user
+        posts = db.collection('posts').document(user_id).collection('ootd').stream()
         
         # Create a list of post IDs from the posts subcollection
         post_ids = [{'post_id': post.id} for post in posts if post.id != 'initial_post']
@@ -84,6 +102,11 @@ def upload_file_to_collections(file_path, filename):
 
 def add_data_to_firestore(filename, userId, file_metadata):
     doc_ref = db.collection('posts').document(userId).collection('userPosts').document(filename).set({})
+    doc_ref = db.collection('all_posts').document(filename)
+    doc_ref.set(file_metadata)
+
+def add_ootd_to_firestore(filename, userId, file_metadata):
+    doc_ref = db.collection('posts').document(userId).collection('ootd').document(filename).set({})
     doc_ref = db.collection('all_posts').document(filename)
     doc_ref.set(file_metadata)
 

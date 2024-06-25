@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
 import app
-from app.services.firebase import get_post, get_all_posts, upload_file_to_storage, add_data_to_firestore, get_posts_by_user, get_liked_posts_by_user
+from app.services.firebase import get_post, get_all_posts, upload_file_to_storage, add_data_to_firestore, add_ootd_to_firestore, get_posts_by_user, get_ootd_by_user, get_liked_posts_by_user
 from app.services.auth import token_required
 from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
@@ -48,6 +48,18 @@ def get_user_posts(user_id):
     """
     try:
         response = get_posts_by_user(user_id)
+        return response
+    except Exception as e:
+        return jsonify({"Could not retrieve post": str(e)}), 500
+    
+@posts_blueprint.route('/ootd/<user_id>', methods=['GET'])
+def get_user_ootd(user_id):
+    """
+    Retrieves all ootd uploaded by a user.
+    Returns the JSON response of the post or an error message.
+    """
+    try:
+        response = get_ootd_by_user(user_id)
         return response
     except Exception as e:
         return jsonify({"Could not retrieve post": str(e)}), 500
@@ -103,7 +115,10 @@ def upload_file(user_id):
                 'shares': 0,
                 'tags': tags,
             }
-            add_data_to_firestore(unique_filename, user_id, file_metadata)
+            if 'ootd' in category:
+                add_ootd_to_firestore(unique_filename, user_id, file_metadata)
+            else:
+                add_data_to_firestore(unique_filename, user_id, file_metadata)
             
             # Clean up the temporary directory
             os.remove(filepath)
