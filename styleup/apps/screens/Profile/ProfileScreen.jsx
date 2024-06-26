@@ -38,8 +38,8 @@ export default function ProfileScreen() {
     const [routes] = React.useState([
         { key: "posts", title: "posts" },
         { key: "swipes", title: "swipes" },
-        { key: "saved", title: "collection" },
-        { key: "wardrobe", title: "ootd" },
+        { key: "collection", title: "collection" },
+        { key: "ootd", title: "ootd" },
     ]);
 
     const renderScene = ({ route }) => {
@@ -48,9 +48,9 @@ export default function ProfileScreen() {
                 return <Posts style={styles.posts} user={user} />;
             case "swipes":
                 return <Swipes style={styles.posts} user={user} />;
-            case "saved":
+            case "collection":
                 return <Collection style={styles.posts} user={user} />;
-            case "wardrobe":
+            case "ootd":
                 return <Ootd style={styles.posts} user={user} />;
             default:
                 return null;

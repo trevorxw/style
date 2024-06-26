@@ -11,6 +11,7 @@ import { FlatGrid } from "react-native-super-grid";
 import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { useUser } from "@clerk/clerk-expo";
 import moment from "moment";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -21,11 +22,14 @@ export default function Ootd({ user }) {
     const numColumns = 3;
     const spacing = 1; // Space between items
     const itemWidth = (screenWidth - (numColumns - 1) * spacing) / numColumns;
+    const { isLoading, isSignedIn, user: userClerk } = useUser();
     const navigation = useNavigation();
 
     useEffect(() => {
-        if (user) {
+        if (user && user.id == userClerk.id) {
             getUserOotd();
+        } else {
+            getOtherUserOotd();
         }
     }, [user]);
 
@@ -60,6 +64,36 @@ export default function Ootd({ user }) {
         const formattedYear = year.toString().slice(-2);
 
         return `${month}/${day}/${formattedYear}`;
+    };
+
+    const getOtherUserOotd = async () => {
+        const posts = [];
+        setLoading(true);
+
+        // Fetch details for each post using the post ID
+        try {
+            const response = await fetch(
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootd/${user.id}`
+            );
+            const ootdData = await response.json();
+            for (const post of ootdData) {
+                try {
+                    const response = await fetch(
+                        `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
+                    );
+                    const postData = await response.json();
+                    const enrichedPostData = { ...postData, ...post };
+                    if (postData) {
+                        posts.push(enrichedPostData);
+                    }
+                } catch (error) {
+                    console.error("Error fetching ootd data", error);
+                }
+            }
+            setUserOotd(posts);
+        } catch (error) {
+            console.error("Error fetching ootd data", error);
+        }
     };
 
     const getUserOotd = async () => {

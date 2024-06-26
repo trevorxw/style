@@ -12,6 +12,8 @@ import useFetchUser from "../../hooks/useFetchUser";
 import Followers from "../components/ProfileScreen/Followers";
 import Following from "../components/ProfileScreen/Following";
 import Posts from "../components/ProfileScreen/Posts";
+import Collection from "../components/ProfileScreen/Collection";
+import Ootd from "../components/ProfileScreen/Ootd";
 import { TabView, TabBar } from "react-native-tab-view";
 import {
     useFonts,
@@ -31,8 +33,8 @@ export default function OtherProfileScreen() {
     const [routes] = React.useState([
         { key: "posts", title: "posts" },
         // { key: "swipes", title: "Swipes" },
-        { key: "collection", title: "collection" },
-        // { key: "wardrobe", title: "Wardrobe" },
+        // { key: "collection", title: "collection" },
+        { key: "ootd", title: "ootd" },
     ]);
 
     const renderScene = ({ route }) => {
@@ -42,9 +44,9 @@ export default function OtherProfileScreen() {
             // case "swipes":
             //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
             case "collection":
-                return <View style={{ flex: 1, backgroundColor: "white" }} />;
-            // case "wardrobe":
-            //     return <View style={{ flex: 1, backgroundColor: "#673ab7" }} />;
+                return <Collection style={styles.posts} user={user} />;
+            case "ootd":
+                return <Ootd style={styles.posts} user={user} />;
             default:
                 return null;
         }
