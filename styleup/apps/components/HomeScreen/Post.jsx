@@ -6,6 +6,7 @@ import {
     ActivityIndicator,
     Dimensions,
     ScrollView,
+    Alert,
 } from "react-native";
 import useFetchUser from "../../../hooks/useFetchUser";
 import Like from "./Like";
@@ -22,9 +23,6 @@ import { Image } from 'expo-image';
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Post({ card }) {
-    let [fontsLoaded] = useFonts({
-        JosefinSans_400Regular,
-    });
     const { user, loading, error } = useFetchUser(card.user_id);
 
     if (loading) {
@@ -47,7 +45,7 @@ export default function Post({ card }) {
             console.error("Failed to open URL: ", error);
             Alert.alert("Error", "Failed to open link");
         }
-    };
+    }; 
 
     return (
         <View style={styles.card}>
@@ -87,7 +85,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        resizeMode: "contain",
+        contentFit: "contain",
     },
     buttonsContainer: {
         position: "absolute",

@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: screenWidth * (9 / 16),
         width: "100%",
-        resizeMode: "contain",
+        contentFit: "contain",
         alignItems: "center",
         justifyContent: "center",
     },
@@ -482,7 +482,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: screenWidth * (9 / 16),
         width: "100%",
-        resizeMode: "contain",
+        contentFit: "contain",
         alignItems: "left",
     },
     imageContainer: {

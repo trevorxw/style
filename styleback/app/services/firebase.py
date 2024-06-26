@@ -31,7 +31,7 @@ def get_all_posts():
     try:
         query_snapshot = db.collection('all_posts').order_by('created_at', direction=firestore.Query.DESCENDING).stream()
         cards = [
-            {'id': doc.id, **doc.to_dict()} 
+            {'post_id': doc.id, **doc.to_dict()} 
             for doc in query_snapshot 
             if 'private' not in doc.to_dict().get('category', {})
         ]

@@ -16,7 +16,7 @@ function formatNumber(num) {
 
 export default function Like({ card }) {
     const db = getFirestore(app);
-    const likesRef = doc(db, "all_posts", card.id);
+    const likesRef = doc(db, "all_posts", card.post_id);
 
     // State to track if the icon is liked
     const [isLiked, setIsLiked] = useState(false);
