@@ -53,12 +53,12 @@ export default function Ootd({ user }) {
         const day = date.getDate();
         const month = date.getMonth() + 1; // getMonth() is zero-indexed
         const year = date.getFullYear();
-    
+
         // Pad the day and month with zeros if they are less than 10
         // const formattedDay = day < 10 ? `0${day}` : day;
         // const formattedMonth = month < 10 ? `0${month}` : month;
         const formattedYear = year.toString().slice(-2);
-    
+
         return `${month}/${day}/${formattedYear}`;
     };
 
@@ -78,8 +78,9 @@ export default function Ootd({ user }) {
                         `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
                     );
                     const postData = await response.json();
+                    const enrichedPostData = { ...postData, ...post };
                     if (postData) {
-                        posts.push(postData);
+                        posts.push(enrichedPostData);
                     }
                 } catch (error) {
                     console.error("Error fetching ootd data", error);
@@ -139,7 +140,13 @@ export default function Ootd({ user }) {
                             },
                         ]}
                     >
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() =>
+                                navigation.navigate("post", {
+                                    post: item,
+                                })
+                            }
+                        >
                             <Image
                                 source={item.url}
                                 onLoadEnd={onLoadEnd}
@@ -151,7 +158,9 @@ export default function Ootd({ user }) {
                                     size={12}
                                     color="white"
                                 />
-                                <Text style={styles.infoText}>{formatDate(item.created_at)}</Text>
+                                <Text style={styles.infoText}>
+                                    {formatDate(item.created_at)}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                         {loading && (
@@ -186,7 +195,7 @@ const styles = StyleSheet.create({
     infoText: {
         fontFamily: "JosefinSans_400Regular",
         fontSize: 12,
-        color: 'white',
+        color: "white",
         marginLeft: 3,
         bottom: -3,
     },

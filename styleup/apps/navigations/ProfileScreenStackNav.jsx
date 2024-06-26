@@ -7,6 +7,7 @@ import EditProfile from "../screens/Profile/EditProfile";
 import AddCollection from "../screens/Profile/AddCollection";
 import ViewCollection from "../screens/Profile/ViewCollection";
 import OotdCamera from "../screens/Profile/OotdCamera";
+import OtherPostScreen from "../screens/OtherPostScreen";
 import { useFonts, JosefinSans_400Regular, JosefinSans_700Bold } from '@expo-google-fonts/josefin-sans';
 
 const Stack = createStackNavigator();
@@ -67,6 +68,11 @@ export default function ProfileScreenStackNav() {
                 options={{
                     headerShown: false,
                 }}
+            />
+            <Stack.Screen
+                name="post"
+                component={OtherPostScreen}
+                options={{ headerShown: false }}
             />
         </Stack.Navigator>
     );

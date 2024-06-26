@@ -8,7 +8,7 @@ import {
     TextInput,
     ActivityIndicator,
 } from "react-native";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import {
     useFonts,
@@ -235,7 +235,9 @@ export default function ViewCollection({ route, navigation }) {
             const result = await response.json();
             if (response.ok) {
                 Alert.alert("Success!", "Collection Deleted Successfully.");
-                navigation.navigate("profile-tab", { from: "edited collection" });
+                navigation.navigate("profile-tab", {
+                    from: "edited collection",
+                });
             } else {
                 Alert.alert("Error", result.message || "An error occurred");
             }
@@ -450,10 +452,7 @@ export default function ViewCollection({ route, navigation }) {
                             <TouchableOpacity
                                 onPress={() => toggleSelection(item)}
                             >
-                                <Image
-                                    source={item.url}
-                                    style={styles.image}
-                                />
+                                <Image source={item.url} style={styles.image} />
 
                                 {selectedPosts.has(item.post_id) && (
                                     <View style={styles.selectionOverlay}>
@@ -466,10 +465,15 @@ export default function ViewCollection({ route, navigation }) {
                                 )}
                             </TouchableOpacity>
                         ) : (
-                            <Image
-                                source={item.url}
-                                style={styles.image}
-                            />
+                            <TouchableOpacity
+                                onPress={() =>
+                                    navigation.navigate("post", {
+                                        post: item,
+                                    })
+                                }
+                            >
+                                <Image source={item.url} style={styles.image} />
+                            </TouchableOpacity>
                         )}
                     </View>
                 )}

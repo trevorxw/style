@@ -38,10 +38,10 @@ export default function Posts({ user }) {
                     `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
                 );
                 const postData = await response.json();
-                    const enrichedPostData = { ...postData, ...post };
-                    if (postData) {
-                        posts.push(enrichedPostData);
-                    }
+                const enrichedPostData = { ...postData, ...post };
+                if (postData) {
+                    posts.push(enrichedPostData);
+                }
             } catch (error) {
                 console.error("Error fetching post data", error);
             }
@@ -71,11 +71,8 @@ export default function Posts({ user }) {
                 >
                     <TouchableOpacity
                         onPress={() =>
-                            navigation.navigate("Home", {
-                                screen: "post",
-                                params: {
-                                    post: item 
-                                },
+                            navigation.navigate("post", {
+                                post: item,
                             })
                         }
                     >

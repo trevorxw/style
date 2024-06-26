@@ -4,16 +4,18 @@ import {
     StyleSheet,
     ActivityIndicator,
     Dimensions,
-    TouchableOpacity
+    TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { FlatGrid } from "react-native-super-grid";
+import { useNavigation } from "@react-navigation/native";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function Swipes({ user }) {
     const [loading, setLoading] = useState(true);
+    const navigation = useNavigation();
     const [userSwipedPosts, setSwipedPosts] = useState([]);
     const numColumns = 3;
 
@@ -39,8 +41,9 @@ export default function Swipes({ user }) {
                         `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
                     );
                     const postData = await response.json();
+                    const enrichedPostData = { ...postData, ...post };
                     if (postData) {
-                        posts.push(postData);
+                        posts.push(enrichedPostData);
                     }
                 } catch (error) {
                     console.error("Error fetching post data", error);
@@ -73,7 +76,13 @@ export default function Swipes({ user }) {
                         },
                     ]}
                 >
-                    <TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() =>
+                            navigation.navigate("post", {
+                                post: item,
+                            })
+                        }
+                    >
                         {item.url != "" ? (
                             <Image
                                 source={item.url}
