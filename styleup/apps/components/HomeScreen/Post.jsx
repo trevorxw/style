@@ -22,7 +22,7 @@ import { Image } from 'expo-image';
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Post({ card }) {
+export default function Post({ card, swipeRight}) {
     const { user, loading, error } = useFetchUser(card.user_id);
 
     if (loading) {
@@ -51,7 +51,7 @@ export default function Post({ card }) {
         <View style={styles.card}>
             <View style={styles.buttonsContainer}>
                 <ProfilePicture user={user} />
-                <Like card={card} />
+                <Like card={card} swipeRight={swipeRight}/>
                 {/* <Share card={card} /> */}
             </View>
             <View style={styles.fieldsContainer}>

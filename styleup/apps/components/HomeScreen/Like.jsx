@@ -14,7 +14,7 @@ function formatNumber(num) {
     }
 }
 
-export default function Like({ card }) {
+export default function Like({ card, swipeRight }) {
     const db = getFirestore(app);
     const likesRef = doc(db, "all_posts", card.post_id);
 
@@ -35,12 +35,10 @@ export default function Like({ card }) {
     return (
         <View>
             <TouchableOpacity
-                disabled={true}
+                disabled={!swipeRight}
                 onPress={() => {
-                    {
-                        isLiked ? decrementLike() : incrementLike();
-                        setIsLiked(!isLiked);
-                    } // Correctly call the functions when pressed
+                    swipeRight();
+                    incrementLike();
                 }}
                 style={styles.buttons}
             >

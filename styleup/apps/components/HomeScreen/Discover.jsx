@@ -6,7 +6,7 @@ import {
     Text,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Post from "./Post";
 import { AntDesign } from "@expo/vector-icons";
 //Firebase
@@ -28,6 +28,7 @@ export default function Discover() {
     const [cards, setCards] = useState([])
     const [loading, setLoading] = useState(false);
     const swipeTimer = useRef(null);
+    const swiperRef = useRef(null);
     //User
     const { isLoading, isSignedIn, user: userClerk } = useUser();
     const { user, loadingUser, error } = useFetchUser(userClerk.id);
@@ -44,6 +45,12 @@ export default function Discover() {
     useEffect(() => {
         getCards();
     }, []);
+
+    // const swipeRight = useCallback((index) => {
+    //     if (swiperRef.current) {
+    //         swiperRef.current.swipeRight();
+    //     }
+    // }, [swiperRef.current, cards]);
 
     const getCards = async () => {
         try {
@@ -98,7 +105,7 @@ export default function Discover() {
     
             const result = await response.json();
             if (response.ok) {
-                console.log(`Uploaded metrics successfully for user: ${user.id}. Metrics:`, postData);
+                console.log(`Uploaded metrics successfully for user: ${user.id}. Card: ${card.id}, Metrics:`, postData);
             } else {
                 console.error("Failed to upload metrics. Server responded with: ", result);
             }
@@ -182,10 +189,11 @@ export default function Discover() {
         <View style={styles.swiperContainer}>
             <Swiper
                 cards={cards}
-                renderCard={(card) => {
+                ref={swiperRef}
+                renderCard={(card, index) => {
                     return (
                         <View style={styles.postContainer}>
-                            <Post card={card} />
+                            <Post card={card}/>
                         </View>
                     );
                 }}
