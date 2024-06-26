@@ -78,12 +78,13 @@ export default function Post({ card, swipeRight}) {
 }
 
 const styles = StyleSheet.create({
+    // add marginBottom to raise image
     card: {
         flex: 1,
         backgroundColor: "white",
     },
     image: {
-        width: "100%",
+        width: screenWidth,
         height: "100%",
         contentFit: "contain",
     },

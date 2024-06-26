@@ -156,7 +156,7 @@ export default function Discover() {
         left: {
             element: (
                 <View style={styles.overlayLabelLeft}>
-                    <AntDesign name="close" size={28} color="red" />
+                    <AntDesign name="close" size={28} color="white" />
                     <Text style={styles.overlayLabelText}>NOPE</Text>
                 </View>
             ),
@@ -167,7 +167,7 @@ export default function Discover() {
         right: {
             element: (
                 <View style={styles.overlayLabelRight}>
-                    <AntDesign name="heart" size={28} color="green" />
+                    <AntDesign name="heart" size={28} color="white" />
                     <Text style={styles.overlayLabelText}>LIKE</Text>
                 </View>
             ),
@@ -187,6 +187,7 @@ export default function Discover() {
 
     return (
         <View style={styles.swiperContainer}>
+            <View style={styles.header}></View>
             <Swiper
                 cards={cards}
                 ref={swiperRef}
@@ -214,7 +215,9 @@ export default function Discover() {
                 cardVerticalMargin={0}
                 cardHorizontalMargin={0}
                 overlayLabels={overlayLabels}
-                animateCardOpacity={true}
+                animateCardOpacity={false}
+                horizontalThreshold={60}
+                overlayOpacityHorizontalThreshold={60}
             />
         </View>
     );
@@ -227,25 +230,28 @@ const styles = StyleSheet.create({
     postContainer: {
         flex: 1,
     },
+    // height controls top container
+    header:{
+        position:'absolute',
+        backgroundColor: 'white',
+        top: 0,
+        width: screenWidth,
+        height: 65,
+        zIndex: 1,
+    },
     overlayLabelLeft: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         padding: 10,
-        borderRadius: 5,
-        borderWidth: 2,
-        borderColor: "red",
-        backgroundColor: "rgba(255, 0, 0, 0.5)", // Semi-transparent background
+        marginTop: 20,
     },
     overlayLabelRight: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
         padding: 10,
-        borderRadius: 5,
-        borderWidth: 2,
-        borderColor: "green",
-        backgroundColor: "rgba(0, 128, 0, 0.5)", // Semi-transparent background
+        marginTop: 20,
     },
     overlayLabelText: {
         fontSize: 24,
@@ -256,11 +262,9 @@ const styles = StyleSheet.create({
     leftOverlay: {
         position: "absolute",
         top: 50,
-        right: 20,
     },
     rightOverlay: {
         position: "absolute",
         top: 50,
-        left: 20,
     },
 });
