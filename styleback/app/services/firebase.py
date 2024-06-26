@@ -256,12 +256,17 @@ def del_collection(user_id, collection_id):
     blob = bucket.blob(file_path)
     
     try:
-        blob.delete()
         collection_ref = db.collection('users').document(user_id).collection('collections').document(collection_id)
         collection = collection_ref.get()
         if collection.exists:
             collection_ref.delete()
-            print(f"Collection {collection_id} deleted from Firestore.")
+            # Check if the blob exists before attempting to delete
+            if blob.exists():
+                blob.delete()
+                print(f"Collection {collection_id} deleted from Firestore and Storage.")
+            else:
+                print(f"No such object in storage: {file_path}")
+            
             return True
         else:
             print(f"No such collection {collection_id} to delete.")
