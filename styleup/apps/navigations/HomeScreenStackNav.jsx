@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import OtherProfileScreen from "../screens/OtherProfileScreen";
-import HomeScreen from "../screens/HomeScreen";
+import HomeScreen from "../screens/Home/HomeScreen";
 import OtherPostScreen from "../screens/OtherPostScreen";
 
 const Stack = createStackNavigator();
