@@ -9,7 +9,7 @@ export default function App() {
   return (
     <ClerkProvider publishableKey='pk_test_bGlnaHQtZWFnbGUtNTguY2xlcmsuYWNjb3VudHMuZGV2JA=='>
       <View style={styles.container}>
-        <StatusBar style="light" />
+        <StatusBar style="dark" />
         <SignedIn> 
           <NavigationContainer>
             <TabNavigation/>

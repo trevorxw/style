@@ -80,7 +80,7 @@ export default function Post({ card, swipeRight}) {
 const styles = StyleSheet.create({
     card: {
         flex: 1,
-        backgroundColor: "black",
+        backgroundColor: "white",
     },
     image: {
         width: "100%",

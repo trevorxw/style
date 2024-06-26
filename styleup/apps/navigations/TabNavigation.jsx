@@ -24,11 +24,11 @@ export default function TabNavigation() {
             screenOptions={{
                 headerShown: false,
                 // tabBarActiveTintColor: "#000",
-                tabBarActiveTintColor: "#fff", // Active tab color set to white
-                tabBarInactiveTintColor: "#888", // Inactive tab color set to grey
+                tabBarActiveTintColor: "#000", // Active tab color set to white
+                tabBarInactiveTintColor: "#aaa", // Inactive tab color set to grey
                 tabBarStyle: {
-                    backgroundColor: "#000", // Tab bar background color set to black
-                    borderTopColor: "#000" // Tab bar top border color set to black
+                    backgroundColor: "#fff", // Tab bar background color set to black
+                    borderTopColor: "#ddd" // Tab bar top border color set to black
                 },
                 lazy: true,
             }}
