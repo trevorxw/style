@@ -8,7 +8,7 @@ import {
     TextInput,
     ActivityIndicator,
 } from "react-native";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
 import {
     useFonts,
@@ -24,7 +24,7 @@ export default function AddCollection({ route, navigation }) {
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
     });
-    const { user, collection } = route.params;
+    const { user, collectionId } = route.params;
     const [loading, setLoading] = useState(false);
     const [image, setImage] = useState(null);
     const [userSwipedPosts, setSwipedPosts] = useState([]);
@@ -37,6 +37,11 @@ export default function AddCollection({ route, navigation }) {
             getUserLikes();
         }
     }, [user]);
+
+    useEffect(() => {
+        updateCollectionPosts();
+    }),
+        [selectedPosts];
 
     const getUserLikes = async () => {
         const posts = [];
@@ -96,6 +101,36 @@ export default function AddCollection({ route, navigation }) {
         });
     };
 
+    const updateCollectionPosts = async () => {
+        try {
+            let formData = new FormData();
+            formData.append("posts", JSON.stringify([...selectedPosts]));
+            // Post request to Flask endpoint
+            const response = await fetchWithTimeout(
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                {
+                    method: "POST",
+                    body: formData,
+                }
+            );
+
+            const result = await response.json();
+            if (response.ok) {
+            } else {
+                Alert.alert("Error", result.message || "An error occurred");
+            }
+        } catch (error) {
+            if (error.name === "AbortError") {
+                console.error("Fetch aborted:", error);
+                Alert.alert("Error", "Request timed out, please try again");
+            } else {
+                console.error("Error editing collection", error);
+                Alert.alert("Error", "Failed to edit collection.");
+            }
+        } finally {
+        }
+    };
+
     const onSubmitMethod = async (values) => {
         setLoading(true);
         try {
@@ -111,11 +146,10 @@ export default function AddCollection({ route, navigation }) {
             formData.append("description", values.description);
             formData.append("createdAt", values.createdAt);
             formData.append("title", values.title);
-            formData.append("posts", JSON.stringify([...selectedPosts]));
             console.log("formData", formData);
             // Post request to Flask endpoint
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collection}`,
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "POST",
                     body: formData,
@@ -246,10 +280,7 @@ export default function AddCollection({ route, navigation }) {
                         <TouchableOpacity
                             onPress={() => toggleSelection(item.post_id)}
                         >
-                            <Image
-                                source={item.url}
-                                style={styles.image}
-                            />
+                            <Image source={item.url} style={styles.image} />
 
                             {selectedPosts.has(item.post_id) && (
                                 <View style={styles.selectionOverlay}>
@@ -370,7 +401,7 @@ const styles = StyleSheet.create({
     image: {
         width: "100%",
         height: "100%",
-        contentFit: "cover",
+        resizeMode: "cover",
     },
     selectionOverlay: {
         width: "100%",

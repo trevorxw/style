@@ -52,16 +52,6 @@ export default function ViewCollection({ route, navigation }) {
     }),
         [selectedPosts];
 
-    const handleCollectionChange = (name, value) => {
-        setCollection((prevCollection) => {
-            if (prevCollection[name] !== value) {
-            }
-            return {
-                ...prevCollection,
-                [name]: value,
-            };
-        });
-    };
 
     const getCollectionData = async () => {
         // Fetch details for each post using the post ID

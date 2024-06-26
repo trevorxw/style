@@ -55,7 +55,7 @@ export default function Collection({ user }) {
         const newCollection = {
             title: "",
             description: "",
-            posts: [],
+            posts: "",
             uri: "",
             createdAt: Date.now()
         };
@@ -89,7 +89,7 @@ export default function Collection({ user }) {
             setUserCollections(updatedCollections);
 
             navigation.navigate("add collection", {
-                collection: result,
+                collectionId: result,
                 user: user,
             });
 
