@@ -18,6 +18,7 @@ export default function ProfileScreenStackNav() {
         JosefinSans_700Bold,
     });
     return (
+        
         <Stack.Navigator>
             <Stack.Screen
                 name="profile-tab"

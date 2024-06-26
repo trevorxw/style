@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     // height controls top container
     header:{
         position:'absolute',
-        backgroundColor: 'white',
+        backgroundColor: 'black',
         top: 0,
         width: screenWidth,
         height: 65,

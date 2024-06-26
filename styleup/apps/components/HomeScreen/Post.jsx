@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     // add marginBottom to raise image
     card: {
         flex: 1,
-        backgroundColor: "white",
+        backgroundColor: "black",
     },
     image: {
         width: screenWidth,
