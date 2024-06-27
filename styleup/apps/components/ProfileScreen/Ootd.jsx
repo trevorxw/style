@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
         bottom: -3,
     },
     image: {
-        width: (screenWidth * 1) / 3,
+        width: "100%",
         height: 150,
         contentFit: "cover",
     },
