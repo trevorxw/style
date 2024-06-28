@@ -123,7 +123,7 @@ export default function Discover() {
     };
 
     const incrementLike = async (card) => {
-        const likesRef = doc(db, "all_posts", card.id);
+        const likesRef = doc(db, "all_posts", card.post_id);
         await updateDoc(likesRef, {
             likes: increment(1),
         });
