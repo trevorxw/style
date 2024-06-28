@@ -1,12 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/Home/HomeScreen';
-import ExploreScreen from '../screens/ExploreScreen';
-import NewsScreen from '../screens/NewsScreen';
 import ProfileScreenStackNav from './ProfileScreenStackNav';
 import PostScreenStackNav from './PostScreenStackNav';
-import Posts from '../components/ProfileScreen/Posts';
 import { Foundation, AntDesign, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import HomeScreenStackNav from './HomeScreenStackNav';
 

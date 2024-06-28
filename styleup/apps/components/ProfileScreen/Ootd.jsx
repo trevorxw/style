@@ -6,12 +6,12 @@ import {
     Dimensions,
     TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { FlatGrid } from "react-native-super-grid";
 import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { useUser } from "@clerk/clerk-expo";
+import { AuthenticatedUserContext } from "../../providers";
 import moment from "moment";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
@@ -22,11 +22,11 @@ export default function Ootd({ user }) {
     const numColumns = 3;
     const spacing = 1; // Space between items
     const itemWidth = (screenWidth - (numColumns - 1) * spacing) / numColumns;
-    const { isLoading, isSignedIn, user: userClerk } = useUser();
+    const { user: userFirebase } = useContext(AuthenticatedUserContext);
     const navigation = useNavigation();
 
     useEffect(() => {
-        if (user && user.id == userClerk.id) {
+        if (user && user.id == userFirebase.uid) {
             getUserOotd();
         } else {
             getOtherUserOotd();
@@ -73,7 +73,7 @@ export default function Ootd({ user }) {
         // Fetch details for each post using the post ID
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootd/${user.id}`
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootd/${userFirebase.uid}`
             );
             const ootdData = await response.json();
             for (const post of ootdData) {
@@ -103,7 +103,7 @@ export default function Ootd({ user }) {
         // Fetch details for each post using the post ID
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootd/${user.id}`
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootd/${userFirebase.uid}`
             );
             const ootdData = await response.json();
             for (const post of ootdData) {

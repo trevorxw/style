@@ -11,9 +11,9 @@ def create_app():
     CORS(app)
 
     # Initialize Firebase
-    cred = credentials.Certificate("style-d2141-firebase-adminsdk-7j1ar-e2ee195ff6.json")
+    cred = credentials.Certificate("fitpic-59ecb-firebase-adminsdk-he85m-ac5a8a7931.json")
     firebase_admin.initialize_app(cred, {
-        'storageBucket': 'style-d2141.appspot.com'
+        'storageBucket': "fitpic-59ecb.appspot.com",
     })
 
     from .api.posts import posts_blueprint

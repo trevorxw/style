@@ -4,13 +4,15 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
     "@clerk/clerk-expo": "^1.0.8-snapshot.v7e206ff",
     "@expo-google-fonts/josefin-sans": "^0.2.3",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.1.17",
@@ -21,13 +23,15 @@
     "expo": "~51.0.14",
     "expo-app-loading": "^2.1.1",
     "expo-application": "~5.9.1",
-    "expo-auth-session": "~5.5.2",
     "expo-camera": "~15.0.11",
     "expo-constants": "~16.0.2",
+    "expo-crypto": "~13.0.2",
+    "expo-dev-client": "~4.0.18",
     "expo-font": "~12.0.6",
     "expo-image": "~1.12.12",
     "expo-image-picker": "~15.0.5",
     "expo-media-library": "~16.0.3",
+    "expo-secure-store": "~13.0.1",
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.17",
     "expo-web-browser": "~13.0.3",
@@ -46,7 +50,8 @@
     "react-native-screens": "3.31.1",
     "react-native-super-grid": "^5.1.0",
     "react-native-tab-view": "^3.5.2",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

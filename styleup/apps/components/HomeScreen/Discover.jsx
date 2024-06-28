@@ -6,7 +6,7 @@ import {
     Text,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import Post from "./Post";
 import { AntDesign } from "@expo/vector-icons";
 //Firebase
@@ -16,7 +16,7 @@ import { app } from "../../../firebaseConfig";
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
 //User
 import useFetchUser from "../../../hooks/useFetchUser";
-import { useUser } from "@clerk/clerk-expo";
+import { AuthenticatedUserContext } from "../../providers";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -25,19 +25,18 @@ export default function Discover() {
 
     const [cardIndex, setCardIndex] = useState(0);
     const [swipeTimes, setSwipeTimes] = useState({});
-    const [cards, setCards] = useState([])
+    const [cards, setCards] = useState([]);
     const [loading, setLoading] = useState(false);
     const swipeTimer = useRef(null);
     const swiperRef = useRef(null);
     //User
-    const { isLoading, isSignedIn, user: userClerk } = useUser();
-    const { user, loadingUser, error } = useFetchUser(userClerk.id);
+    const { user: userFirebase } = useContext(AuthenticatedUserContext);
+    const { user, loadingUser, error } = useFetchUser(userFirebase.uid);
 
     const MAX_CARDS = 20; // Max number of cards to hold in memory
 
     // Start the timer when the card is rendered
     useEffect(() => {
-        
         swipeTimer.current = Date.now();
     }, [cardIndex]);
 
@@ -54,7 +53,9 @@ export default function Discover() {
 
     const getCards = async () => {
         try {
-            const response = await fetch('https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/');
+            const response = await fetch(
+                "https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/"
+            );
             const fetchedCards = await response.json();
             setCards(fetchedCards);
         } catch (error) {
@@ -67,7 +68,7 @@ export default function Discover() {
         setLoading(true);
         try {
             const newCards = await //fetchCardsFromAPI();
-            setCards(prevCards => {
+            setCards((prevCards) => {
                 // Remove old cards if exceeding max allowed cards after adding new ones
                 if (prevCards.length + newCards.length > MAX_CARDS) {
                     return [...prevCards.slice(newCards.length), ...newCards];
@@ -97,17 +98,23 @@ export default function Discover() {
                 {
                     method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
+                        "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(postData)
+                    body: JSON.stringify(postData),
                 }
             );
-    
+
             const result = await response.json();
             if (response.ok) {
-                console.log(`Uploaded metrics successfully for user: ${user.id}. Card: ${card.id}, Metrics:`, postData);
+                console.log(
+                    `Uploaded metrics successfully for user: ${user.id}. Card: ${card.id}, Metrics:`,
+                    postData
+                );
             } else {
-                console.error("Failed to upload metrics. Server responded with: ", result);
+                console.error(
+                    "Failed to upload metrics. Server responded with: ",
+                    result
+                );
             }
         } catch (error) {
             console.error("Error uploading user post metrics:", error);
@@ -122,7 +129,6 @@ export default function Discover() {
     };
 
     const onSwiped = (index, direction, card) => {
-
         // Metric Tracker
         const duration = Date.now() - swipeTimer.current;
         console.log(
@@ -146,8 +152,7 @@ export default function Discover() {
         if (direction === "right") {
             incrementLike(card);
             uploadMetrics(user, card, 1, duration, 0);
-        }
-        else{
+        } else {
             uploadMetrics(user, card, 0, duration, 0);
         }
     };
@@ -194,13 +199,11 @@ export default function Discover() {
                 renderCard={(card, index) => {
                     return (
                         <View style={styles.postContainer}>
-                            <Post card={card}/>
+                            <Post card={card} />
                         </View>
                     );
                 }}
-                onSwipedLeft={(index) =>
-                    onSwiped(index, "left", cards[index])
-                }
+                onSwipedLeft={(index) => onSwiped(index, "left", cards[index])}
                 onSwipedRight={(index) =>
                     onSwiped(index, "right", cards[index])
                 }
@@ -231,9 +234,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     // height controls top container
-    header:{
-        position:'absolute',
-        backgroundColor: 'black',
+    header: {
+        position: "absolute",
+        backgroundColor: "black",
         top: 0,
         width: screenWidth,
         height: 65,

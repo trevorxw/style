@@ -1,64 +1,103 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection
+from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details
 from app.services.auth import token_required
 import requests
 from werkzeug.utils import secure_filename
 import tempfile
 from datetime import datetime
 import pytz
+from firebase_admin import auth
 
 users_blueprint = Blueprint('users', __name__)
 
-clerk_api_key = os.getenv('CLERK_SECRET_KEY')
-
-# Function to get user from Clerk
-@users_blueprint.route('/user/<user_id>', methods=['GET'])
+# Function to get user from Firebase auth and firestore.
+@users_blueprint.route('/user/<user_id>', methods=['GET', 'POST'])
 def get_user_profile(user_id):
+    if request.method == 'GET':
+        try:
 
-    # Retrieve user data from clerk
-    headers = {'Authorization': f'Bearer {clerk_api_key}'}
-    clerk_endpoint = f'https://api.clerk.com/v1/users/{user_id}'
-    response = requests.get(clerk_endpoint, headers=headers)
-    response_json = response.json()
+            # Retrieve user data from clerk
+            userFirebase = get_user_by_uid(user_id)
+            create_new_user(user_id)
 
-    create_new_user(user_id)
+            # Retrieve posts from firestore
+            user_posts = get_posts_by_user(user_id)
+            user_data = get_user_details(user_id)
 
-    # Retrieve posts from firestore
-    user_posts = get_posts_by_user(user_id)
-    user_data = get_user_details(user_id)
+            if not user_data:
+                return jsonify({"error": "User not found in Firestore"}), 404
+            
+            photoUrl = userFirebase.photo_url if userFirebase and userFirebase.photo_url else ""
+            display_name = userFirebase.display_name if userFirebase and userFirebase.display_name else ""
 
-    if not user_data:
-        return jsonify({"error": "User not found in Firestore"}), 404
-    
-    bio = ''
+            # Create fields of user data
+            user = {
+                'id': user_id,
+                'name': display_name,
+                'username': user_data['username'],
+                'image_url': photoUrl,
+                'bio': user_data['bio'],
+                'following': user_data['following'],
+                'followers': user_data['followers'],
+                'post_ids': user_posts,
+            }
 
-    if 'bio' in response_json['unsafe_metadata']:
-         bio = response_json['unsafe_metadata']['bio']
+            if userFirebase:
+                return jsonify(user), 200
+            else:
+                # User not found in Firebase Auth
+                return jsonify({"error": "User not found in Firebase Auth"}), 404
+        except Exception as e:
+            # General error handling
+            return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
+    elif request.method == 'POST':
+        try:
+            userData = {}
+            if 'username' in request.form:
+                username = request.form.get('username', '')
+                userData['username'] = username
 
-    # Create fields of user data
-    user = {
-        'id': response_json['id'],
-        'username': response_json['username'],
-        'image_url': response_json['image_url'],
-        'bio': bio,
-        'following': user_data['following'],
-        'followers': user_data['followers'],
-        'post_ids': user_posts,
-    }
+            if 'bio' in request.form:
+                bio = request.form.get('bio','')
+                userData['bio'] = bio
+                
+            if 'name' in request.form:
+                name = request.form.get('name', "")
+                user = auth.update_user(
+                    user_id,
+                    display_name=name,
+                )
+            if 'file' in request.files:
+                file = request.files['file']
+                if file.filename == '':
+                    return jsonify(error="No selected file"), 400
+                if file and allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    # Create temp file path
+                    temp_dir = tempfile.mkdtemp()
+                    filepath = os.path.join(temp_dir, filename)
+                    file.save(filepath)
+                    try:
 
-    # Check for a successful response
-    if response.status_code == 200:
-        return jsonify(user), 200
-    # Check for a not found response
-    elif response.status_code == 404:
-        abort(404, description="User not found")
-    else:
-        # For other HTTP errors, return a generic error message
-        # Log the error for debugging purposes
-        print(f"Failed to fetch user: {response.status_code}, {response.text}")
-        abort(response.status_code, description="Failed to fetch user profile from Clerk")
+                        # Upload file to Firebase Storage and add tags to Firestore
+                        unique_filename = user_id
+                        file_url = upload_profile_picture(filepath, unique_filename)
+
+                        user = auth.update_user(
+                            user_id,
+                            photo_url=file_url,
+                        )
+                    except Exception as e:
+                        os.remove(filepath)
+                        os.rmdir(temp_dir)
+                        print('Failed to upload file: {}'.format(file_url))
+            if len(userData) != 0: update_user_details(user_id, userData)
+            return jsonify({"Auth User": user, "Firestore User": userData}), 200
+        except Exception as e:
+            # General error handling
+            return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
 # Retrieve/Create User Collections
 @users_blueprint.route('/collections/<user_id>', methods=['GET', 'POST'])

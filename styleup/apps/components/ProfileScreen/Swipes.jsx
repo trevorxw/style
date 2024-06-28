@@ -35,6 +35,9 @@ export default function Swipes({ user }) {
                 `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/likes/${user.id}`
             );
             const likesData = await response.json();
+            console.log(
+                `Getting likes for user: ${user.id}.\nposts: ${likesData.posts}`
+            );
             for (const post of likesData) {
                 try {
                     const response = await fetch(
@@ -46,11 +49,11 @@ export default function Swipes({ user }) {
                         posts.push(enrichedPostData);
                     }
                 } catch (error) {
-                    console.error("Error fetching post data", error);
+                    console.error("Error fetching liked post data", error);
                 }
             }
         } catch (error) {
-            console.error("Error fetching post data", error);
+            console.error("Error fetching liked post data", error);
         }
 
         setSwipedPosts(posts);

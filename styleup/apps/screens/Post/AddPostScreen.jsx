@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import {
     View,
     Text,
@@ -19,7 +19,7 @@ import {
 import { Image } from "expo-image";
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
-import { useUser } from "@clerk/clerk-expo";
+import { AuthenticatedUserContext } from "../../providers";
 import {
     Ionicons,
     MaterialIcons,
@@ -47,7 +47,7 @@ export default function AddPostScreen() {
         Dimensions.get("window");
     const [image, setImage] = useState(null);
     const [loading, setLoading] = useState(false);
-    const { user } = useUser();
+    const { user: userFirebase } = useContext(AuthenticatedUserContext);
     const navigation = useNavigation();
 
     // Camera
@@ -144,7 +144,7 @@ export default function AddPostScreen() {
             formData.append("shops", JSON.stringify(shops));
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/upload/${user.id}`,
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/upload/${userFirebase.uid}`,
                 {
                     method: "POST",
                     body: formData,

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
     View,
     Text,
@@ -8,7 +8,7 @@ import {
     ActivityIndicator,
 } from "react-native";
 import { Image } from 'expo-image';
-import { useUser } from "@clerk/clerk-expo";
+import { AuthenticatedUserContext } from "../../providers";
 import { Feather } from "@expo/vector-icons";
 import Followers from "../../components/ProfileScreen/Followers";
 import Following from "../../components/ProfileScreen/Following";
@@ -32,7 +32,9 @@ export default function ProfileScreen() {
     const layout = useWindowDimensions();
     const route = useRoute();
     const navigation = useNavigation();
-    const { isLoading, isSignedIn, user: userClerk } = useUser();
+
+    const { user: userFirebase } = useContext(AuthenticatedUserContext);
+    const { user, loadingUser, error, refreshUserData } = useFetchUser(userFirebase.uid);
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -57,8 +59,6 @@ export default function ProfileScreen() {
         }
     };
 
-    const { user, loading, error, refreshUserData } = useFetchUser(userClerk.id);
-
     useEffect(() => {
         // Check if the screen is focused and if navigation came from the 'Settings' page
         if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost' || route.params?.from === 'edited collection'|| route.params?.from === 'add collection' || route.params?.from === 'ootd')) {
@@ -67,7 +67,7 @@ export default function ProfileScreen() {
         }
     }, [isFocused, route.params, refreshUserData]);
 
-    if (loading) {
+    if (loadingUser) {
         return (
             <View style={styles.center}>
                 <ActivityIndicator size="large" color="#00ffff" />
@@ -77,7 +77,7 @@ export default function ProfileScreen() {
     if (!user) {
         return (
             <View style={styles.center}>
-                <Text>No user data available.</Text>
+                <ActivityIndicator size="large" color="#00ffff" />
             </View>
         );
     }

@@ -1,4 +1,4 @@
-from firebase_admin import firestore, storage
+from firebase_admin import firestore, storage, auth
 from flask import jsonify
 
 db = firestore.client()
@@ -62,7 +62,7 @@ def get_ootd_by_user(user_id):
         posts = db.collection('posts').document(user_id).collection('ootd').stream()
         
         # Create a list of post IDs from the posts subcollection
-        post_ids = [{'post_id': post.id} for post in posts if post.id != 'initial_post']
+        post_ids = [{'post_id': post.id} for post in posts if post.id != 'initial_ootd']
         return sorted(post_ids, key=lambda x: x['post_id'], reverse=True)
     except Exception as e:
         return {"error": str(e)}
@@ -91,6 +91,15 @@ def upload_file_to_storage(file_path, filename):
     print(f"File URL: {blob.public_url}")  # Verify the URL
     return blob.public_url  # Ensure the file is publicly accessible
 
+def upload_profile_picture(file_path, filename):
+    # Specify the path within the bucket
+    blob = bucket.blob(f'profilePictures/{filename}')
+    print(f"Uploading to: {blob.path}")  # Check the path
+    blob.upload_from_filename(file_path)
+    blob.make_public()
+    print(f"File URL: {blob.public_url}")  # Verify the URL
+    return blob.public_url  # Ensure the file is publicly accessible
+
 def upload_file_to_collections(file_path, filename):
     # Specify the path within the bucket
     blob = bucket.blob(f'collections/{filename}')
@@ -112,6 +121,15 @@ def add_ootd_to_firestore(filename, userId, file_metadata):
 
 #User
 
+def get_user_by_uid(uid):
+    try:
+        user = auth.get_user(uid)
+        print('Successfully fetched user data: {}'.format(user))
+        return user
+    except auth.AuthError as e:
+        print('Error fetching user data:', e)
+        return None
+
 def create_new_user(user_id):
     """
     Creates new user if user does not exist, else do nothing.
@@ -124,6 +142,7 @@ def create_new_user(user_id):
 
     #add user_id to users collection
     user_ref.set({
+        'username': '',
         'bio': 'This is a default bio',
         'created_at': firestore.SERVER_TIMESTAMP
     })
@@ -132,6 +151,10 @@ def create_new_user(user_id):
     # Posts
     db.collection('posts').document(user_id).collection('userPosts').document('initial_post').set({
         'title': 'First Post',
+        'content': 'Welcome to your new social media!'
+    })
+    db.collection('posts').document(user_id).collection('ootd').document('initial_ootd').set({
+        'title': 'First Ootd',
         'content': 'Welcome to your new social media!'
     })
 
@@ -169,6 +192,7 @@ def get_user_details(user_id):
         # Fetch bio
         user_data = user_doc.to_dict()
         bio = user_data.get('bio', 'No bio available')
+        username = user_data.get('username')
 
         # Fetch following
         following_refs = db.collection('users').document(user_id).collection('userFollowing').stream()
@@ -180,11 +204,19 @@ def get_user_details(user_id):
 
         # Compile and return all data
         return {
+            "username": username,
             "bio": bio,
             "following": following,
             "followers": followers
         }
 
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+def update_user_details(user_id, data):
+    try:
+        user_ref = db.collection('users').document(user_id) 
+        user_ref.update(data)
     except Exception as e:
         return jsonify({"error": str(e)})
 

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
-import { useClerk } from "@clerk/clerk-expo";
+import { auth } from "../../../firebaseConfig";
+import { signOut } from "firebase/auth";
 import {
     useFonts,
     JosefinSans_400Regular,
@@ -10,16 +11,10 @@ export default function LogoutButton() {
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
     });
-    const { signOut } = useClerk();
 
-    const handleLogout = async () => {
-        try {
-            await signOut(); // Make sure to implement your sign-out logic here
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
-    };
-
+    const handleLogout = () => {
+        signOut(auth).catch((error) => console.log("Error logging out: ", error));
+      };
     return (
         <TouchableOpacity style={styles.button} onPress={handleLogout}>
             <Text style={styles.text}>Logout</Text>

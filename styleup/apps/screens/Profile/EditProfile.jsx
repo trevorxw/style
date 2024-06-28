@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
     View,
     Text,
@@ -6,39 +6,97 @@ import {
     TouchableOpacity,
     StyleSheet,
     KeyboardAvoidingView,
-    Platform
+    Platform,
+    Alert,
+    ScrollView,
 } from "react-native";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
-import { useUser, useClerk } from "@clerk/clerk-expo";
+import { AuthenticatedUserContext } from "../../providers";
 import { useNavigation } from "@react-navigation/native";
+import useFetchUser from "../../../hooks/useFetchUser";
+import { Formik } from "formik";
+import { FormErrorMessage } from "../../components/LoginScreen/FormErrorMessage";
+import { Feather } from "@expo/vector-icons";
+import * as Yup from "yup";
+import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
 
 export default function EditProfileScreen() {
-    const { isLoaded, user } = useUser();
+    const { user: userFirebase } = useContext(AuthenticatedUserContext);
+    const { user, loadingUser, error, refreshUserData } = useFetchUser(
+        userFirebase.uid
+    );
+
     const [username, setUsername] = useState(user?.username);
-    const [bio, setBio] = useState(user?.unsafeMetadata["bio"]);
-    const [profileImage, setProfileImage] = useState(user?.imageUrl);
+    const [name, setName] = useState(user?.name);
+    const [bio, setBio] = useState(user?.bio);
+    const [profileImage, setProfileImage] = useState(user?.image_url);
+    const [image, setImage] = useState(null);
+    const [errorState, setErrorState] = useState("");
     const navigation = useNavigation();
 
-    const handleSaveProfile = async () => {
-        if (!user) {
-            console.error("User context is not ready.");
-            return;
-        }
+    useEffect(() => {
+        setProfileImage(user?.image_url);
+    }, [user]);
 
-        try {
-            await user.update({
-                username: username,
-                unsafeMetadata: {
-                    bio,
-                },
-            });
+    const usernameValidationSchema = Yup.object().shape({
+        username: Yup.string().min(1).label("username"),
+    });
 
-            await user.reload();
-        } catch (error) {
-            console.error("Failed to update profile:", error.message);
+    const handleSaveProfile = async (values) => {
+        if (
+            image ||
+            values.bio !== bio ||
+            values.username !== username ||
+            values.name !== name
+        ) {
+            try {
+                // Create a FormData object to encapsulate the file data
+                let formData = new FormData();
+                if (image) {
+                    formData.append("file", {
+                        uri: image,
+                        name: `${Date.now()}.jpg`,
+                        type: "image/jpeg",
+                    });
+                }
+
+                // Append other form values that you want to send along with the file
+                if (values.bio !== bio) {
+                    formData.append("bio", values.bio);
+                }
+                if (values.username !== username) {
+                    formData.append("username", values.username);
+                }
+                if (values.name !== name) {
+                    formData.append("name", values.name);
+                }
+                // Post request to Flask endpoint
+                const response = await fetchWithTimeout(
+                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/user/${userFirebase.uid}`,
+                    {
+                        method: "POST",
+                        body: formData,
+                    }
+                );
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    if (image) {
+                        setImage(null);
+                    }
+                    Alert.alert("Success!", "Profile Edited Successfully.");
+                    navigation.navigate("profile-tab", { from: "settings" });
+                } else {
+                    Alert.alert("Error", result.message || "An error occurred");
+                }
+            } catch (error) {
+                console.error("Error uploading post", error);
+                Alert.alert("Error", "Failed to edit profile.");
+                navigation.navigate("profile-tab", { from: "settings" });
+            }
         }
-        navigation.navigate("profile-tab", { from: "settings" });
     };
 
     const pickImage = async () => {
@@ -46,109 +104,203 @@ export default function EditProfileScreen() {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [1, 1],
-            quality: 1,
+            quality: 0.2,
             base64: true,
         });
-        try {
-            if (!result.canceled && result.assets[0].base64) {
-                const base64 = result.assets[0].base64;
-                const mimeType = result.assets[0].mimeType;
-
-                const image = `data:${mimeType};base64,${base64}`;
-
-                await user?.setProfileImage({
-                    file: image,
-                });
-
-                await user.reload();
-                navigation.navigate("profile-tab", { from: "settings" });
-            }
-        } catch (error) {
-            console.error("Failed to update profile picture:", error);
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
         }
     };
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{ flex: 1 }}
-        >
+        <View style={{ flex: 1 }}>
             <View style={styles.container}>
-                <TouchableOpacity
-                    onPress={pickImage}
-                    style={styles.imagePicker}
+                <View style={styles.imageContainer}>
+                    <TouchableOpacity
+                        onPress={pickImage}
+                        style={styles.imagePicker}
+                    >
+                        {profileImage ? (
+                            <Image
+                                source={profileImage}
+                                style={styles.profileImage}
+                            />
+                        ) : image ? (
+                            <Image source={image} style={styles.profileImage} />
+                        ) : (
+                            <Image
+                                source={require("../../../assets/images/blank-profile-picture.png")}
+                                style={styles.profileImage}
+                            />
+                        )}
+                    </TouchableOpacity>
+                    {/* <Text style={styles.descriptionText}>
+                        Profile Picture changes immediately.
+                    </Text>
+                    <Text style={styles.descriptionText}>
+                        Username can only have letters, numbers, -, _
+                    </Text> */}
+                </View>
+                <Formik
+                    initialValues={{
+                        username: user?.username,
+                        name: user?.name,
+                        bio: user?.bio,
+                    }}
+                    enableReinitialize={true}
+                    validationSchema={usernameValidationSchema}
+                    onSubmit={(values) => handleSaveProfile(values)}
                 >
-                    {profileImage ? (
-                        <Image
-                            source={profileImage}
-                            style={styles.profileImage}
-                        />
-                    ) : (
-                        <Image
-                            source={require("../../../assets/images/blank-profile-picture.png")}
-                            style={styles.profileImage}
-                        />
+                    {({
+                        values,
+                        touched,
+                        errors,
+                        handleChange,
+                        handleSubmit,
+                        handleBlur,
+                    }) => (
+                        <KeyboardAvoidingView
+                            behavior="padding"
+                            style={styles.form}
+                        >
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.inputTitleText}>
+                                    username:
+                                </Text>
+                                <View style={styles.usernameContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder={values.username}
+                                        name="username"
+                                        autoCapitalize="none"
+                                        autoCorrect={false}
+                                        textContentType="name"
+                                        onChangeText={handleChange("username")}
+                                        onBlur={handleBlur("username")}
+                                    />
+                                    <Feather
+                                        name="check-circle"
+                                        size={22}
+                                        color="#3BADFF"
+                                        style={styles.check}
+                                    />
+                                </View>
+                                <FormErrorMessage
+                                    error={errors.username}
+                                    visible={touched.username}
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.inputTitleText}>name:</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder={values.name}
+                                    name="name"
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    textContentType="name"
+                                    onChangeText={handleChange("name")}
+                                    onBlur={handleBlur("name")}
+                                />
+                                <FormErrorMessage
+                                    error={errors.name}
+                                    visible={touched.name}
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <Text style={styles.inputTitleText}>bio:</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder={values.bio}
+                                    name="bio"
+                                    autoCapitalize="none"
+                                    autoCorrect={false}
+                                    textContentType="bio"
+                                    onChangeText={handleChange("bio")}
+                                    onBlur={handleBlur("bio")}
+                                />
+                                <FormErrorMessage
+                                    error={errors.bio}
+                                    visible={touched.bio}
+                                />
+                            </View>
+                            <TouchableOpacity
+                                onPress={handleSubmit}
+                                style={styles.button}
+                            >
+                                <Text style={styles.buttonText}>
+                                    Save Profile
+                                </Text>
+                            </TouchableOpacity>
+                        </KeyboardAvoidingView>
                     )}
-                </TouchableOpacity>
-                <Text>Profile Picture changes immediately.</Text>
-                <Text>Username can only have letters, numbers, -, _</Text>
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setUsername}
-                    placeholder={username ? username : "Set Username"}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setBio}
-                    placeholder={bio ? bio : "currently obsessed with..."}
-                />
-                <TouchableOpacity
-                    onPress={handleSaveProfile}
-                    style={styles.button}
-                >
-                    <Text style={styles.buttonText}>Save Profile</Text>
-                </TouchableOpacity>
+                </Formik>
             </View>
-        </KeyboardAvoidingView>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
         alignItems: "center",
         padding: 20,
-        backgroundColor: "#f2f2f2",
+        backgroundColor: "white",
+    },
+    imageContainer: {
+        backgroundColor: "white",
+    },
+    form: {
+        width: "100%",
+        alignItems: "center",
+    },
+    usernameContainer: {
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+    },
+    check: {
+        position: "absolute",
+        right: 10,
     },
     imagePicker: {
         marginBottom: 20,
-        justifyContent: "center",
         alignItems: "center",
-        width: 200,
-        height: 200,
+        width: 150,
+        height: 150,
         borderRadius: 100,
         backgroundColor: "#dddddd",
     },
     profileImage: {
-        width: 200,
-        height: 200,
+        width: 150,
+        height: 150,
         borderRadius: 100,
         contentFit: "cover",
     },
     input: {
-        width: "80%",
+        width: "100%",
         marginVertical: 10,
         padding: 15,
-        borderWidth: 2,
-        borderColor: "#007bff",
+        borderWidth: 1.5,
+        borderColor: "#3BADFF",
         borderRadius: 10,
         backgroundColor: "#ffffff",
-        fontSize: 16,
+        fontSize: 18,
+        fontFamily: "JosefinSans_400Regular",
+    },
+    inputContainer: {
+        width: "80%",
+        marginBottom: 5,
+    },
+    inputTitleText: {
+        color: "black",
+        fontSize: 20,
+        fontFamily: "JosefinSans_400Regular",
+        marginBottom: -2,
     },
     button: {
         marginTop: 20,
-        backgroundColor: "#007bff",
+        backgroundColor: "#3BADFF",
         paddingVertical: 12,
         paddingHorizontal: 20,
         borderRadius: 8,
@@ -162,5 +314,9 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         fontSize: 18,
         textAlign: "center",
+        fontFamily: "JosefinSans_400Regular",
+    },
+    descriptionText: {
+        fontFamily: "JosefinSans_400Regular",
     },
 });

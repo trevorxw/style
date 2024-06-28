@@ -46,7 +46,6 @@ export default function Posts({ user }) {
                 console.error("Error fetching post data", error);
             }
         }
-
         setUserPosts(posts);
     };
 
