@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details
+from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, add_username
 from app.services.auth import token_required
 import requests
 from werkzeug.utils import secure_filename
@@ -56,8 +56,9 @@ def get_user_profile(user_id):
         try:
             userData = {}
             if 'username' in request.form:
-                username = request.form.get('username', '')
+                username = request.form.get('username')
                 userData['username'] = username
+                add_username(username)
 
             if 'bio' in request.form:
                 bio = request.form.get('bio','')
@@ -94,11 +95,20 @@ def get_user_profile(user_id):
                         os.rmdir(temp_dir)
                         print('Failed to upload file: {}'.format(file_url))
             if len(userData) != 0: update_user_details(user_id, userData)
-            return jsonify({"Auth User": user, "Firestore User": userData}), 200
+            return 200
         except Exception as e:
             # General error handling
             return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
+@users_blueprint.route('/usernames', methods=['GET'])
+def usernames():
+    if request.method == 'GET':
+        try: 
+            result = get_usernames()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": "Could not retrieve usernames", "details": str(e)}), 500
+    
 # Retrieve/Create User Collections
 @users_blueprint.route('/collections/<user_id>', methods=['GET', 'POST'])
 def manage_collections(user_id):

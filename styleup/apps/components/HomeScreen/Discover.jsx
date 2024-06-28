@@ -93,8 +93,9 @@ export default function Discover() {
                 time: Date.now(),
             };
             // Post request to Flask endpoint
+            console.log(card);
             const response = await fetchWithTimeout(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/like/${user.id}/${card.id}`,
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/like/${user.id}/${card.post_id}`,
                 {
                     method: "POST",
                     headers: {
@@ -107,7 +108,7 @@ export default function Discover() {
             const result = await response.json();
             if (response.ok) {
                 console.log(
-                    `Uploaded metrics successfully for user: ${user.id}. Card: ${card.id}, Metrics:`,
+                    `Uploaded metrics successfully for user: ${user.id}. Card: ${card.post_id}, Metrics:`,
                     postData
                 );
             } else {

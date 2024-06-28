@@ -34,14 +34,40 @@ export default function EditProfileScreen() {
     const [image, setImage] = useState(null);
     const [errorState, setErrorState] = useState("");
     const navigation = useNavigation();
+    const [usernames, setUsernames] = useState(null);
 
     useEffect(() => {
         setProfileImage(user?.image_url);
     }, [user]);
 
+    useEffect(() => {
+        retrieveUsernames();
+    }, []);
+
     const usernameValidationSchema = Yup.object().shape({
-        username: Yup.string().min(1).label("username"),
+        username: Yup.string()
+            .min(1, "username must be at least 1 character long")
+            .test(
+                "is-unique",
+                "username not available",
+                (value) => !usernames.has(value) // Check if the set does not contain the username
+            ),
+        name: Yup.string(),
+        bio: Yup.string(),
     });
+
+    const retrieveUsernames = async () => {
+        try {
+            const response = await fetch(
+                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/usernames`
+            );
+            const usernameData = await response.json();
+
+            setUsernames(new Set(usernameData));
+        } catch (error) {
+            console.error("Error fetching usernames", error);
+        }
+    };
 
     const handleSaveProfile = async (values) => {
         if (

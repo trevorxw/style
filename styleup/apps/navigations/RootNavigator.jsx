@@ -6,28 +6,38 @@ import { AuthenticatedUserContext } from "../providers";
 import { auth } from "../../firebaseConfig";
 import LoginScreenStackNav from "./LoginScreenStackNav";
 import TabNavigation from "./TabNavigation";
+import WelcomeScreenStackNav from "./WelcomeScreenStackNav";
+import useFetchUser from "../../hooks/useFetchUser";
 
 export const RootNavigator = () => {
-  const { user, setUser } = useContext(AuthenticatedUserContext);
-  const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // onAuthStateChanged returns an unsubscriber
-    const unsubscribeAuthStateChanged = onAuthStateChanged(
-      auth,
-      (authenticatedUser) => {
-        authenticatedUser ? setUser(authenticatedUser) : setUser(null);
-        setIsLoading(false);
-      }
+    const { user, setUser } = useContext(
+        AuthenticatedUserContext
     );
 
-    // unsubscribe auth listener on unmount
-    return unsubscribeAuthStateChanged;
-  }, [user]);
+    useEffect(() => {
+        // onAuthStateChanged returns an unsubscriber
+        const unsubscribeAuthStateChanged = onAuthStateChanged(
+            auth,
+            (authenticatedUser) => {
+                authenticatedUser ? setUser(authenticatedUser) : setUser(null);
+                setIsLoading(false);
+            }
+        );
+        // unsubscribe auth listener on unmount
+        return unsubscribeAuthStateChanged;
+    }, [user]);
 
-  return (
-    <NavigationContainer>
-      {user ? <TabNavigation /> : <LoginScreenStackNav />}
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            {user && user.displayName? (
+                <TabNavigation />
+            ) : user ? (
+                <WelcomeScreenStackNav/>
+            ) : (
+                <LoginScreenStackNav />
+            )}
+        </NavigationContainer>
+    );
 };

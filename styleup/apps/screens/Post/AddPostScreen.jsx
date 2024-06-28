@@ -275,7 +275,7 @@ export default function AddPostScreen() {
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.submitButton}>
-                                    <TouchableOpacity onPress={handleSubmit}>
+                                    <TouchableOpacity onPress={handleSubmit} disabled={loading}>
                                         <Text style={styles.submitButtonText}>
                                             Post
                                         </Text>

@@ -129,6 +129,31 @@ def get_user_by_uid(uid):
     except auth.AuthError as e:
         print('Error fetching user data:', e)
         return None
+    
+def get_usernames():
+    """
+    get usernames
+    """
+    try:
+        # Ensure to reference the posts subcollection for the specific user
+        usernames_query = db.collection('usernames').stream()
+
+        usernames = []
+        
+        # Create a list of post IDs from the posts subcollection
+        # Iterate through the streamed documents
+        for doc in usernames_query:
+            usernames.append(doc.id)
+        return usernames
+    except Exception as e:
+        return {"error": str(e)}
+    
+def add_username(username):
+    try:
+        # Ensure to reference the posts subcollection for the specific user
+        db.collection('usernames').doc(username).set({"hi":"hi"})
+    except Exception as e:
+        return {"error": str(e)}
 
 def create_new_user(user_id):
     """
@@ -215,8 +240,10 @@ def get_user_details(user_id):
 
 def update_user_details(user_id, data):
     try:
+        
         user_ref = db.collection('users').document(user_id) 
         user_ref.update(data)
+        print(data)
     except Exception as e:
         return jsonify({"error": str(e)})
 

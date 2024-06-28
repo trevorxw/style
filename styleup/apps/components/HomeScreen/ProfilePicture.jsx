@@ -7,6 +7,7 @@ import { AuthenticatedUserContext } from "../../providers";
 export default function ProfilePicture({ user }) {
     const navigation = useNavigation();
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
+    console.log(user);
     return (
         <View>
             <TouchableOpacity
@@ -19,7 +20,7 @@ export default function ProfilePicture({ user }) {
                 }}
             >
                 <Image
-                    source={userFirebase.photoURL}
+                    source={user.image_url}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>
