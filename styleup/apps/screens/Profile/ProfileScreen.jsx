@@ -7,7 +7,7 @@ import {
     useWindowDimensions,
     ActivityIndicator,
 } from "react-native";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import { AuthenticatedUserContext } from "../../providers";
 import { Feather } from "@expo/vector-icons";
 import Followers from "../../components/ProfileScreen/Followers";
@@ -17,7 +17,11 @@ import Posts from "../../components/ProfileScreen/Posts";
 import Swipes from "../../components/ProfileScreen/Swipes";
 import Collection from "../../components/ProfileScreen/Collection";
 import Ootd from "../../components/ProfileScreen/Ootd";
-import { useRoute, useNavigation, useIsFocused } from "@react-navigation/native";
+import {
+    useRoute,
+    useNavigation,
+    useIsFocused,
+} from "@react-navigation/native";
 import useFetchUser from "../../../hooks/useFetchUser";
 import {
     useFonts,
@@ -34,7 +38,9 @@ export default function ProfileScreen() {
     const navigation = useNavigation();
 
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
-    const { user, loadingUser, error, refreshUserData } = useFetchUser(userFirebase.uid);
+    const { user, loadingUser, error, refreshUserData } = useFetchUser(
+        userFirebase.uid
+    );
 
     const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
@@ -61,9 +67,16 @@ export default function ProfileScreen() {
 
     useEffect(() => {
         // Check if the screen is focused and if navigation came from the 'Settings' page
-        if (isFocused && (route.params?.from === 'settings' || route.params?.from === 'AddPost' || route.params?.from === 'edited collection'|| route.params?.from === 'add collection' || route.params?.from === 'ootd')) {
+        if (
+            isFocused &&
+            (route.params?.from === "settings" ||
+                route.params?.from === "AddPost" ||
+                route.params?.from === "edited collection" ||
+                route.params?.from === "add collection" ||
+                route.params?.from === "ootd")
+        ) {
             refreshUserData();
-            route.params.from = undefined
+            route.params.from = undefined;
         }
     }, [isFocused, route.params, refreshUserData]);
 
@@ -84,21 +97,23 @@ export default function ProfileScreen() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.header}>
+                <View style={styles.placeholder}></View>
+                <View style={styles.placeholder}></View>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("settings")}
+                    style={styles.settingsButton}
+                >
+                    <Feather name="settings" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
             <View style={styles.profileSection}>
-                <Image
-                    source={user.image_url}
-                    style={styles.profileImage}
-                />
+                <Image source={user.image_url} style={styles.profileImage} />
                 <View style={styles.profileInfo}>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("settings")}
-                        style={styles.settingsButton}
-                    >
-                        <Feather name="settings" size={24} color="black" />
-                    </TouchableOpacity>
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
-                        {/* <Text style={styles.userEmoji}>trevor | 😃😃😃😃</Text> */}
+                        <Text style={styles.name}>{user.name}</Text>
+                        <View style={styles.divider}></View>
                         <View>
                             <Text style={styles.userBio}>
                                 {user.bio == ""
@@ -167,9 +182,21 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
+    header:{
+        marginTop: 50,
+        marginBottom: 5,
+        height: 24,
+        flexDirection: 'center',
+        justifyContent:'space-between',
+        marginRight: 20,
+    },
+    placeholder:{
+        width: 24,
+    },
     settingsButton: {
         justifyContent: "flex-end",
         zIndex: 10, // Tailwind z-1
+        
     },
     container: {
         flex: 1,
@@ -177,7 +204,7 @@ const styles = StyleSheet.create({
     },
     profileSection: {
         flexDirection: "row",
-        marginTop: 56,
+        marginTop: 0,
         marginHorizontal: 24,
     },
     profileImage: {
@@ -212,11 +239,24 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     profileText: {
-        marginTop: 32,
+        alignItems: "center",
+        marginTop: 10,
     },
     userName: {
         fontSize: 20,
         fontFamily: "JosefinSans_400Regular",
+        marginBottom: 20,
+    },
+    name: {
+        marginTop: 5,
+        fontSize: 16,
+        fontFamily: "JosefinSans_400Regular",
+    },
+    divider: {
+        marginTop: 5,
+        width: "100%",
+        height: 1,
+        backgroundColor: "#D9D9D9",
     },
     userBio: {
         marginTop: 10,
