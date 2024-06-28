@@ -47,7 +47,7 @@ export default function RegistrationScreen() {
         <View style={styles.container}>
             <Text style={styles.title}>fitpic registration</Text>
             <Text style={styles.description}>a world of fashion awaits</Text>
-            <TouchableOpacity style={styles.buttonGoogle}>
+            {/* <TouchableOpacity style={styles.buttonGoogle}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={require("../../../assets/images/google-logo.png")}
@@ -63,7 +63,7 @@ export default function RegistrationScreen() {
                 <View style={styles.lines}></View>
                 <Text style={styles.dividerText}>OR</Text>
                 <View style={styles.lines}></View>
-            </View>
+            </View> */}
             <Formik
                 initialValues={{
                     email: "",
@@ -97,7 +97,7 @@ export default function RegistrationScreen() {
                                     autoCapitalize="none"
                                     keyboardType="email-address"
                                     textContentType="emailAddress"
-                                    autoFocus={true}
+                                    // autoFocus={true}
                                     value={values.email}
                                     onChangeText={handleChange("email")}
                                     onBlur={handleBlur("email")}

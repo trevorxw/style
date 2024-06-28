@@ -5,7 +5,7 @@ import {
     StyleSheet,
     TextInput,
 } from "react-native";
-import React, { useContext, useCallback } from "react";
+import React, { useContext, useCallback, useEffect } from "react";
 import * as WebBrowser from "expo-web-browser";
 import { useWarmUpBrowser } from "../../../hooks/useWarmUpBrowser";
 import { Feather } from "@expo/vector-icons";
@@ -16,14 +16,17 @@ import {
     JosefinSans_400Regular,
     JosefinSans_700Bold,
 } from "@expo-google-fonts/josefin-sans";
-import { auth } from "../../../firebaseConfig";
 import { AuthenticatedUserContext } from "../../providers";
-
-
+// import * as Google from "expo-auth-session/providers/google";
+// import { auth, iosClientId, expoClientId } from "../../../firebaseConfig";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function OptionsScreen() {
+    // const [ request, response, promptAsync ] = Google.useAuthRequest({
+    //     expoClientId: expoClientId,
+    //     iosClientId: iosClientId,
+    // });
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
         JosefinSans_700Bold,
@@ -32,19 +35,12 @@ export default function OptionsScreen() {
     const { login } = useContext(AuthenticatedUserContext);
     const navigation = useNavigation();
 
-    const onPress = useCallback(async () => {
-        try {
-        } catch (err) {
-            console.error("OAuth error", err);
-        }
-    }, []);
-
     return (
         <View style={styles.container}>
             <Text style={styles.title}>fitpic</Text>
             <Text style={styles.description}>a world of fashion awaits</Text>
             {/* <Text style={styles.forgotPassword}>forgot password?</Text> */}
-            <TouchableOpacity style={styles.button} onPress={onPress}>
+            {/* <TouchableOpacity style={styles.button} onPress={promptAsync}>
                 <View style={styles.imageContainer}>
                     <Image
                         source={require("../../../assets/images/google-logo.png")}
@@ -58,7 +54,7 @@ export default function OptionsScreen() {
             </TouchableOpacity>
             <View style={styles.divider}>
                 <Text style={styles.dividerText}>OR</Text>
-            </View>
+            </View> */}
             <TouchableOpacity
                 style={styles.button}
                 onPress={() => {

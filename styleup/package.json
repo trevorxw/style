@@ -12,7 +12,6 @@
     "@clerk/clerk-expo": "^1.0.8-snapshot.v7e206ff",
     "@expo-google-fonts/josefin-sans": "^0.2.3",
     "@react-native-async-storage/async-storage": "1.23.1",
-    "@react-native-google-signin/google-signin": "^12.2.1",
     "@react-native-picker/picker": "2.7.5",
     "@react-navigation/bottom-tabs": "^6.5.19",
     "@react-navigation/native": "^6.1.17",
@@ -23,6 +22,7 @@
     "expo": "~51.0.14",
     "expo-app-loading": "^2.1.1",
     "expo-application": "~5.9.1",
+    "expo-auth-session": "~5.5.2",
     "expo-camera": "~15.0.11",
     "expo-constants": "~16.0.2",
     "expo-crypto": "~13.0.2",
@@ -35,7 +35,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-updates": "~0.25.17",
     "expo-web-browser": "~13.0.3",
-    "firebase": "^10.9.0",
+    "firebase": "^10.12.2",
     "formik": "^2.4.5",
     "moment": "^2.30.1",
     "nativewind": "^2.0.11",
@@ -51,7 +51,8 @@
     "react-native-super-grid": "^5.1.0",
     "react-native-tab-view": "^3.5.2",
     "typescript": "~5.3.3",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "undefined": "firebase/auth/react-native"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

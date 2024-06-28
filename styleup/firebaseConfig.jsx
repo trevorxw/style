@@ -7,6 +7,7 @@ import {
     getReactNativePersistence,
 } from "firebase/auth";
 import * as SecureStore from 'expo-secure-store';
+import Constants from 'expo-constants';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -35,6 +36,10 @@ const firebaseConfig = {
   appId: "1:359106368965:web:fe17c80a280e4c3a63e7ac",
   measurementId: "G-VGERV3C0ZP"
 };
+
+export const expoClientId = process.env.EXPO_CLIENT_ID;
+export const iosClientId = process.env.IOS_CLIENT_ID;
+
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);

@@ -45,6 +45,7 @@ export default function LoginScreen() {
     return (
         <View isSafe style={styles.container}>
             <Text style={styles.title}>fitpic</Text>
+            <Text style={styles.description}>a world of fashion awaits</Text>
             <Formik
                 initialValues={{
                     email: "",
@@ -70,7 +71,7 @@ export default function LoginScreen() {
                             autoCapitalize="none"
                             keyboardType="email-address"
                             textContentType="emailAddress"
-                            autoFocus={true}
+                            // autoFocus={true}
                             value={values.email}
                             onChangeText={handleChange("email")}
                             onBlur={handleBlur("email")}
@@ -157,8 +158,14 @@ const styles = StyleSheet.create({
         paddingTop: 4,
         color: "#45B0FF",
         fontSize: 50,
-        marginBottom: 30,
         fontFamily: "JosefinSans_700Bold",
+    },
+    description: {
+        paddingTop: 4,
+        color: "white",
+        fontSize: 15,
+        marginBottom: 30,
+        fontFamily: "JosefinSans_400Regular",
     },
     input: {
         height: 50,

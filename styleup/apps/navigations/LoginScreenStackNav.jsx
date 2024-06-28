@@ -10,11 +10,11 @@ const Stack = createStackNavigator();
 export default function LoginScreenStackNav() {
     return (
         <Stack.Navigator>
-            <Stack.Screen
+            {/* <Stack.Screen
                 name="options"
                 component={OptionsScreen}
                 options={{ headerShown: false }}
-            />
+            /> */}
             <Stack.Screen
                 name="login"
                 component={LoginScreen}
