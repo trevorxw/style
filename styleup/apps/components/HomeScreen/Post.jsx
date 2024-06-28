@@ -55,6 +55,7 @@ export default function Post({ card, swipeRight}) {
                 {/* <Share card={card} /> */}
             </View>
             <View style={styles.fieldsContainer}>
+                <Text style={styles.usernameText}>@{user.username}</Text>
                 <Text style={styles.descriptionText}>{card.description}</Text>
                 <ScrollView style={styles.shops} horizontal={true}>
                     {JSON.parse(card.shops).map((shop, index) => (
@@ -97,8 +98,14 @@ const styles = StyleSheet.create({
     },
     descriptionText: {
         fontSize: 18,
-        color: "rgba(256, 256, 256, 0.75)",
+        color: "rgba(256, 256, 256, 0.85)",
         fontFamily: "JosefinSans_400Regular",
+    },
+    usernameText:{
+        fontSize: 18,
+        color: "rgba(256, 256, 256, 0.85)",
+        fontFamily: "JosefinSans_400Regular",
+        marginBottom: 3,
     },
     shops: {
         marginTop: 20,
@@ -117,7 +124,7 @@ const styles = StyleSheet.create({
     fieldsContainer: {
         position: "absolute",
         justifyContent: "center",
-        top: (screenHeight * 9) / 11,
+        top: (screenHeight * 10.4) / 13,
         paddingLeft: 10,
         zIndex: 1,
     },
