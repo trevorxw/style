@@ -5,6 +5,7 @@ import ProfileScreenStackNav from './ProfileScreenStackNav';
 import PostScreenStackNav from './PostScreenStackNav';
 import { Foundation, AntDesign, MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import HomeScreenStackNav from './HomeScreenStackNav';
+import { useFonts, JosefinSans_400Regular } from '@expo-google-fonts/josefin-sans';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ export default function TabNavigation() {
                 name="Home"
                 component={HomeScreenStackNav}
                 options={{
-                    tabBarLabel: ({ color }) => <Text style={{ color }}>Home</Text>,
+                    tabBarLabel: ({ color }) => <Text style={[styles.tabBarText, { color }]}>Home</Text>,
                     tabBarIcon: ({ color, size }) => (
                         <IconComponent library={Foundation} name="home" color={color} size={size} style={styles.icon}/>
                     ),
@@ -55,7 +56,7 @@ export default function TabNavigation() {
                 name="AddPost"
                 component={PostScreenStackNav}
                 options={{
-                    tabBarLabel: ({ color }) => <Text style={{ color }}>Post</Text>,
+                    tabBarLabel: ({ color }) => <Text style={[styles.tabBarText, { color }]}>Post</Text>,
                     tabBarIcon: ({ color, size }) => (
                         <IconComponent library={AntDesign} name="skin" color={color} size={size-3} style={styles.icon}/>
                     ),
@@ -77,7 +78,7 @@ export default function TabNavigation() {
                 name="Profile"
                 component={ProfileScreenStackNav}
                 options={{
-                    tabBarLabel: ({ color }) => <Text style={{ color }}>Profile</Text>,
+                    tabBarLabel: ({ color }) => <Text style={[styles.tabBarText, { color }]}>Profile</Text>,
                     tabBarIcon: ({ color, size }) => (
                         <IconComponent library={FontAwesome5} name="user-alt" color={color} size={size - 5} style={styles.icon}/>
                     ),
@@ -91,6 +92,9 @@ export default function TabNavigation() {
 const styles = StyleSheet.create({
     icon: {
         paddingTop: 1,
+    },
+    tabBarText: {
+        fontFamily: 'JosefinSans_400Regular',
     },
 });
 

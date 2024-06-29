@@ -1,5 +1,8 @@
 from firebase_admin import firestore, storage, auth
 from flask import jsonify
+from datetime import datetime, timedelta
+import pytz
+
 
 db = firestore.client()
 bucket = storage.bucket()
@@ -33,7 +36,31 @@ def get_all_posts():
         cards = [
             {'post_id': doc.id, **doc.to_dict()} 
             for doc in query_snapshot 
-            if 'private' not in doc.to_dict().get('category', {})
+            if 'ootd' not in doc.to_dict().get('category', {})
+        ]
+        return jsonify(cards), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
+def get_all_ootd():
+    """
+    Retrieves all ootds from Firestore.
+    """
+    try:
+        tz = pytz.timezone('America/Los_Angeles')
+        today_start = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = today_start + timedelta(days=1)
+
+        query_snapshot = db.collection('all_posts')\
+                           .where('category', '==', 'ootd')\
+                           .where('created_at', '>=', today_start)\
+                           .where('created_at', '<', today_end)\
+                           .order_by('created_at', direction=firestore.Query.DESCENDING)\
+                           .stream()
+        cards = [
+            {'post_id': doc.id, **doc.to_dict()} 
+            for doc in query_snapshot 
+            if 'ootd' in doc.to_dict().get('category', {})
         ]
         return jsonify(cards), 200
     except Exception as e:
@@ -341,6 +368,15 @@ def add_swipe_history(user_id, post_id, metrics):
     """
     try:
         # Add additional data validation or processing here if necessary
-        doc_ref = db.collection('users').document(user_id).collection('swipeHistory').document(post_id).set(metrics)
+        doc_ref = db.collection('users').document(user_id).collection('swipeHistory').document(post_id)
+
+        # Check if the document exists
+        doc = doc_ref.get()
+        if doc.exists:
+            return {"message": "No update performed because the document already exists."}
+        else:
+            # Set the document with the given metrics if it does not exist
+            doc_ref.set(metrics)
+            return {"document_id": doc_ref.id, "message": "Document created successfully."}
     except Exception as e:
         raise Exception(f"Failed to save user interaction: {str(e)}")

@@ -451,8 +451,8 @@ export default function AddPostScreen() {
                                                 style={styles.saveButton}
                                                 onPress={delShop}
                                             >
-                                                <Ionicons
-                                                    name="remove"
+                                                <Feather
+                                                    name="trash-2"
                                                     size={24}
                                                     color="white"
                                                 />
@@ -625,6 +625,9 @@ const styles = StyleSheet.create({
         fontFamily: "JosefinSans_400Regular",
         color: "rgba(0, 0, 0, 0.5)",
         paddingVertical: 3,
+    },
+    saveButton:{
+        marginTop: 5,
     },
     divider: {
         height: 1,

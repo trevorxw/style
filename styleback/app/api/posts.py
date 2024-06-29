@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
 import app
-from app.services.firebase import get_post, get_all_posts, upload_file_to_storage, add_data_to_firestore, add_ootd_to_firestore, get_posts_by_user, get_ootd_by_user, get_liked_posts_by_user
+from app.services.firebase import get_post, get_all_posts, get_all_ootd, upload_file_to_storage, add_data_to_firestore, add_ootd_to_firestore, get_posts_by_user, get_ootd_by_user, get_liked_posts_by_user
 from app.services.auth import token_required
 from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
@@ -36,6 +36,19 @@ def get_posts():
     """
     try:
         response = get_all_posts()
+        return response
+    except Exception as e:
+        return jsonify({"Could not retrieve post": str(e)}), 500
+    
+@posts_blueprint.route('/ootds/', methods=['GET'])
+# @token_required
+def get_ootds():
+    """
+    Retrieves a post from Firestore based on the post_id.
+    Returns the JSON response of the post or an error message.
+    """
+    try:
+        response = get_all_ootd()
         return response
     except Exception as e:
         return jsonify({"Could not retrieve post": str(e)}), 500

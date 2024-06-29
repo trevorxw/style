@@ -173,7 +173,7 @@ export default function ProfileScreen() {
                         )}
                     />
                 )}
-                lazy
+                lazy={1}
                 onIndexChange={setIndex}
                 initialLayout={{ width: layout.width }}
             />

@@ -20,7 +20,7 @@ import { AuthenticatedUserContext } from "../../providers";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Discover() {
+export default function Ootd() {
     const db = getFirestore(app);
 
     const [cardIndex, setCardIndex] = useState(0);
@@ -54,7 +54,7 @@ export default function Discover() {
     const getCards = async () => {
         try {
             const response = await fetch(
-                "https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/"
+                "https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootds/"
             );
             const fetchedCards = await response.json();
             setCards(fetchedCards);
