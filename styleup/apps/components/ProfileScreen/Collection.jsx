@@ -15,6 +15,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { FlatGrid } from "react-native-super-grid";
 import { Feather } from "@expo/vector-icons";
+import { getFirebaseToken } from "../../../utils";
 
 export default function Collection({ user }) {
     let [fontsLoaded] = useFonts({
@@ -34,8 +35,14 @@ export default function Collection({ user }) {
     const getUserCollections = async () => {
         setLoading(true);
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collections/${user.id}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collections/${user.id}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const collectionsData = await response.json();
             console.log(collectionsData);
@@ -62,12 +69,14 @@ export default function Collection({ user }) {
         };
 
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collections/${user.id}`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(newCollection),
                 }

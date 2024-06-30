@@ -146,6 +146,33 @@ def add_ootd_to_firestore(filename, userId, file_metadata):
     doc_ref = db.collection('all_posts').document(filename)
     doc_ref.set(file_metadata)
 
+def del_post(user_id, post_id):
+    bucket = storage.bucket()
+    file_path = f'postImages/{post_id}.jpg'
+    blob = bucket.blob(file_path)
+    
+    try:
+        all_posts_ref = db.collection('all_posts').document(post_id)
+        all_posts = all_posts_ref.get()
+        post_ref = db.collection('posts').document(user_id).collection('userPosts').document(post_id)
+        post = post_ref.get()
+        if post.exists and all_posts.exists:
+            post_ref.delete()
+            all_posts_ref.delete()
+            # Check if the blob exists before attempting to delete
+            if blob.exists():
+                blob.delete()
+                print(f"Collection {post_id} deleted from Firestore and Storage.")
+            else:
+                print(f"No such object in storage: {file_path}")
+            
+            return True
+        else:
+            print(f"No such collection {post_id} to delete.")
+            return False
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
 #User
 
 def get_user_by_uid(uid):

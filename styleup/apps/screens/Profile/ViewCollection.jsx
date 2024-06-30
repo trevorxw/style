@@ -19,6 +19,8 @@ import { FlatGrid } from "react-native-super-grid";
 import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
+import { getFirebaseToken } from "../../../utils";
+
 
 export default function ViewCollection({ route, navigation }) {
     let [fontsLoaded] = useFonts({
@@ -56,8 +58,13 @@ export default function ViewCollection({ route, navigation }) {
     const getCollectionData = async () => {
         // Fetch details for each post using the post ID
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const collectionData = await response.json();
             console.log(
@@ -78,8 +85,13 @@ export default function ViewCollection({ route, navigation }) {
             for (const post_id of postIds) {
                 if (post_id) {
                     try {
+                        const token = await getFirebaseToken();
                         const postResponse = await fetch(
-                            `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post_id}`
+                            `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post_id}`,{
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                },
+                            }
                         );
                         const postData = await postResponse.json();
                         if (postData) {
@@ -109,15 +121,24 @@ export default function ViewCollection({ route, navigation }) {
 
         // Fetch details for each post using the post ID
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/likes/${user.id}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/likes/${user.id}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const likesData = await response.json();
-            // console.log(likesData);
+            console.log(likesData);
             for (const post of likesData) {
                 try {
                     const response = await fetch(
-                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
+                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,{
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
                     );
                     const postData = await response.json();
                     const enrichedPostData = { ...postData, ...post };
@@ -140,11 +161,15 @@ export default function ViewCollection({ route, navigation }) {
             let formData = new FormData();
             formData.append("posts", JSON.stringify([...selectedPosts]));
             // Post request to Flask endpoint
+            const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "POST",
                     body: formData,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
 
@@ -185,11 +210,15 @@ export default function ViewCollection({ route, navigation }) {
 
             try {
                 // Post request to Flask endpoint
+                const token = await getFirebaseToken();
                 const response = await fetch(
                     `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
                     {
                         method: "POST",
                         body: formData,
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     }
                 );
 
@@ -216,10 +245,14 @@ export default function ViewCollection({ route, navigation }) {
 
     const deleteCollection = async () => {
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
             const result = await response.json();

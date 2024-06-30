@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { Image } from "expo-image";
 import { FlatGrid } from "react-native-super-grid";
 import { useNavigation } from "@react-navigation/native";
+import { getFirebaseToken } from "../../../utils";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -31,8 +32,13 @@ export default function Swipes({ user }) {
 
         // Fetch details for each post using the post ID
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/likes/${user.id}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/likes/${user.id}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const likesData = await response.json();
             console.log(
@@ -41,7 +47,11 @@ export default function Swipes({ user }) {
             for (const post of likesData) {
                 try {
                     const response = await fetch(
-                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
+                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,{
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
                     );
                     const postData = await response.json();
                     const enrichedPostData = { ...postData, ...post };

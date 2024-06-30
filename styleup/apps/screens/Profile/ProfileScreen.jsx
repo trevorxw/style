@@ -28,13 +28,12 @@ import {
     JosefinSans_400Regular,
 } from "@expo-google-fonts/josefin-sans";
 
-export default function ProfileScreen() {
+export default function ProfileScreen({route}) {
     const isFocused = useIsFocused();
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
     });
     const layout = useWindowDimensions();
-    const route = useRoute();
     const navigation = useNavigation();
 
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
@@ -76,7 +75,6 @@ export default function ProfileScreen() {
                 route.params?.from === "ootd")
         ) {
             refreshUserData();
-            route.params.from = undefined;
         }
     }, [isFocused, route.params, refreshUserData]);
 

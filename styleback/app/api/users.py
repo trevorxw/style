@@ -100,6 +100,7 @@ def get_user_profile(user_id):
             return jsonify({"error": "An unexpected error occurred", "details": str(e)}), 500
 
 @users_blueprint.route('/usernames', methods=['GET'])
+@token_required
 def usernames():
     if request.method == 'GET':
         try: 
@@ -109,6 +110,7 @@ def usernames():
             return jsonify({"error": "Could not retrieve usernames", "details": str(e)}), 500
         
 @users_blueprint.route('/usernames/data', methods=['GET'])
+@token_required
 def usernames_data():
     if request.method == 'GET':
         try: 
@@ -119,6 +121,7 @@ def usernames_data():
     
 # Retrieve/Create User Collections
 @users_blueprint.route('/collections/<user_id>', methods=['GET', 'POST'])
+@token_required
 def manage_collections(user_id):
     if request.method == 'GET':
         try:
@@ -139,6 +142,7 @@ def manage_collections(user_id):
 
 # Edit User Collection
 @users_blueprint.route('/collection/<user_id>/<collection_id>', methods=['GET', 'POST'])
+@token_required
 def edit_collection(user_id, collection_id):
     if request.method == 'GET':
         response = get_user_collection(user_id, collection_id)
@@ -188,6 +192,7 @@ def edit_collection(user_id, collection_id):
 
 # Delete User Collection
 @users_blueprint.route('/collection/<user_id>/<collection_id>', methods=['DELETE'])
+@token_required
 def delete_collection(user_id, collection_id):
     try:
         # Document reference
@@ -201,6 +206,7 @@ def delete_collection(user_id, collection_id):
 
 # Upload Post Metrics
 @users_blueprint.route('/like/<user_id>/<post_id>', methods=['POST'])
+@token_required
 def add_user_like(user_id, post_id):
     try:
         data = request.get_json()  # Use .get_json() to parse JSON body
@@ -227,6 +233,7 @@ def allowed_file(filename):
 #INTERACTIONS
 
 @users_blueprint.route('/follow/<uidFollower>/<uid>', methods=['POST', 'DELETE'])
+@token_required
 def toggle_followering_status(uidFollower, uid):
     if request.method == "POST":
         try:

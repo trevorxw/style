@@ -14,6 +14,7 @@ import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 //Request
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
+import { getFirebaseToken } from "../../../utils";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -47,8 +48,13 @@ export default function Ootd({user}) {
 
     const getOotds = async () => {
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootds/"
+                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootds/",{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const fetchedCards = await response.json();
             setCards(fetchedCards);
@@ -68,12 +74,14 @@ export default function Ootd({user}) {
             };
             // Post request to Flask endpoint
             console.log(card);
+            const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/like/${user.id}/${card.post_id}`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(postData),
                 }

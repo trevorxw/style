@@ -12,7 +12,7 @@ import { Image } from "expo-image";
 import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { AuthenticatedUserContext } from "../../providers";
-import moment from "moment";
+import { getFirebaseToken } from "../../../utils";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -72,14 +72,25 @@ export default function Ootd({ user }) {
 
         // Fetch details for each post using the post ID
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootd/${userFirebase.uid}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootd/${userFirebase.uid}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const ootdData = await response.json();
             for (const post of ootdData) {
                 try {
                     const response = await fetch(
-                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
+                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
                     );
                     const postData = await response.json();
                     const enrichedPostData = { ...postData, ...post };
@@ -102,14 +113,25 @@ export default function Ootd({ user }) {
 
         // Fetch details for each post using the post ID
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootd/${userFirebase.uid}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootd/${userFirebase.uid}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const ootdData = await response.json();
             for (const post of ootdData) {
                 try {
                     const response = await fetch(
-                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
+                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,
+                        {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        }
                     );
                     const postData = await response.json();
                     const enrichedPostData = { ...postData, ...post };

@@ -13,6 +13,7 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 import { Image } from "expo-image";
 import { ProfileFollowing } from "./ProfileFollowing";
+import { getFirebaseToken } from "../../../utils";
 
 export default function FollowHistory({ user }) {
     let [fontsLoaded] = useFonts({
@@ -34,8 +35,14 @@ export default function FollowHistory({ user }) {
 
     const retrieveUsernameData = async () => {
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames/data`
+                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames/data",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const userData = await response.json();
             delete userData[user.username];
@@ -71,10 +78,14 @@ export default function FollowHistory({ user }) {
         try {
             // Determine if the user is currently followed to either follow or unfollow
             const currentlyFollowing = !!following[username];
+            const token = await getFirebaseToken();
             const response = await fetch(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/follow/${user.id}/${uid}`,
                 {
                     method: currentlyFollowing ? "DELETE" : "POST", // Assuming DELETE to unfollow and POST to follow
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
             // Toggle the following state based on current state

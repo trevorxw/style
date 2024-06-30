@@ -36,6 +36,7 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 import * as MediaLibrary from "expo-media-library";
 import { PinchGestureHandler, State } from "react-native-gesture-handler";
+import { getFirebaseToken } from "../../../utils";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -146,11 +147,15 @@ export default function OotdCamera() {
             formData.append("category", values.category);
             formData.append("shops", JSON.stringify(shops));
             // Post request to Flask endpoint
+            const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/upload/${userFirebase.uid}`,
                 {
                     method: "POST",
                     body: formData,
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 }
             );
 

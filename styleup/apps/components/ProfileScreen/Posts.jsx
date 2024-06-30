@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { FlatGrid } from "react-native-super-grid";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
+import { getFirebaseToken } from "../../../utils";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
@@ -32,10 +33,15 @@ export default function Posts({ user }) {
         setLoading(true);
 
         // Fetch details for each post using the post ID
+        const token = await getFirebaseToken();
         for (const post of user.post_ids) {
             try {
                 const response = await fetch(
-                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
+                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,{
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
                 );
                 const postData = await response.json();
                 const enrichedPostData = { ...postData, ...post };

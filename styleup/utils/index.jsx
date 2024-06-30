@@ -1,3 +1,6 @@
+import {
+  getAuth,
+} from "firebase/auth";
 import * as Yup from 'yup';
 
 export const loginValidationSchema = Yup.object().shape({
@@ -19,3 +22,13 @@ export const passwordResetSchema = Yup.object().shape({
     .label('email')
     .email('enter a valid email')
 });
+
+// Function to get the current user's Firebase token
+export const getFirebaseToken = async () => {
+  const user = getAuth().currentUser;
+  if (user) {
+    return await user.getIdToken();
+  } else {
+    throw new Error("No user is logged in.");
+  }
+};

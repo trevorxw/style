@@ -20,6 +20,7 @@ import { FormErrorMessage } from "../../components/LoginScreen/FormErrorMessage"
 import { Feather } from "@expo/vector-icons";
 import * as Yup from "yup";
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
+import { getFirebaseToken } from "../../../utils";
 
 export default function EditProfileScreen() {
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
@@ -58,8 +59,13 @@ export default function EditProfileScreen() {
 
     const retrieveUsernames = async () => {
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const usernameData = await response.json();
 
@@ -98,11 +104,15 @@ export default function EditProfileScreen() {
                     formData.append("name", values.name);
                 }
                 // Post request to Flask endpoint
+                const token = await getFirebaseToken();
                 const response = await fetchWithTimeout(
                     `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/user/${userFirebase.uid}`,
                     {
                         method: "POST",
                         body: formData,
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
                     }
                 );
 

@@ -14,10 +14,11 @@ import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 //Request
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
+import { getFirebaseToken } from "../../../utils";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Discover({user}) {
+export default function Discover({ user }) {
     const db = getFirestore(app);
 
     const [cardIndex, setCardIndex] = useState(0);
@@ -47,11 +48,18 @@ export default function Discover({user}) {
 
     const getCards = async () => {
         try {
+            const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/"
+                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
             );
             const fetchedCards = await response.json();
-            setCards(fetchedCards);
+            console.log("Fetched cards:", fetchedCards);
+            setCards(fetchedCards.filter(card => card != null));
         } catch (error) {
             console.error("Error fetching cards:", error);
         }
@@ -88,12 +96,14 @@ export default function Discover({user}) {
             };
             // Post request to Flask endpoint
             console.log(card);
+            const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/like/${user.id}/${card.post_id}`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify(postData),
                 }
@@ -192,6 +202,7 @@ export default function Discover({user}) {
                 cards={cards}
                 ref={swiperRef}
                 renderCard={(card, index) => {
+                    console.log("Rendering card at index", index, "card data:", card);
                     return (
                         <View style={styles.postContainer}>
                             <Post card={card} />
