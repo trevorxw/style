@@ -50,13 +50,14 @@ export default function Ootd({user}) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootds/",{
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootds/${user.id}`,{
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
             const fetchedCards = await response.json();
+            console.log(`Displaying ootds: ${fetchedCards[0]}, ${response}`);
             setCards(fetchedCards);
         } catch (error) {
             console.error("Error fetching cards:", error);

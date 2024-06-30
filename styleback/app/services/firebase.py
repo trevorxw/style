@@ -42,27 +42,43 @@ def get_all_posts():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
-def get_all_ootd():
+
+def get_all_ootd(user_id):
     """
-    Retrieves all ootds from Firestore.
+    Retrieves all 'OOTD' posts from Firestore where there is mutual following.
     """
     try:
+        # Timezone and time range setup
         tz = pytz.timezone('America/Los_Angeles')
         today_start = datetime.now(tz).replace(hour=0, minute=0, second=0, microsecond=0)
         today_end = today_start + timedelta(days=1)
 
+        # Query for users that user_id follows
+        follows_snapshot = db.collection('users').document(user_id).collection('userFollows').stream()
+        follows = [doc.id for doc in follows_snapshot]
+
+        mutual_follows = []
+        for user in follows:
+            # Check if each user also follows user_id
+            if db.collection('users').document(user).collection('userFollows').document(user_id).get().exists:
+                mutual_follows.append(user)
+
+        cards = []
+        # Fetch 'OOTD' posts from users who have mutual follow relationships
         query_snapshot = db.collection('all_posts')\
                            .where('category', '==', 'ootd')\
                            .where('created_at', '>=', today_start)\
                            .where('created_at', '<', today_end)\
                            .order_by('created_at', direction=firestore.Query.DESCENDING)\
                            .stream()
-        cards = [
-            {'post_id': doc.id, **doc.to_dict()} 
-            for doc in query_snapshot 
-            if 'ootd' in doc.to_dict().get('category', {})
-        ]
+
+        for doc in query_snapshot:
+            doc_dict = doc.to_dict()
+            if doc_dict.get('user_id', '') in mutual_follows:
+                cards.append({'post_id': doc.id, **doc_dict})
+
         return jsonify(cards), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     

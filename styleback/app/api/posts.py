@@ -40,15 +40,14 @@ def get_posts():
     except Exception as e:
         return jsonify({"Could not retrieve post": str(e)}), 500
     
-@posts_blueprint.route('/ootds/', methods=['GET'])
-@token_required
-def get_ootds():
+@posts_blueprint.route('/ootds/<user_id>', methods=['GET'])
+def get_ootds(user_id):
     """
     Retrieves a post from Firestore based on the post_id.
     Returns the JSON response of the post or an error message.
     """
     try:
-        response = get_all_ootd()
+        response = get_all_ootd(user_id)
         return response
     except Exception as e:
         return jsonify({"Could not retrieve post": str(e)}), 500
