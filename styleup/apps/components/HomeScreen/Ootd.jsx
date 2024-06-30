@@ -36,7 +36,7 @@ export default function Ootd({user}) {
 
     // Fetch initial cards
     useEffect(() => {
-        getCards();
+        getOotds();
     }, []);
 
     // const swipeRight = useCallback((index) => {
@@ -45,7 +45,7 @@ export default function Ootd({user}) {
     //     }
     // }, [swiperRef.current, cards]);
 
-    const getCards = async () => {
+    const getOotds = async () => {
         try {
             const response = await fetch(
                 "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootds/"
@@ -54,26 +54,6 @@ export default function Ootd({user}) {
             setCards(fetchedCards);
         } catch (error) {
             console.error("Error fetching cards:", error);
-        }
-    };
-
-    const fetchAndReplaceCards = async () => {
-        if (loading) return;
-        setLoading(true);
-        try {
-            const newCards = await //fetchCardsFromAPI();
-            setCards((prevCards) => {
-                // Remove old cards if exceeding max allowed cards after adding new ones
-                if (prevCards.length + newCards.length > MAX_CARDS) {
-                    return [...prevCards.slice(newCards.length), ...newCards];
-                } else {
-                    return [...prevCards, ...newCards];
-                }
-            });
-        } catch (error) {
-            console.error("Error fetching new cards:", error);
-        } finally {
-            setLoading(false);
         }
     };
 

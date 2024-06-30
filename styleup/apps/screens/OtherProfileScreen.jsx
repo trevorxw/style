@@ -34,7 +34,7 @@ export default function OtherProfileScreen() {
         { key: "posts", title: "posts" },
         // { key: "swipes", title: "Swipes" },
         // { key: "collection", title: "collection" },
-        { key: "ootd", title: "ootd" },
+        // { key: "ootd", title: "ootd" },
     ]);
 
     const renderScene = ({ route }) => {

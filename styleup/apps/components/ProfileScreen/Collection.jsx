@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     ActivityIndicator,
 } from "react-native";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 import React, { useState, useEffect } from "react";
 import {
     useFonts,
@@ -38,6 +38,7 @@ export default function Collection({ user }) {
                 `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collections/${user.id}`
             );
             const collectionsData = await response.json();
+            console.log(collectionsData);
             // Add addButton to end of collections
             if (collectionsData && collectionsData.collections) {
                 const collectionsWithAddButton = [
@@ -57,7 +58,7 @@ export default function Collection({ user }) {
             description: "",
             posts: "",
             uri: "",
-            createdAt: Date.now()
+            createdAt: Date.now(),
         };
 
         try {
@@ -134,21 +135,24 @@ export default function Collection({ user }) {
                 return (
                     <TouchableOpacity
                         style={styles.itemContainer}
-                        onPress={() => navigation.navigate("view collection", {
-                            collectionId: item.id,
-                            user: user,
-                        })}
+                        onPress={() => {
+                            navigation.navigate("view collection", {
+                                collectionId: item.id,
+                                user: user,
+                            });
+
+                            console.log("navigating to ", item.id);
+                        }}
                     >
                         {item.uri ? (
-                        <Image
-                            source={item.uri}
-                            onLoadEnd={onLoadEnd}
-                            style={styles.image}
-                        />
-                    ) : (
-                        <View>
-                        </View>
-                    )}
+                            <Image
+                                source={item.uri}
+                                onLoadEnd={onLoadEnd}
+                                style={styles.image}
+                            />
+                        ) : (
+                            <View></View>
+                        )}
                         <View style={styles.textContainer}>
                             <Text style={styles.text}>
                                 {item.title
@@ -188,7 +192,7 @@ const styles = StyleSheet.create({
         paddingVertical: 2,
         borderRadius: 4,
         backgroundColor: "rgba(256,256,256,0.5)",
-        justifyContent: 'center',
+        justifyContent: "center",
     },
     itemContainer: {
         flex: 1,
