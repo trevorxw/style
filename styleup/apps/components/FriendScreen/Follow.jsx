@@ -45,13 +45,14 @@ export default function Follow({ user }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames/",
+                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
+
             const usernameData = await response.json();
             // delete own uid
             delete usernameData[user.username];
