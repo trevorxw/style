@@ -35,7 +35,7 @@ export default function Posts({ user }) {
         for (const post of user.post_ids) {
             try {
                 const response = await fetch(
-                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
+                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
                 );
                 const postData = await response.json();
                 const enrichedPostData = { ...postData, ...post };

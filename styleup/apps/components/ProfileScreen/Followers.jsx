@@ -14,7 +14,7 @@ export default function Followers({ user }) {
     return (
         <View style={styles.container}>
             <TouchableOpacity>
-                <Text style={styles.number}>{user.followers.length}</Text>
+                <Text style={styles.number}>{Object.keys(user.followers).length}</Text>
                 <Text style={styles.text}>Followers</Text>
             </TouchableOpacity>
         </View>

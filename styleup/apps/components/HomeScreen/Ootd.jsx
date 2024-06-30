@@ -14,13 +14,10 @@ import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
 import { app } from "../../../firebaseConfig";
 //Request
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
-//User
-import useFetchUser from "../../../hooks/useFetchUser";
-import { AuthenticatedUserContext } from "../../providers";
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
-export default function Ootd() {
+export default function Ootd({user}) {
     const db = getFirestore(app);
 
     const [cardIndex, setCardIndex] = useState(0);
@@ -29,9 +26,6 @@ export default function Ootd() {
     const [loading, setLoading] = useState(false);
     const swipeTimer = useRef(null);
     const swiperRef = useRef(null);
-    //User
-    const { user: userFirebase } = useContext(AuthenticatedUserContext);
-    const { user, loadingUser, error } = useFetchUser(userFirebase.uid);
 
     const MAX_CARDS = 20; // Max number of cards to hold in memory
 
@@ -54,7 +48,7 @@ export default function Ootd() {
     const getCards = async () => {
         try {
             const response = await fetch(
-                "https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/ootds/"
+                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/ootds/"
             );
             const fetchedCards = await response.json();
             setCards(fetchedCards);
@@ -95,7 +89,7 @@ export default function Ootd() {
             // Post request to Flask endpoint
             console.log(card);
             const response = await fetchWithTimeout(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/like/${user.id}/${card.post_id}`,
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/like/${user.id}/${card.post_id}`,
                 {
                     method: "POST",
                     headers: {

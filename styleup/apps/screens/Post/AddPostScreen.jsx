@@ -144,7 +144,7 @@ export default function AddPostScreen() {
             formData.append("shops", JSON.stringify(shops));
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/upload/${userFirebase.uid}`,
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/upload/${userFirebase.uid}`,
                 {
                     method: "POST",
                     body: formData,

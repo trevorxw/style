@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import OtherProfileScreen from "../screens/OtherProfileScreen";
 import HomeScreen from "../screens/Home/HomeScreen";
 import OtherPostScreen from "../screens/OtherPostScreen";
+import FriendScreen from "../screens/Home/FriendScreen";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,11 @@ export default function HomeScreenStackNav() {
             <Stack.Screen
                 name="post"
                 component={OtherPostScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="friend"
+                component={FriendScreen}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>

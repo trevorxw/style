@@ -50,7 +50,7 @@ export default function UserCreationScreen() {
             .test(
                 "is-unique",
                 "username not available",
-                (value) => !usernames.has(value) // Check if the set does not contain the username
+                (value) => value && !(value in usernames) // Check if the set does not contain the username
             )
             .required("username is required"),
         name: Yup.string().required("name is required"),
@@ -60,11 +60,11 @@ export default function UserCreationScreen() {
     const retrieveUsernames = async () => {
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/usernames`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames`
             );
             const usernameData = await response.json();
             console.log(usernameData);
-            setUsernames(new Set(usernameData));
+            setUsernames(usernameData);
         } catch (error) {
             console.error("Error fetching usernames", error);
         }
@@ -90,7 +90,7 @@ export default function UserCreationScreen() {
             formData.append("name", values.name);
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/user/${userFirebase.uid}`,
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/user/${userFirebase.uid}`,
                 {
                     method: "POST",
                     body: formData,

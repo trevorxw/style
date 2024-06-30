@@ -59,7 +59,7 @@ export default function EditProfileScreen() {
     const retrieveUsernames = async () => {
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/usernames`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames`
             );
             const usernameData = await response.json();
 
@@ -99,7 +99,7 @@ export default function EditProfileScreen() {
                 }
                 // Post request to Flask endpoint
                 const response = await fetchWithTimeout(
-                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/user/${userFirebase.uid}`,
+                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/user/${userFirebase.uid}`,
                     {
                         method: "POST",
                         body: formData,

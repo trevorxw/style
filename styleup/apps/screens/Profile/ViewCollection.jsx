@@ -57,7 +57,7 @@ export default function ViewCollection({ route, navigation }) {
         // Fetch details for each post using the post ID
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collectionId}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`
             );
             const collectionData = await response.json();
             console.log(
@@ -79,7 +79,7 @@ export default function ViewCollection({ route, navigation }) {
                 if (post_id) {
                     try {
                         const postResponse = await fetch(
-                            `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post_id}`
+                            `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post_id}`
                         );
                         const postData = await postResponse.json();
                         if (postData) {
@@ -110,14 +110,14 @@ export default function ViewCollection({ route, navigation }) {
         // Fetch details for each post using the post ID
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/likes/${user.id}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/likes/${user.id}`
             );
             const likesData = await response.json();
             // console.log(likesData);
             for (const post of likesData) {
                 try {
                     const response = await fetch(
-                        `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/cards/${post.post_id}`
+                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`
                     );
                     const postData = await response.json();
                     const enrichedPostData = { ...postData, ...post };
@@ -141,7 +141,7 @@ export default function ViewCollection({ route, navigation }) {
             formData.append("posts", JSON.stringify([...selectedPosts]));
             // Post request to Flask endpoint
             const response = await fetchWithTimeout(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "POST",
                     body: formData,
@@ -186,7 +186,7 @@ export default function ViewCollection({ route, navigation }) {
             try {
                 // Post request to Flask endpoint
                 const response = await fetch(
-                    `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
                     {
                         method: "POST",
                         body: formData,
@@ -217,7 +217,7 @@ export default function ViewCollection({ route, navigation }) {
     const deleteCollection = async () => {
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "DELETE",
                 }

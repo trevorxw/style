@@ -6,11 +6,7 @@ import {
     useWindowDimensions,
     TouchableOpacity,
 } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import Discover from "../../components/HomeScreen/Discover";
-import Ootd from "../../components/HomeScreen/Ootd";
-import { app } from "../../../firebaseConfig";
-import { getFirestore, getDocs, collection } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import { TabBar, TabView } from "react-native-tab-view";
 import {
     useFonts,
@@ -18,41 +14,31 @@ import {
     JosefinSans_700Bold,
 } from "@expo-google-fonts/josefin-sans";
 import { Feather } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-// User
-import useFetchUser from "../../../hooks/useFetchUser";
-import { AuthenticatedUserContext } from "../../providers";
+import Follow from "../../components/FriendScreen/Follow";
+import FollowHistory from "../../components/FriendScreen/FollowHistory";
 
-export default function HomeScreen() {
+export default function FriendScreen({ route }) {
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
         JosefinSans_700Bold,
     });
-    const navigation = useNavigation();
+    const { user } = route.params;
     const layout = useWindowDimensions();
-    const [index, setIndex] = React.useState(1);
+    const [index, setIndex] = React.useState(0);
     const [routes] = React.useState([
-        { key: "ootd", title: "ootd" },
-        { key: "posts", title: "posts" },
+        { key: "follow", title: "follow others" },
+        { key: "followers", title: "followed you" },
     ]);
-    const { user: userFirebase } = useContext(AuthenticatedUserContext);
-    const { user, loadingUser, error } = useFetchUser(userFirebase.uid);
 
     const renderScene = ({ route }) => {
         switch (route.key) {
-            case "ootd":
-                return <Ootd user={user}/>;
-            case "posts":
-                return <Discover user={user}/>;
+            case "follow":
+                return <Follow user={user}/>;
+            case "followers":
+                return <FollowHistory user={user}/>;
 
             default:
                 return null;
-        }
-    };
-
-    const handleNavigation = (destination, params) => {
-        if (user) {
-            navigation.navigate(destination, params);
         }
     };
 
@@ -63,13 +49,10 @@ export default function HomeScreen() {
                 renderScene={renderScene}
                 renderTabBar={(props) => (
                     <View style={styles.tabBarContainer}>
-                        <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigation("friend", { user })}>
-                            <Feather name="user-plus" size={24} color="white" />
-                        </TouchableOpacity>
                         <TabBar
                             {...props}
                             indicatorStyle={styles.indicatorStyle}
-                            style={styles.tabBar}
+                            style={{ backgroundColor: "transparent" }}
                             renderLabel={({ route, focused, color }) => (
                                 <View style={[styles.focusedLabel]}>
                                     <Text
@@ -84,9 +67,6 @@ export default function HomeScreen() {
                                 </View>
                             )}
                         />
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Feather name="bell" size={24} color="white" />
-                        </TouchableOpacity>
                     </View>
                 )}
                 lazy
@@ -100,44 +80,39 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "black",
+        marginTop: 50,
     },
     tabBarContainer: {
-        flexDirection: "row",
-        alignItems: "center",
         justifyContent: "space-between",
         backgroundColor: "transparent",
-        top: 60,
         zIndex: 1,
-        marginHorizontal: 10,
-    },
-    tabBar: {
-        flex: 1,
-        backgroundColor: "transparent",
-        wdith: "60%",
-        zIndex: 2,
     },
     indicatorStyle: {
-        backgroundColor: "white",
-        width: 50,
-        bottom: 12,
+        backgroundColor: "black",
+        width: 85,
+        bottom: 17,
         justifyContent: "center",
-        marginHorizontal: 35,
+        marginHorizontal: 55,
         borderRadius: 5,
     },
-    tabLabelContainer: {
+    focusedLabel: {
         flex: 1,
+        // backgroundColor: "#CFE8FF", // Dark blue background when the tab is focused
         backgroundColor: "transparent",
-        marginTop: 5,
+        height: 30,
     },
+    unfocusedLabel: {
+        backgroundColor: "transparent", // Light grey background when the tab is not focused
+    },
+
     focusedText: {
-        color: "white",
-        fontFamily: "JosefinSans_400Regular",
+        color: "black",
+        fontFamily: "JosefinSans_700Bold",
         fontSize: 19,
     },
     unfocusedText: {
-        color: "#888", // Grey color for unfocused tabs
-        fontFamily: "JosefinSans_400Regular",
+        color: "#D9D9D9",
+        fontFamily: "JosefinSans_700Bold",
         fontSize: 19,
     },
     iconButton: {

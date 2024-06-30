@@ -35,7 +35,7 @@ export default function Collection({ user }) {
         setLoading(true);
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collections/${user.id}`
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collections/${user.id}`
             );
             const collectionsData = await response.json();
             // Add addButton to end of collections
@@ -62,7 +62,7 @@ export default function Collection({ user }) {
 
         try {
             const response = await fetch(
-                `https://3cc7-2600-1700-3680-2110-c494-b15d-2488-7b57.ngrok-free.app/collections/${user.id}`,
+                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collections/${user.id}`,
                 {
                     method: "POST",
                     headers: {
