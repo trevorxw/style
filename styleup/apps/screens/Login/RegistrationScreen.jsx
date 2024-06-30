@@ -43,6 +43,15 @@ export default function RegistrationScreen() {
             .catch((error) => setErrorState(error.message));
     };
 
+    const openWebBrowser = async (url) => {
+        try {
+            await WebBrowser.dismissBrowser();
+            const result = await WebBrowser.openBrowserAsync(url);
+        } catch (error) {
+            console.error("Failed to open URL: ", error);
+        }
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>fitpic registration</Text>
@@ -196,14 +205,41 @@ export default function RegistrationScreen() {
             <View style={styles.termsContainer}>
                 <Text style={styles.termsText}>
                     By continuing, you agree to FitPic's
-                    <TouchableOpacity style={styles.clickableContainer}>
+                    <TouchableOpacity
+                        style={styles.clickableContainer}
+                        onPress={() =>
+                            openWebBrowser(
+                                "https://docs.google.com/document/d/1KcB2yipns_UAqKoATryvAplVtjOInA685A3ejZxGVKU/edit?usp=sharing"
+                            )
+                        }
+                    >
                         <Text style={styles.clickableText}>
                             Terms of Service
                         </Text>
                     </TouchableOpacity>
                     and confirm that you have read FitPic's
-                    <TouchableOpacity style={styles.clickableContainer}>
+                    <TouchableOpacity
+                        style={styles.clickableContainer}
+                        onPress={() =>
+                            openWebBrowser(
+                                "https://docs.google.com/document/d/1EKjiTuZkLLfHtkR9rZbq2nJsIsoCXF7nyPisNxvwNp8/edit?usp=sharing"
+                            )
+                        }
+                    >
                         <Text style={styles.clickableText}>Privacy Policy</Text>
+                    </TouchableOpacity>
+                    and
+                    <TouchableOpacity
+                        style={styles.clickableContainer}
+                        onPress={() =>
+                            openWebBrowser(
+                                "https://docs.google.com/document/d/1QjQ7DxdWJkF8oZKYOndV2HAH-8jxR2Cj0apJUCkQz7c/edit?usp=sharing"
+                            )
+                        }
+                    >
+                        <Text style={styles.clickableText}>
+                            Community Guidelines
+                        </Text>
                     </TouchableOpacity>
                     .
                 </Text>
@@ -347,5 +383,6 @@ const styles = StyleSheet.create({
     termsText: {
         fontSize: 12,
         fontFamily: "JosefinSans_400Regular",
+        textAlign: "center",
     },
 });
