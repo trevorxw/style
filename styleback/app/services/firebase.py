@@ -530,6 +530,10 @@ def add_swipe_history(user_id, post_id, metrics):
     except Exception as e:
         raise Exception(f"Failed to save user interaction: {str(e)}")
     
+def increment_likes(post_id):
+    likesRef = db.collection('all_posts').document(post_id)
+    likesRef.update({"likes": firestore.Increment(1)})
+    
 def update_notifications(user_id_liked, user_id_post, post_id):
     # Let Firestore generate a unique document ID automatically
     like_ref = db.collection('users').document(user_id_post).collection('likes').document()

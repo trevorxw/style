@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, get_usernames_data, toggle_follower, toggle_following, update_notifications, get_like_notifications, get_usernames_id 
+from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, get_usernames_data, toggle_follower, toggle_following, update_notifications, get_like_notifications, get_usernames_id, increment_likes
 from app.services.auth import token_required
 import requests
 from werkzeug.utils import secure_filename
@@ -236,6 +236,7 @@ def add_user_like(user_id_liked, user_id_post, post_id):
                 'time': time,
             }
         add_swipe_history(user_id_liked, post_id, metrics)
+        increment_likes(post_id)
         if user_id_liked != user_id_post:
             update_notifications(user_id_liked, user_id_post, post_id)
         return jsonify(metrics), 200

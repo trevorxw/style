@@ -126,13 +126,6 @@ export default function Discover({ user }) {
         }
     };
 
-    const incrementLike = async (card) => {
-        const likesRef = doc(db, "all_posts", card.post_id);
-        await updateDoc(likesRef, {
-            likes: increment(1),
-        });
-    };
-
     const onSwiped = (index, direction, card) => {
         // Metric Tracker
         const duration = Date.now() - swipeTimer.current;
@@ -155,7 +148,6 @@ export default function Discover({ user }) {
         // }
 
         if (direction === "right") {
-            incrementLike(card);
             uploadMetrics(user, card, 1, duration, 0);
         } else {
             uploadMetrics(user, card, 0, duration, 0);

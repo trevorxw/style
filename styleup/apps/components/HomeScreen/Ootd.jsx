@@ -105,12 +105,6 @@ export default function Ootd({user}) {
         }
     };
 
-    const incrementLike = async (card) => {
-        const likesRef = doc(db, "all_posts", card.post_id);
-        await updateDoc(likesRef, {
-            likes: increment(1),
-        });
-    };
 
     const onSwiped = (index, direction, card) => {
         // Metric Tracker
@@ -134,7 +128,6 @@ export default function Ootd({user}) {
         // }
 
         if (direction === "right") {
-            incrementLike(card);
             uploadMetrics(user, card, 1, duration, 0);
         } else {
             uploadMetrics(user, card, 0, duration, 0);

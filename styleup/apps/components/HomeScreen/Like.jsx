@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import { getFirestore, doc, updateDoc, increment } from "firebase/firestore";
-import { app } from "../../../firebaseConfig";
 
 function formatNumber(num) {
     if (num >= 1000000) {
@@ -15,22 +13,9 @@ function formatNumber(num) {
 }
 
 export default function Like({ card, swipeRight }) {
-    const db = getFirestore(app);
-    const likesRef = doc(db, "all_posts", card.post_id);
 
     // State to track if the icon is liked
     const [isLiked, setIsLiked] = useState(false);
-
-    const incrementLike = async () => {
-        await updateDoc(likesRef, {
-            likes: increment(1),
-        });
-    };
-    const decrementLike = async () => {
-        await updateDoc(likesRef, {
-            likes: increment(-1),
-        });
-    };
 
     return (
         <View>
@@ -38,7 +23,6 @@ export default function Like({ card, swipeRight }) {
                 disabled={true}
                 onPress={() => {
                     swipeRight();
-                    incrementLike();
                 }}
                 style={styles.buttons}
             >
