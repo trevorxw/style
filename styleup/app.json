@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "styleup",
-    "slug": "style",
+    "name": "fitpic",
+    "slug": "fitpic",
     "scheme": "style",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -18,8 +18,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifer": "com.trevorsx.style",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "bundleIdentifier": "com.trevorsx.style"
     },
     "android": {
       "adaptiveIcon": {
