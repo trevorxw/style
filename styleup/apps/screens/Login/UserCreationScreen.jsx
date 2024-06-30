@@ -27,10 +27,7 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 
 export default function UserCreationScreen() {
-    let [fontsLoaded] = useFonts({
-        JosefinSans_400Regular,
-        JosefinSans_700Bold,
-    });
+    
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
     const { user, loadingUser, error, refreshUserData } = useFetchUser(
         userFirebase.uid

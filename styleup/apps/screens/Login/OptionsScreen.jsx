@@ -27,10 +27,7 @@ export default function OptionsScreen() {
     //     expoClientId: expoClientId,
     //     iosClientId: iosClientId,
     // });
-    let [fontsLoaded] = useFonts({
-        JosefinSans_400Regular,
-        JosefinSans_700Bold,
-    });
+    
     useWarmUpBrowser();
     const { login } = useContext(AuthenticatedUserContext);
     const navigation = useNavigation();

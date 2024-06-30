@@ -24,10 +24,7 @@ import useFetchUser from "../../../hooks/useFetchUser";
 import { AuthenticatedUserContext } from "../../providers";
 
 export default function HomeScreen() {
-    let [fontsLoaded] = useFonts({
-        JosefinSans_400Regular,
-        JosefinSans_700Bold,
-    });
+    
     const navigation = useNavigation();
     const layout = useWindowDimensions();
     const [index, setIndex] = React.useState(1);

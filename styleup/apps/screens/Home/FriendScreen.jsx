@@ -18,10 +18,7 @@ import Follow from "../../components/FriendScreen/Follow";
 import FollowHistory from "../../components/FriendScreen/FollowHistory";
 
 export default function FriendScreen({ route }) {
-    let [fontsLoaded] = useFonts({
-        JosefinSans_400Regular,
-        JosefinSans_700Bold,
-    });
+    
     const { user } = route.params;
     const layout = useWindowDimensions();
     const [index, setIndex] = React.useState(0);
