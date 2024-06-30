@@ -50,7 +50,7 @@ export default function EditProfileScreen() {
             .test(
                 "is-unique",
                 "username not available",
-                (value) => !usernames.has(value) // Check if the set does not contain the username
+                (value) => value && !(value in usernames) // Check if the set does not contain the username
             ),
         name: Yup.string(),
         bio: Yup.string(),
@@ -63,7 +63,7 @@ export default function EditProfileScreen() {
             );
             const usernameData = await response.json();
 
-            setUsernames(new Set(usernameData));
+            setUsernames(usernameData);
         } catch (error) {
             console.error("Error fetching usernames", error);
         }

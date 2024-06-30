@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, add_username
+from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, get_usernames_data, toggle_follower, toggle_following
 from app.services.auth import token_required
 import requests
 from werkzeug.utils import secure_filename
@@ -58,7 +58,6 @@ def get_user_profile(user_id):
             if 'username' in request.form:
                 username = request.form.get('username')
                 userData['username'] = username
-                add_username(username)
 
             if 'bio' in request.form:
                 bio = request.form.get('bio','')
@@ -105,6 +104,15 @@ def usernames():
     if request.method == 'GET':
         try: 
             result = get_usernames()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": "Could not retrieve usernames", "details": str(e)}), 500
+        
+@users_blueprint.route('/usernames/data', methods=['GET'])
+def usernames_data():
+    if request.method == 'GET':
+        try: 
+            result = get_usernames_data()
             return jsonify(result), 200
         except Exception as e:
             return jsonify({"error": "Could not retrieve usernames", "details": str(e)}), 500
@@ -215,3 +223,28 @@ def add_user_like(user_id, post_id):
     
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+
+#INTERACTIONS
+
+@users_blueprint.route('/follow/<uidFollower>/<uid>', methods=['POST', 'DELETE'])
+def toggle_followering_status(uidFollower, uid):
+    if request.method == "POST":
+        try:
+            result = toggle_follower(uidFollower, uid)
+            result1 = toggle_following(uidFollower, uid)
+            if result == result1:
+                return result1, 200
+            else:
+                return 500
+        except Exception as e:
+                return jsonify(error=str(e)), 500
+    elif request.method == "DELETE":
+        try:
+            result = toggle_follower(uidFollower, uid)
+            result1 = toggle_following(uidFollower, uid)
+            if result == result1:
+                return result1, 200
+            else:
+                return 500
+        except Exception as e:
+                return jsonify(error=str(e)), 500

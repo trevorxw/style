@@ -159,26 +159,62 @@ def get_user_by_uid(uid):
     
 def get_usernames():
     """
-    get usernames
+    Retrieves all usernames along with their user IDs from the 'usernames' collection.
     """
     try:
-        # Ensure to reference the posts subcollection for the specific user
-        usernames_query = db.collection('usernames').stream()
+        # Reference the 'usernames' collection and stream the documents
+        usernames_query = db.collection('users').stream()
 
-        usernames = []
-        
-        # Create a list of post IDs from the posts subcollection
+        # Initialize an empty dictionary to store the usernames and user IDs
+        usernames = {}
+
         # Iterate through the streamed documents
         for doc in usernames_query:
-            usernames.append(doc.id)
+            # Assume each document ID is the user ID, and each document contains a 'username' field
+            user_data = doc.to_dict()
+            usernames[user_data['username']] = doc.id
+
         return usernames
     except Exception as e:
         return {"error": str(e)}
-    
-def add_username(username):
+
+def get_usernames_data():
+    """
+    Retrieves all usernames along with their user IDs, display names, and photo URLs.
+    Retrieves from the 'users' collection in Firestore and also fetches additional
+    information from Firebase Authentication where available.
+    """
     try:
-        # Ensure to reference the posts subcollection for the specific user
-        db.collection('usernames').doc(username).set({"hi":"hi"})
+        # Reference the 'users' collection and stream the documents
+        usernames_query = db.collection('users').stream()
+
+        # Initialize an empty dictionary to store the usernames and user IDs along with additional info
+        usernames = {}
+
+        # Iterate through the streamed documents
+        for doc in usernames_query:
+            user_data = doc.to_dict()
+            user_id = doc.id
+
+            # Default fields from Firestore
+            username = user_data.get('username', 'No Username')
+            display_name = user_data.get('display_name', 'No Display Name')
+            photo_url = user_data.get('photo_url', '')
+
+            # Try to fetch additional data from Firebase Auth if needed
+            # This is pseudocode; actual implementation might vary based on your Firebase setup
+            auth_user = auth.get_user(user_id)
+            photo_url = auth_user.photo_url if auth_user.photo_url else photo_url
+            display_name = auth_user.display_name if auth_user.display_name else display_name
+
+            # Store in dictionary
+            usernames[username] = {
+                'uid': user_id,
+                'display_name': display_name,
+                'photo_url': photo_url
+            }
+
+        return usernames
     except Exception as e:
         return {"error": str(e)}
 
@@ -209,7 +245,7 @@ def create_new_user(user_id):
         'title': 'First Ootd',
         'content': 'Welcome to your new social media!'
     })
-
+    
     # Following
     user_ref.collection('userFollowing').document('dummy_user').set({
         'following_since': firestore.SERVER_TIMESTAMP
@@ -237,22 +273,43 @@ def get_user_details(user_id):
     """
     try:
         # Fetch the user document to get bio
-        user_doc = db.collection('users').document(user_id).get()
+        user_doc_ref = db.collection('users').document(user_id)
+        user_doc = user_doc_ref.get()
+        
         if not user_doc.exists:
-            return jsonify({"error": "User not found"}), 404
+            return {"error": "User not found"}, 404  # Return as a dictionary with an error code
 
-        # Fetch bio
         user_data = user_doc.to_dict()
         bio = user_data.get('bio', 'No bio available')
-        username = user_data.get('username')
+        username = user_data.get('username', 'No username provided')
 
-        # Fetch following
-        following_refs = db.collection('users').document(user_id).collection('userFollowing').stream()
-        following = [doc.id for doc in following_refs]  # Assumes you store user IDs or use document IDs as user IDs
+        # Initialize dictionaries for followers and following
+        following = {}
+        followers = {}
 
-        # Fetch followers
-        followers_refs = db.collection('users').document(user_id).collection('userFollows').stream()
-        followers = [doc.id for doc in followers_refs]  # Similarly, assumes user IDs are document IDs
+        # Fetch following details
+        following_refs = user_doc_ref.collection('userFollows').stream()
+        for doc in following_refs:
+            followee_doc = db.collection('users').document(doc.id).get()
+            if followee_doc.exists:
+                followee_data = followee_doc.to_dict()
+                following_username = followee_data.get('username', 'Username not found')
+                following[following_username] = {
+                    'uid': doc.id,
+                    'createdAt': doc.to_dict().get('createdAt', None)  # Fetch createdAt if available
+                }
+
+        # Fetch followers details
+        followers_refs = user_doc_ref.collection('userFollowing').stream()
+        for doc in followers_refs:
+            follower_doc = db.collection('users').document(doc.id).get()
+            if follower_doc.exists:
+                follower_data = follower_doc.to_dict()
+                follower_username = follower_data.get('username', 'Username not found')
+                followers[follower_username] = {
+                    'uid': doc.id,
+                    'createdAt': doc.to_dict().get('createdAt', None)  # Fetch createdAt if available
+                }
 
         # Compile and return all data
         return {
@@ -267,10 +324,33 @@ def get_user_details(user_id):
 
 def update_user_details(user_id, data):
     try:
-        
         user_ref = db.collection('users').document(user_id) 
         user_ref.update(data)
         print(data)
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+def toggle_follower(uidFollower, uid):
+    try:
+        following_ref = db.collection('users').document(uid).collection('userFollowing').document(uidFollower)
+        if following_ref.get().exists:
+            following_ref.delete()
+            return "DELETED"
+        else:
+            following_ref.set({'createdAt': firestore.SERVER_TIMESTAMP})
+            return "CREATED"
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+def toggle_following(uidFollower, uid):
+    try:
+        following_ref = db.collection('users').document(uidFollower).collection('userFollows').document(uid)
+        if following_ref.get().exists:
+            following_ref.delete()
+            return "DELETED"
+        else:
+            following_ref.set({'createdAt': firestore.SERVER_TIMESTAMP})
+            return "CREATED"
     except Exception as e:
         return jsonify({"error": str(e)})
 
