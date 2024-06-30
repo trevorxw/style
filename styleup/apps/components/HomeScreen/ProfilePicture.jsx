@@ -7,7 +7,7 @@ import { AuthenticatedUserContext } from "../../providers";
 export default function ProfilePicture({ user }) {
     const navigation = useNavigation();
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
-    console.log(user);
+    console.log(`Displaying profile picture for user: ${userFirebase.uid}`);
     return (
         <View>
             <TouchableOpacity

@@ -83,8 +83,6 @@ export default function Post({ card, swipeRight }) {
         }
     };
 
-    console.log(card);
-
     return (
         <View style={styles.card}>
             <View style={styles.buttonsContainer}>
