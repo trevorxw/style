@@ -220,7 +220,28 @@ def get_usernames():
         return usernames
     except Exception as e:
         return {"error": str(e)}
+    
+def get_usernames_id():
+    """
+    Retrieves all usernames along with their user IDs from the 'usernames' collection.
+    """
+    try:
+        # Reference the 'usernames' collection and stream the documents
+        usernames_query = db.collection('users').stream()
 
+        # Initialize an empty dictionary to store the usernames and user IDs
+        usernames = {}
+
+        # Iterate through the streamed documents
+        for doc in usernames_query:
+            # Assume each document ID is the user ID, and each document contains a 'username' field
+            user_data = doc.to_dict()
+            usernames[doc.id] = user_data['username']
+
+        return usernames
+    except Exception as e:
+        return {"error": str(e)}
+    
 def get_usernames_data():
     """
     Retrieves all usernames along with their user IDs, display names, and photo URLs.
@@ -291,20 +312,25 @@ def create_new_user(user_id):
     
     # Following
     user_ref.collection('userFollowing').document('dummy_user').set({
-        'following_since': firestore.SERVER_TIMESTAMP
+        'created_at': firestore.SERVER_TIMESTAMP
     })
 
     # Followers
     user_ref.collection('userFollows').document('dummy_user').set({
-        'followed_since': firestore.SERVER_TIMESTAMP
+        'created_at': firestore.SERVER_TIMESTAMP
     })
     # SwipeHistory
     user_ref.collection('swipeHistory').document('dummy_history').set({
-        'followed_since': firestore.SERVER_TIMESTAMP
+        'created_at': firestore.SERVER_TIMESTAMP
     })
     # Collections
     user_ref.collection('collections').document('dummy_collection').set({
-        'followed_since': firestore.SERVER_TIMESTAMP
+        'created_at': firestore.SERVER_TIMESTAMP
+    })
+
+    # Likes
+    user_ref.collection('likes').document('dummy_like').set({
+        'created_at': firestore.SERVER_TIMESTAMP
     })
 
     return jsonify({'message': 'New user created with initial settings'}), 201
@@ -503,3 +529,29 @@ def add_swipe_history(user_id, post_id, metrics):
             return {"document_id": doc_ref.id, "message": "Document created successfully."}
     except Exception as e:
         raise Exception(f"Failed to save user interaction: {str(e)}")
+    
+def update_notifications(user_id_liked, user_id_post, post_id):
+    # Let Firestore generate a unique document ID automatically
+    like_ref = db.collection('users').document(user_id_post).collection('likes').document()
+    like_ref.set({
+        'created_at': firestore.SERVER_TIMESTAMP,  # Set the timestamp correctly here
+        'post_id': post_id,
+        'user_id': user_id_liked
+    })
+
+def get_like_notifications(user_id_post):
+    """
+    Retrieves all like notifications for a post, ordered by creation time from most recent to least recent.
+    """
+    # Fetch the likes from Firestore, ordered by 'created_at' field in descending order
+    like_snapshot = db.collection('users')\
+                      .document(user_id_post)\
+                      .collection('likes')\
+                      .order_by('created_at', direction=firestore.Query.DESCENDING)\
+                      .stream()
+
+    # Construct a list of likes from the documents
+    likes = [{**doc.to_dict()} for doc in like_snapshot]
+    return likes
+
+

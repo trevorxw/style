@@ -35,7 +35,7 @@ export default function Like({ card, swipeRight }) {
     return (
         <View>
             <TouchableOpacity
-                disabled={!swipeRight}
+                disabled={true}
                 onPress={() => {
                     swipeRight();
                     incrementLike();

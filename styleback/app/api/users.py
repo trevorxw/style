@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, abort
 import os
 import jwt
-from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, get_usernames_data, toggle_follower, toggle_following
+from app.services.firebase import get_user_by_uid, get_posts_by_user, get_user_details, add_swipe_history, get_user_collection, get_user_collections, add_new_collection, create_new_user, edit_collection_user, upload_file_to_collections, del_collection, upload_profile_picture, update_user_details, get_usernames, get_usernames_data, toggle_follower, toggle_following, update_notifications, get_like_notifications, get_usernames_id 
 from app.services.auth import token_required
 import requests
 from werkzeug.utils import secure_filename
@@ -109,6 +109,16 @@ def usernames():
         except Exception as e:
             return jsonify({"error": "Could not retrieve usernames", "details": str(e)}), 500
         
+@users_blueprint.route('/usernames/id', methods=['GET'])
+@token_required
+def usernames_id():
+    if request.method == 'GET':
+        try: 
+            result = get_usernames_id()
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify({"error": "Could not retrieve usernames", "details": str(e)}), 500
+        
 @users_blueprint.route('/usernames/data', methods=['GET'])
 @token_required
 def usernames_data():
@@ -205,9 +215,13 @@ def delete_collection(user_id, collection_id):
         return jsonify({"error": str(e)}), 500
 
 # Upload Post Metrics
-@users_blueprint.route('/like/<user_id>/<post_id>', methods=['POST'])
+@users_blueprint.route('/like/<user_id_liked>/<user_id_post>/<post_id>', methods=['POST'])
 @token_required
-def add_user_like(user_id, post_id):
+def add_user_like(user_id_liked, user_id_post, post_id):
+    """
+        user_id_liked is the id of the user who liked the post
+        user_id_post is the id of the post's user
+    """
     try:
         data = request.get_json()  # Use .get_json() to parse JSON body
         liked = data.get('liked', 0)
@@ -221,7 +235,9 @@ def add_user_like(user_id, post_id):
                 'shared': shared,
                 'time': time,
             }
-        add_swipe_history(user_id, post_id, metrics)
+        add_swipe_history(user_id_liked, post_id, metrics)
+        if user_id_liked != user_id_post:
+            update_notifications(user_id_liked, user_id_post, post_id)
         return jsonify(metrics), 200
     except Exception as e:
             # Attempt to clean up even if there is an error
@@ -229,6 +245,12 @@ def add_user_like(user_id, post_id):
     
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'png', 'jpg', 'jpeg', 'gif'}
+
+@users_blueprint.route('/like/<user_id_post>', methods=['GET'])
+@token_required
+def retrieve_user_likes(user_id_post):
+    return jsonify(get_like_notifications(user_id_post)), 200
+
 
 #INTERACTIONS
 

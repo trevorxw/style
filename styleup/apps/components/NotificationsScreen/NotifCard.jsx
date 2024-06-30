@@ -1,27 +1,56 @@
-import { useNavigation } from '@react-navigation/native';
-import { Image } from 'expo-image';
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import { Image } from "expo-image";
+import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import useFetchUser from "../../../hooks/useFetchUser";
 
-export const ProfileFollowing = ({ username, userDetails, isFollowing, onToggleFollow, loading }) => {
-    navigation = useNavigation()
+export const NotifCard = ({
+    username,
+    userDetails,
+    isFollowing,
+    onToggleFollow,
+    loading,
+    post_id,
+    post
+}) => {
+    navigation = useNavigation();
     const { user, error } = useFetchUser(userDetails.uid);
+
+    // const handleNavigation = (destination, params) => {
+    //     if (post) {
+    //         navigation.navigate(destination, params);
+    //         console.log(`Redirecting to ${JSON.stringify(post)}`)
+    //     }
+    // };
+    
     return (
         <View style={styles.userContainer}>
-            <TouchableOpacity style={styles.redirectContainer} onPress={()=>{
-                navigation.navigate('profile', { user: user })
-            }}>
-            <Image
-                source={userDetails.photo_url}
-                style={styles.userImage}
-            />
-            <View style={styles.textContainer}>
-                <Text style={styles.usernameStyle}>{username}</Text>
-                <Text style={styles.name}>{userDetails.display_name}</Text>
-            </View>
+            <TouchableOpacity
+                style={styles.redirectContainer}
+                onPress={() => {
+                    navigation.navigate("profile", { user: user });
+                }}
+            >
+                <Image
+                    source={userDetails.photo_url}
+                    style={styles.userImage}
+                    width={50}
+                    height={50}
+                />
+                <View style={styles.textContainer}>
+                    <Text style={styles.usernameStyle}>{username}</Text>
+                    {post_id ? (
+                        <Text style={styles.text}>liked your post</Text>
+                    ) : (
+                        <Text style={styles.text}>started following you</Text>
+                    )}
+                </View>
             </TouchableOpacity>
-            {isFollowing ? (
+            {post_id ? (
+                <TouchableOpacity>
+                    <Image source={post?.url} style={styles.image} />
+                </TouchableOpacity>
+            ) : isFollowing ? (
                 <TouchableOpacity
                     style={styles.followingButton}
                     onPress={() => onToggleFollow(username, userDetails.uid)}
@@ -56,17 +85,18 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         width: 160,
+        textAlign: "center",
     },
-    redirectContainer:{
-        flexDirection: 'row',
-        alignItems: 'center',
+    redirectContainer: {
+        flexDirection: "row",
+        alignItems: "center",
     },
     usernameStyle: {
         fontFamily: "JosefinSans_700Bold",
         fontSize: 16,
         marginBottom: 2,
     },
-    name: {
+    text: {
         fontFamily: "JosefinSans_400Regular",
         fontSize: 14,
     },
@@ -99,5 +129,12 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontFamily: "JosefinSans_700Bold",
         color: "white",
+    },
+    image: {
+        backgroundColor: "#D9D9D9",
+        borderRadius: 6,
+        height: 50,
+        width: 50,
+        marginLeft: 35,
     },
 });

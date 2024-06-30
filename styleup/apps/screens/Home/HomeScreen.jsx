@@ -81,7 +81,7 @@ export default function HomeScreen() {
                                 </View>
                             )}
                         />
-                        <TouchableOpacity style={styles.iconButton}>
+                        <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigation("notifications", { user })}>
                             <Feather name="bell" size={24} color="white" />
                         </TouchableOpacity>
                     </View>

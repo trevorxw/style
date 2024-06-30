@@ -99,7 +99,7 @@ export default function FollowHistory({ user }) {
         setLoading(false);
     };
 
-    console.log("HERE", followers["today"]);
+    console.log(user, "HERE", followers["today"]);
     console.log(userData["trev.wong"]);
 
     return (
