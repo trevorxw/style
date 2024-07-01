@@ -4,7 +4,7 @@ import jwt
 import app
 from app.services.firebase import get_post, get_all_posts, get_all_ootd, upload_file_to_storage, add_data_to_firestore, add_ootd_to_firestore, get_posts_by_user, get_ootd_by_user, get_liked_posts_by_user, del_post
 from app.services.auth import token_required
-from app.imagetagger.imagetagger import tag_image
+# from app.imagetagger.imagetagger import tag_image
 from werkzeug.utils import secure_filename
 import tempfile
 from datetime import datetime
@@ -113,7 +113,7 @@ def upload_file(user_id):
             shops = request.form.get('shops', '')
 
             # Tag the image
-            tags = tag_image(filepath)
+            # tags = tag_image(filepath)
             
             # Upload file to Firebase Storage and add tags to Firestore
             unique_filename = f"{user_id}{datetime.now().astimezone(pytz.timezone('America/Los_Angeles')).strftime('%Y%m%d%H%M%S')}"
@@ -129,7 +129,7 @@ def upload_file(user_id):
                 'category': category,
                 'likes': 0,
                 'shares': 0,
-                'tags': tags,
+                # 'tags': tags,
             }
             if 'ootd' in category:
                 add_ootd_to_firestore(unique_filename, user_id, file_metadata)
