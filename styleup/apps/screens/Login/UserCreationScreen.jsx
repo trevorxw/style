@@ -59,7 +59,7 @@ export default function UserCreationScreen() {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames`,{
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -94,7 +94,7 @@ export default function UserCreationScreen() {
             // Post request to Flask endpoint
             const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/user/${userFirebase.uid}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/user/${userFirebase.uid}`,
                 {
                     method: "POST",
                     body: formData,

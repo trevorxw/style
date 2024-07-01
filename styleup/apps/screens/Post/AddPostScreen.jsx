@@ -146,7 +146,7 @@ export default function AddPostScreen() {
             // Post request to Flask endpoint
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/upload/${userFirebase.uid}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/upload/${userFirebase.uid}`,
                 {
                     method: "POST",
                     body: formData,

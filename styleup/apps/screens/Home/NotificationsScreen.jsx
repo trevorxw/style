@@ -47,7 +47,7 @@ export default function NotificationsScreen({ route }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames/id",
+                "https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames/id",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ export default function NotificationsScreen({ route }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames/data",
+                "https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames/data",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -86,7 +86,7 @@ export default function NotificationsScreen({ route }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/like/${user.id}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/like/${user.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -110,7 +110,7 @@ export default function NotificationsScreen({ route }) {
         for (const like of likesData) {
             try {
                 const response = await fetch(
-                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${like.post_id}`,{
+                    `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${like.post_id}`,{
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
@@ -178,7 +178,7 @@ export default function NotificationsScreen({ route }) {
             const currentlyFollowing = !!following[username];
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/follow/${user.id}/${uid}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/follow/${user.id}/${uid}`,
                 {
                     method: currentlyFollowing ? "DELETE" : "POST", // Assuming DELETE to unfollow and POST to follow
                     headers: {

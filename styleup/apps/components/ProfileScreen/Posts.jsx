@@ -37,7 +37,7 @@ export default function Posts({ user }) {
         for (const post of user.post_ids) {
             try {
                 const response = await fetch(
-                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,{
+                    `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,{
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },

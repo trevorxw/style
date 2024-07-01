@@ -50,7 +50,7 @@ export default function Discover({ user }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/",
+                "https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -98,7 +98,7 @@ export default function Discover({ user }) {
             console.log(`Card data retrieved: ${card}`);
             const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/like/${user.id}/${card.user_id}/${card.post_id}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/like/${user.id}/${card.user_id}/${card.post_id}`,
                 {
                     method: "POST",
                     headers: {

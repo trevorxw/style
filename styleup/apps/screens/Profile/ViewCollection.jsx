@@ -60,7 +60,7 @@ export default function ViewCollection({ route, navigation }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/collection/${user.id}/${collectionId}`,{
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -87,7 +87,7 @@ export default function ViewCollection({ route, navigation }) {
                     try {
                         const token = await getFirebaseToken();
                         const postResponse = await fetch(
-                            `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post_id}`,{
+                            `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post_id}`,{
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 },
@@ -123,7 +123,7 @@ export default function ViewCollection({ route, navigation }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/likes/${user.id}`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/likes/${user.id}`,{
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -134,7 +134,7 @@ export default function ViewCollection({ route, navigation }) {
             for (const post of likesData) {
                 try {
                     const response = await fetch(
-                        `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/cards/${post.post_id}`,{
+                        `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,{
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
@@ -163,7 +163,7 @@ export default function ViewCollection({ route, navigation }) {
             // Post request to Flask endpoint
             const token = await getFirebaseToken();
             const response = await fetchWithTimeout(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "POST",
                     body: formData,
@@ -212,7 +212,7 @@ export default function ViewCollection({ route, navigation }) {
                 // Post request to Flask endpoint
                 const token = await getFirebaseToken();
                 const response = await fetch(
-                    `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                    `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/collection/${user.id}/${collectionId}`,
                     {
                         method: "POST",
                         body: formData,
@@ -247,7 +247,7 @@ export default function ViewCollection({ route, navigation }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/collection/${user.id}/${collectionId}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/collection/${user.id}/${collectionId}`,
                 {
                     method: "DELETE",
                     headers: {

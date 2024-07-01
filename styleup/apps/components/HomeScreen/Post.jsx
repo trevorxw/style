@@ -60,7 +60,7 @@ export default function Post({ card, swipeRight }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/post/${user.id}/${card.post_id}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/post/${user.id}/${card.post_id}`,
                 {
                     method: "DELETE",
                     headers: {

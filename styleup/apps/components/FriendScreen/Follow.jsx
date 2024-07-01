@@ -45,7 +45,7 @@ export default function Follow({ user }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames",
+                "https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -67,7 +67,7 @@ export default function Follow({ user }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                "https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/usernames/data",
+                "https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames/data",
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ export default function Follow({ user }) {
             const currentlyFollowing = !!following[username];
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://1c3f-2600-1700-3680-2110-c5e1-68dc-a20a-4910.ngrok-free.app/follow/${user.id}/${uid}`,
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/follow/${user.id}/${uid}`,
                 {
                     method: currentlyFollowing ? "DELETE" : "POST", // Assuming DELETE to unfollow and POST to follow
                     headers: {
