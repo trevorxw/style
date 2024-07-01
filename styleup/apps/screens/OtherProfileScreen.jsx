@@ -60,12 +60,15 @@ export default function OtherProfileScreen() {
                     style={styles.profileImage}
                 />
                 <View style={styles.profileInfo}>
-                    <View style={styles.profileText}>
+                <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
-                        <Text style={styles.userEmoji}>trevor | 😃😃😃😃</Text>
+                        <Text style={styles.name}>{user.name}</Text>
+                        <View style={styles.divider}></View>
                         <View>
                             <Text style={styles.userBio}>
-                                currently obsessed with...
+                                {user.bio == ""
+                                    ? "currrently obsessed with..."
+                                    : user.bio}
                             </Text>
                         </View>
                     </View>
@@ -75,17 +78,6 @@ export default function OtherProfileScreen() {
                 <Followers user={user} />
                 <Following user={user} />
             </View>
-            {/* Edit Profile Section to be completed */}
-            {/* <View style={styles.editProfileSection}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate("edit-profile")}
-                    style={styles.editProfileButton}
-                >
-                    <Text style={styles.editProfileButtonText}>
-                        edit profile
-                    </Text>
-                </TouchableOpacity>
-            </View> */}
             <TabView
                 navigationState={{ index, routes }}
                 renderScene={renderScene}
@@ -131,8 +123,8 @@ const styles = StyleSheet.create({
     },
     profileSection: {
         flexDirection: "row",
-        marginTop: 56,
-        marginLeft: 24,
+        marginTop: 74,
+        marginHorizontal: 24,
     },
     profileImage: {
         width: 120,
@@ -149,29 +141,36 @@ const styles = StyleSheet.create({
         zIndex: 10,
     },
     profileText: {
-        marginTop: 32,
+        alignItems: "center",
+        marginTop: 10,
     },
     userName: {
         fontSize: 20,
         fontFamily: "JosefinSans_400Regular",
+        marginBottom: 20,
     },
-    userBio: {
-        marginTop: 4,
-        fontSize: 15,
+    name: {
+        marginTop: 5,
+        fontSize: 16,
         fontFamily: "JosefinSans_400Regular",
     },
-    userEmoji: {
-        alignContent: "center",
-        marginTop: 4,
-        fontSize: 20,
+    divider: {
+        marginTop: 5,
+        width: "100%",
+        height: 1,
+        backgroundColor: "#D9D9D9",
+    },
+    userBio: {
+        marginTop: 10,
+        fontSize: 15,
         fontFamily: "JosefinSans_400Regular",
     },
     followSection: {
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 20,
-        marginBottom: 20,
+        marginTop: 0,
+        marginBottom: 10,
         marginRight: 20,
         padding: 2,
     },

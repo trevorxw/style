@@ -261,12 +261,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontFamily: "JosefinSans_400Regular",
     },
-    userEmoji: {
-        alignContent: "center",
-        marginTop: 4,
-        fontSize: 20,
-        fontFamily: "JosefinSans_400Regular",
-    },
     followSection: {
         flexDirection: "row",
         justifyContent: "center",
