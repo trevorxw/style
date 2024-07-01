@@ -13,6 +13,12 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Feather } from "@expo/vector-icons";
 
+import {
+    useFonts,
+    JosefinSans_400Regular,
+    JosefinSans_700Bold,
+} from "@expo-google-fonts/josefin-sans";
+
 // auth
 import { auth } from "../../../firebaseConfig";
 import { AuthenticatedUserContext } from "../../providers";
@@ -24,6 +30,10 @@ import { useTogglePasswordVisibility } from "../../../hooks";
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
+    const [fontsLoaded] = useFonts({
+        JosefinSans_400Regular,
+        JosefinSans_700Bold,
+    });
     const navigation = useNavigation();
     const { login } = useContext(AuthenticatedUserContext);
     const [errorState, setErrorState] = useState("");
