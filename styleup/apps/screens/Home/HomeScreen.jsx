@@ -82,6 +82,7 @@ export default function HomeScreen() {
                             )}
                         />
                         <TouchableOpacity style={styles.iconButton} onPress={() => handleNavigation("notifications", { user })}>
+                            <View style={styles.notif}></View>
                             <Feather name="bell" size={24} color="white" />
                         </TouchableOpacity>
                     </View>
@@ -140,4 +141,14 @@ const styles = StyleSheet.create({
     iconButton: {
         paddingHorizontal: 20,
     },
+    notif:{
+        top: 0,
+        right: 20,
+        position: 'absolute',
+        backgroundColor: 'red',
+        height: 8,
+        width: 8,
+        borderRadius: 10,
+        zIndex: 1,
+    }
 });
