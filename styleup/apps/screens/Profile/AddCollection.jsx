@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     TextInput,
     ActivityIndicator,
+    Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +21,8 @@ import { Formik } from "formik";
 import * as ImagePicker from "expo-image-picker";
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
 import { getFirebaseToken } from "../../../utils";
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function AddCollection({ route, navigation }) {
     let [fontsLoaded] = useFonts({
@@ -312,7 +315,17 @@ export default function AddCollection({ route, navigation }) {
                         <TouchableOpacity
                             onPress={() => toggleSelection(item.post_id)}
                         >
-                            <Image source={item.url} style={styles.image} />
+                            <Image
+                                source={[
+                                    {
+                                        uri: item.url,
+                                        width: (screenWidth - 2) / 3,
+                                        height: 150,
+                                        scale: 1,
+                                    },
+                                ]}
+                                style={styles.image}
+                            />
 
                             {selectedPosts.has(item.post_id) && (
                                 <View style={styles.selectionOverlay}>

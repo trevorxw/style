@@ -34,7 +34,8 @@ export default function Swipes({ user }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/likes/${user.id}`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/likes/${user.id}`,
+                {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -47,7 +48,8 @@ export default function Swipes({ user }) {
             for (const post of likesData) {
                 try {
                     const response = await fetch(
-                        `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,{
+                        `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,
+                        {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
@@ -98,7 +100,14 @@ export default function Swipes({ user }) {
                     >
                         {item.url != "" ? (
                             <Image
-                                source={item.url}
+                                source={[
+                                    {
+                                        uri: item.url,
+                                        width: (screenWidth - 2) / 3,
+                                        height: 150,
+                                        scale: 1,
+                                    },
+                                ]}
                                 onLoadEnd={onLoadEnd}
                                 style={styles.image}
                             />

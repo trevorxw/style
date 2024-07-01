@@ -11,7 +11,7 @@ export const NotifCard = ({
     onToggleFollow,
     loading,
     post_id,
-    post
+    post,
 }) => {
     navigation = useNavigation();
     const { user, error } = useFetchUser(userDetails.uid);
@@ -22,7 +22,7 @@ export const NotifCard = ({
     //         console.log(`Redirecting to ${JSON.stringify(post)}`)
     //     }
     // };
-    
+
     return (
         <View style={styles.userContainer}>
             <TouchableOpacity
@@ -32,10 +32,15 @@ export const NotifCard = ({
                 }}
             >
                 <Image
-                    source={userDetails.photo_url}
+                    source={[
+                        {
+                            uri: userDetails.photo_url,
+                            width: 50,
+                            height: 50,
+                            scale: 1,
+                        },
+                    ]}
                     style={styles.userImage}
-                    width={50}
-                    height={50}
                 />
                 <View style={styles.textContainer}>
                     <Text style={styles.usernameStyle}>{username}</Text>

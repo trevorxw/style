@@ -204,7 +204,14 @@ export default function Ootd({ user }) {
                             }
                         >
                             <Image
-                                source={item.url}
+                                source={[
+                                    {
+                                        uri: item.url,
+                                        width: (screenWidth - 2) / 3,
+                                        height: 150,
+                                        scale: 1,
+                                    },
+                                ]}
                                 onLoadEnd={onLoadEnd}
                                 style={styles.image}
                             />

@@ -37,14 +37,19 @@ export default function Posts({ user }) {
         for (const post of user.post_ids) {
             try {
                 const response = await fetch(
-                    `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,{
+                    `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,
+                    {
                         headers: {
                             Authorization: `Bearer ${token}`,
                         },
                     }
                 );
                 const postData = await response.json();
-                const enrichedPostData = { ...postData, isLoading: true,...post };
+                const enrichedPostData = {
+                    ...postData,
+                    isLoading: true,
+                    ...post,
+                };
                 if (postData) {
                     posts.push(enrichedPostData);
                 }
@@ -82,7 +87,14 @@ export default function Posts({ user }) {
                         }
                     >
                         <Image
-                            source={item.url}
+                            source={[
+                                {
+                                    uri: item.url,
+                                    width: (screenWidth - 2) / 3,
+                                    height: 150,
+                                    scale: 1,
+                                },
+                            ]}
                             onLoadEnd={onLoadEnd}
                             style={styles.image}
                         />

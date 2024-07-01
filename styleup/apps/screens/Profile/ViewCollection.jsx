@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     TextInput,
     ActivityIndicator,
+    Dimensions,
 } from "react-native";
 import { Image } from "expo-image";
 import { useNavigation } from "@react-navigation/native";
@@ -21,6 +22,7 @@ import * as ImagePicker from "expo-image-picker";
 import { fetchWithTimeout } from "../../../utils/fetchWithTimeout";
 import { getFirebaseToken } from "../../../utils";
 
+const { width: screenWidth, height: screenHeight } = Dimensions.get("window");
 
 export default function ViewCollection({ route, navigation }) {
     let [fontsLoaded] = useFonts({
@@ -54,13 +56,13 @@ export default function ViewCollection({ route, navigation }) {
     }),
         [selectedPosts];
 
-
     const getCollectionData = async () => {
         // Fetch details for each post using the post ID
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/collection/${user.id}/${collectionId}`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/collection/${user.id}/${collectionId}`,
+                {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -87,7 +89,8 @@ export default function ViewCollection({ route, navigation }) {
                     try {
                         const token = await getFirebaseToken();
                         const postResponse = await fetch(
-                            `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post_id}`,{
+                            `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post_id}`,
+                            {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 },
@@ -123,7 +126,8 @@ export default function ViewCollection({ route, navigation }) {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/likes/${user.id}`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/likes/${user.id}`,
+                {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -134,7 +138,8 @@ export default function ViewCollection({ route, navigation }) {
             for (const post of likesData) {
                 try {
                     const response = await fetch(
-                        `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,{
+                        `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/cards/${post.post_id}`,
+                        {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
@@ -483,7 +488,17 @@ export default function ViewCollection({ route, navigation }) {
                             <TouchableOpacity
                                 onPress={() => toggleSelection(item)}
                             >
-                                <Image source={item.url} style={styles.image} />
+                                <Image
+                                    source={[
+                                        {
+                                            uri: item.url,
+                                            width: (screenWidth - 2) / 3,
+                                            height: 150,
+                                            scale: 1,
+                                        },
+                                    ]}
+                                    style={styles.image}
+                                />
 
                                 {selectedPosts.has(item.post_id) && (
                                     <View style={styles.selectionOverlay}>
@@ -503,7 +518,17 @@ export default function ViewCollection({ route, navigation }) {
                                     })
                                 }
                             >
-                                <Image source={item.url} style={styles.image} />
+                                <Image
+                                    source={[
+                                        {
+                                            uri: item.url,
+                                            width: (screenWidth - 2) / 3,
+                                            height: 150,
+                                            scale: 1,
+                                        },
+                                    ]}
+                                    style={styles.image}
+                                />
                             </TouchableOpacity>
                         )}
                     </View>
