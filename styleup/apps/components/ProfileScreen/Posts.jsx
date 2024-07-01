@@ -44,7 +44,7 @@ export default function Posts({ user }) {
                     }
                 );
                 const postData = await response.json();
-                const enrichedPostData = { ...postData, ...post };
+                const enrichedPostData = { ...postData, isLoading: true,...post };
                 if (postData) {
                     posts.push(enrichedPostData);
                 }
