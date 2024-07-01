@@ -104,7 +104,7 @@ export default function OotdCamera() {
     const takePicture = async () => {
         if (camera.current) {
             const options = {
-                quality: 1,
+                quality: 0.5,
                 base64: true,
                 fixOrientation: true,
                 exif: true,

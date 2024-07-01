@@ -96,7 +96,7 @@ export default function AddPostScreen() {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [16, 9],
-            quality: 1,
+            quality: 0.5,
         });
 
         if (!result.canceled) {
@@ -107,7 +107,7 @@ export default function AddPostScreen() {
     const takePicture = async () => {
         if (camera.current) {
             const options = {
-                quality: 1,
+                quality: 0.5,
                 base64: true,
                 fixOrientation: true,
                 exif: true,
