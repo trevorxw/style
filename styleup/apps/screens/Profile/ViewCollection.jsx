@@ -290,6 +290,14 @@ export default function ViewCollection({ route, navigation }) {
     };
 
     const pickImage = async () => {
+        const { status } =
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            alert(
+                "Give access to camera roll permissions to share your photos!"
+            );
+            return;
+        }
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             aspect: [1, 1],

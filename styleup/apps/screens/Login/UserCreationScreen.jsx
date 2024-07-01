@@ -28,7 +28,6 @@ import {
 } from "@expo-google-fonts/josefin-sans";
 
 export default function UserCreationScreen() {
-    
     const { user: userFirebase } = useContext(AuthenticatedUserContext);
     const { user, loadingUser, error, refreshUserData } = useFetchUser(
         userFirebase.uid
@@ -59,7 +58,8 @@ export default function UserCreationScreen() {
         try {
             const token = await getFirebaseToken();
             const response = await fetch(
-                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames`,{
+                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/usernames`,
+                {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -120,6 +120,14 @@ export default function UserCreationScreen() {
     };
 
     const pickImage = async () => {
+        const { status } =
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            alert(
+                "Give access to camera roll permissions to share your photos!"
+            );
+            return;
+        }
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,

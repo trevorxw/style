@@ -85,6 +85,14 @@ export default function AddPostScreen() {
     };
 
     const pickImage = async () => {
+        const { status } =
+            await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            alert(
+                "Give access to camera roll permissions to share your photos!"
+            );
+            return;
+        }
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
             aspect: [16, 9],
@@ -280,7 +288,10 @@ export default function AddPostScreen() {
                                     </TouchableOpacity>
                                 </View>
                                 <View style={styles.submitButton}>
-                                    <TouchableOpacity onPress={handleSubmit} disabled={loading}>
+                                    <TouchableOpacity
+                                        onPress={handleSubmit}
+                                        disabled={loading}
+                                    >
                                         <Text style={styles.submitButtonText}>
                                             Post
                                         </Text>
@@ -492,7 +503,7 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         flex: 1,
-        width: '100%'
+        width: "100%",
     },
     container: {
         flex: 1,
@@ -631,7 +642,7 @@ const styles = StyleSheet.create({
         color: "rgba(0, 0, 0, 0.5)",
         paddingVertical: 3,
     },
-    saveButton:{
+    saveButton: {
         marginTop: 5,
     },
     divider: {
