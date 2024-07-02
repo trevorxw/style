@@ -39,9 +39,10 @@ export const NotifCard = ({
                             height: 50,
                             scale: 1,
                         },
-                        cachePolicy="memory-disk"
+                        
                     ]}
                     style={styles.userImage}
+                    cachePolicy="memory-disk"
                 />
                 <View style={styles.textContainer}>
                     <Text style={styles.usernameStyle}>{username}</Text>
@@ -54,7 +55,15 @@ export const NotifCard = ({
             </TouchableOpacity>
             {post_id ? (
                 <TouchableOpacity>
-                    <Image source={post?.url} style={styles.image} />
+                    <Image source={[
+                        {
+                            uri: post?.url,
+                            width: 50,
+                            height: 50,
+                            scale: 1,
+                        },
+                        
+                    ]} style={styles.image} cachePolicy="memory-disk"/>
                 </TouchableOpacity>
             ) : isFollowing ? (
                 <TouchableOpacity
