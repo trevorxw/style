@@ -14,6 +14,7 @@ import {
 import { Image } from "expo-image";
 import { getFirebaseToken } from "../../../utils";
 import { NotifCard } from "../../components/NotificationsScreen/NotifCard";
+import useLikesData from "../../../hooks/useLikesData";
 
 export default function NotificationsScreen({ route }) {
     const { user } = route.params;
@@ -24,16 +25,16 @@ export default function NotificationsScreen({ route }) {
     const [userPosts, setUserPosts] = useState(null);
     const [userData, setUserData] = useState({});
     const [usernames, setUsernames] = useState({});
-    const [likesData, setLikesData] = useState([]);
+    const { likesData, loading, refreshLikesData } = useLikesData(user.id);
     const [following, setFollowing] = useState(user?.following || {});
     const [activity, setActivity] = useState({ today: [], previous: [] });
-    const [loading, setLoading] = useState(false);
+    
 
     useEffect(() => {
         if (user) {
             retrieveUsernames();
             retrieveUsernameData();
-            retrieveLikesData();
+            refreshLikesData();
         }
     }, [user]);
     useEffect(() => {
@@ -82,28 +83,8 @@ export default function NotificationsScreen({ route }) {
         }
     };
 
-    const retrieveLikesData = async () => {
-        try {
-            const token = await getFirebaseToken();
-            const response = await fetch(
-                `https://fitpic-flask-ys4dqjogsq-wl.a.run.app/like/${user.id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            const likesData = await response.json();
-            console.log(likesData);
-            setLikesData(likesData);
-        } catch (error) {
-            console.error("Error fetching user data", error);
-        }
-    };
-
     const getUserPosts = async () => {
         const posts = {};
-        setLoading(true);
 
         // Fetch details for each post using the post ID
         const token = await getFirebaseToken();
