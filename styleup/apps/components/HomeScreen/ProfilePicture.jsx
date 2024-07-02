@@ -20,7 +20,12 @@ export default function ProfilePicture({ user }) {
                 }}
             >
                 <Image
-                    source={user.image_url}
+                    source={{
+                        uri: user.image_url,
+                        width: 38,
+                        height: 38,
+                        scale: 1,
+                    }}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>

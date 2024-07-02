@@ -13,7 +13,12 @@ export const ProfileFollowing = ({ username, userDetails, isFollowing, onToggleF
                 navigation.navigate('profile', { user: user })
             }}>
             <Image
-                source={userDetails.photo_url}
+                source={{
+                    uri: userDetails.photo_url,
+                    width: 50,
+                    height: 50,
+                    scale: 1,
+                }}
                 style={styles.userImage}
             />
             <View style={styles.textContainer}>

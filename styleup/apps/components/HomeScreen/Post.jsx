@@ -144,7 +144,14 @@ export default function Post({ card, swipeRight }) {
                     ))}
                 </ScrollView>
             </View>
-            <Image source={card.url} style={styles.image} />
+            <Image
+                source={{
+                    uri: card.url,
+                    width: screenWidth,
+                    scale: 1,
+                }}
+                style={styles.image}
+            />
         </View>
     );
 }

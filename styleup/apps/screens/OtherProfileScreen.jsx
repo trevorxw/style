@@ -19,7 +19,7 @@ import {
     useFonts,
     JosefinSans_400Regular,
 } from "@expo-google-fonts/josefin-sans";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 
 export default function OtherProfileScreen() {
     let [fontsLoaded] = useFonts({
@@ -56,11 +56,16 @@ export default function OtherProfileScreen() {
         <View style={styles.container}>
             <View style={styles.profileSection}>
                 <Image
-                    source={user.image_url}
+                    source={{
+                        uri: user.image_url,
+                        width: 50,
+                        height: 50,
+                        scale: 1,
+                    }}
                     style={styles.profileImage}
                 />
                 <View style={styles.profileInfo}>
-                <View style={styles.profileText}>
+                    <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
                         <Text style={styles.name}>{user.name}</Text>
                         <View style={styles.divider}></View>
@@ -119,7 +124,7 @@ export default function OtherProfileScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: "white",
     },
     profileSection: {
         flexDirection: "row",

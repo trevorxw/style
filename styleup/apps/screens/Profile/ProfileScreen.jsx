@@ -28,7 +28,7 @@ import {
     JosefinSans_400Regular,
 } from "@expo-google-fonts/josefin-sans";
 
-export default function ProfileScreen({route}) {
+export default function ProfileScreen({ route }) {
     const isFocused = useIsFocused();
     let [fontsLoaded] = useFonts({
         JosefinSans_400Regular,
@@ -66,14 +66,7 @@ export default function ProfileScreen({route}) {
 
     useEffect(() => {
         // Check if the screen is focused and if navigation came from the 'Settings' page
-        if (
-            isFocused &&
-            (route.params?.from === "settings" ||
-                route.params?.from === "AddPost" ||
-                route.params?.from === "edited collection" ||
-                route.params?.from === "add collection" ||
-                route.params?.from === "ootd")
-        ) {
+        if (isFocused) {
             refreshUserData();
         }
     }, [isFocused, route.params, refreshUserData]);
@@ -106,7 +99,15 @@ export default function ProfileScreen({route}) {
                 </TouchableOpacity>
             </View>
             <View style={styles.profileSection}>
-                <Image source={user.image_url} style={styles.profileImage} />
+                <Image
+                    source={{
+                        uri: user.image_url,
+                        width: 50,
+                        height: 50,
+                        scale: 1,
+                    }}
+                    style={styles.profileImage}
+                />
                 <View style={styles.profileInfo}>
                     <View style={styles.profileText}>
                         <Text style={styles.userName}>@{user.username}</Text>
@@ -180,21 +181,20 @@ export default function ProfileScreen({route}) {
 }
 
 const styles = StyleSheet.create({
-    header:{
+    header: {
         marginTop: 50,
         marginBottom: 5,
         height: 24,
-        flexDirection: 'center',
-        justifyContent:'space-between',
+        flexDirection: "center",
+        justifyContent: "space-between",
         marginRight: 20,
     },
-    placeholder:{
+    placeholder: {
         width: 24,
     },
     settingsButton: {
         justifyContent: "flex-end",
         zIndex: 10, // Tailwind z-1
-        
     },
     container: {
         flex: 1,

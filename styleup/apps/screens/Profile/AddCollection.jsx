@@ -316,14 +316,12 @@ export default function AddCollection({ route, navigation }) {
                             onPress={() => toggleSelection(item.post_id)}
                         >
                             <Image
-                                source={[
-                                    {
-                                        uri: item.url,
-                                        width: (screenWidth - 2) / 3,
-                                        height: 150,
-                                        scale: 1,
-                                    },
-                                ]}
+                                source={{
+                                    uri: item.url,
+                                    width: (screenWidth - 2) / 3,
+                                    height: 150,
+                                    scale: 1,
+                                }}
                                 style={styles.image}
                             />
 

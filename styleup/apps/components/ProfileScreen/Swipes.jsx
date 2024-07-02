@@ -100,14 +100,12 @@ export default function Swipes({ user }) {
                     >
                         {item.url != "" ? (
                             <Image
-                                source={[
-                                    {
-                                        uri: item.url,
-                                        width: (screenWidth - 2) / 3,
-                                        height: 150,
-                                        scale: 1,
-                                    },
-                                ]}
+                                source={{
+                                    uri: item.url,
+                                    width: (screenWidth - 2) / 3,
+                                    height: 150,
+                                    scale: 1,
+                                }}
                                 onLoadEnd={onLoadEnd}
                                 style={styles.image}
                                 cachePolicy="memory-disk"

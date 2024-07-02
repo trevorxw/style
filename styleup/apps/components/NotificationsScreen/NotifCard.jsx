@@ -32,14 +32,12 @@ export const NotifCard = ({
                 }}
             >
                 <Image
-                    source={[
-                        {
-                            uri: userDetails.photo_url,
-                            width: 50,
-                            height: 50,
-                            scale: 1,
-                        },
-                    ]}
+                    source={{
+                        uri: userDetails.photo_url,
+                        width: 60,
+                        height: 60,
+                        scale: 1,
+                    }}
                     style={styles.userImage}
                     cachePolicy="memory-disk"
                 />
@@ -55,14 +53,12 @@ export const NotifCard = ({
             {post_id ? (
                 <TouchableOpacity>
                     <Image
-                        source={[
-                            {
-                                uri: post?.url,
-                                width: 50,
-                                height: 50,
-                                scale: 1,
-                            },
-                        ]}
+                        source={{
+                            uri: post?.url,
+                            width: 50,
+                            height: 50,
+                            scale: 1,
+                        }}
                         style={styles.image}
                         cachePolicy="memory-disk"
                     />

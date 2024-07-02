@@ -166,7 +166,12 @@ export default function EditProfileScreen() {
                     >
                         {profileImage ? (
                             <Image
-                                source={profileImage}
+                            source={{
+                                uri: profileImage,
+                                width: 150,
+                                height: 150,
+                                scale: 1,
+                            }}
                                 style={styles.profileImage}
                             />
                         ) : image ? (

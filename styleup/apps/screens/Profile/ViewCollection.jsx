@@ -489,14 +489,12 @@ export default function ViewCollection({ route, navigation }) {
                                 onPress={() => toggleSelection(item)}
                             >
                                 <Image
-                                    source={[
-                                        {
-                                            uri: item.url,
-                                            width: (screenWidth - 2) / 3,
-                                            height: 150,
-                                            scale: 1,
-                                        },
-                                    ]}
+                                    source={{
+                                        uri: item.url,
+                                        width: (screenWidth - 2) / 3,
+                                        height: 150,
+                                        scale: 1,
+                                    }}
                                     style={styles.image}
                                 />
 
@@ -519,14 +517,12 @@ export default function ViewCollection({ route, navigation }) {
                                 }
                             >
                                 <Image
-                                    source={[
-                                        {
-                                            uri: item.url,
-                                            width: (screenWidth - 2) / 3,
-                                            height: 150,
-                                            scale: 1,
-                                        },
-                                    ]}
+                                    source={{
+                                        uri: item.url,
+                                        width: (screenWidth - 2) / 3,
+                                        height: 150,
+                                        scale: 1,
+                                    }}
                                     style={styles.image}
                                 />
                             </TouchableOpacity>
