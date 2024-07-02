@@ -39,6 +39,7 @@ export const NotifCard = ({
                             height: 50,
                             scale: 1,
                         },
+                        cachePolicy="memory-disk"
                     ]}
                     style={styles.userImage}
                 />

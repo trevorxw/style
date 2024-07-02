@@ -110,6 +110,7 @@ export default function Swipes({ user }) {
                                 ]}
                                 onLoadEnd={onLoadEnd}
                                 style={styles.image}
+                                cachePolicy="memory-disk"
                             />
                         ) : (
                             <ActivityIndicator

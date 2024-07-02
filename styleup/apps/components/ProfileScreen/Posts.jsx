@@ -94,6 +94,7 @@ export default function Posts({ user }) {
                                     height: 150,
                                     scale: 1,
                                 },
+                                cachePolicy="memory-disk"
                             ]}
                             onLoadEnd={onLoadEnd}
                             style={styles.image}
