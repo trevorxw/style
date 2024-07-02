@@ -52,7 +52,9 @@
     "react-native-tab-view": "^3.5.2",
     "typescript": "~5.3.3",
     "undefined": "firebase/auth/react-native",
-    "yup": "^1.4.0"
+    "yup": "^1.4.0",
+    "expo-notifications": "~0.28.9",
+    "expo-device": "~6.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
